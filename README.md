@@ -1,5 +1,10 @@
 # ALA Map Plugin
 
+
+## Migration to Grails 3.3.9
+    * If leflet version or resource is changed, the images path in MapTagLib.groovy also need update, 
+    otherwise leaflet marker may not be shown  
+
 ## Status
 Master: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin)
 
@@ -71,6 +76,23 @@ myOccurrenceMap.map.subscribe(function() {...})
 ```
 
 ## Features
+
+### Version 3
+* Upgraded plugin from Grails 2 to Grails 3.
+* Added `autoZIndex` to preserve zIndex of added layers.
+* Added `preserveZIndex` to prevent the default behaviour of bringing the selected layer to the front.
+* Added `addLayersControlHeading` to include heading on Leaflet layer selector.
+* Added `trackWindowHeight` to adjust map height with browser window height.
+* Added `minMapHeight` to set a minimum height of map when trackWindowHeight is true.
+* Default maxZoom update to 21.
+* Added `otherLayers` which specifies the base layers that will be available (including the default baseLayer).
+* Added `overlays` parameter to init map with passed overlays.
+* `circlemarker` drawing option is by default false.
+* Fullscreen button added by default.
+* New control LegendImage to show Geoserver's legend as image.
+* WMS layer default opacity increased to 0.5.
+* Loading gif removed when location lookup fails.
+* Zoom after resolving location using Geocoder lookup.
 
 ### Version 2.1.1
 * Added a new option called editOptions. This is passed to edit control in Leaflet Draw.

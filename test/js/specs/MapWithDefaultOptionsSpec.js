@@ -2,7 +2,7 @@ describe("ALA.Map tests", function () {
 
     var ID = "mapId";
     var map;
-    var html = "<div id='" + ID + "' data-leaflet-img='pathToLeafletImages'/>";
+    var html = "<div id='" + ID + "' data-leaflet-img='pathToLeafletImages' style='height:600px;width:100%'/>";
 
     beforeAll(function () {
         console.log("****** ALA.Map with default configuration ******");
@@ -127,4 +127,8 @@ describe("ALA.Map tests", function () {
         expect(map.getMarkerLocations().length).toBe(1);
     });
 
+    it("should not change map container height with default options", function() {
+        var map = new ALA.Map(ID);
+        expect($('#'+ID).height()).toBe(600);
+    });
 });
