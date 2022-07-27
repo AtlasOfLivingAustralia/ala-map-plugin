@@ -1,7 +1,9 @@
 *.iml
 .classpath
+.gradle/
 .idea/
 .project
 coverage/
 node_modules/
 target/
+build/

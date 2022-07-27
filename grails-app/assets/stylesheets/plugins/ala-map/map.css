@@ -1,0 +1,209 @@
+.leaflet-control-coordinates {
+    opacity: 0.7;
+}
+
+.leaflet-control-coordinates .uiElement {
+    margin: 0;
+}
+
+.leaflet-control-coordinates .uiElement.label {
+    margin: 5px;
+    color: black;
+    background-color: inherit;
+    text-shadow: none;
+}
+
+.easy-button-button span, .leaflet-control button, .leaflet-control button:hover {
+    line-height: 22px;
+}
+
+.leaflet-control-geocoder-form {
+    margin: 0;
+}
+
+.leaflet-control-geocoder-form input {
+    line-height: normal;
+    margin: 5px 5px 5px 0;
+}
+
+.hide {
+    /*
+       Removed since it interferes with Feature Map rendering on modal dialog.
+       It causes functional test to fail.
+       display: none !important;
+    */
+
+    display: none ;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.two-step-selector {
+    border: none;
+    box-shadow: none;
+}
+
+.two-step-selector button, .two-step-selector button:hover {
+    display: inline-block;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+.selectors select {
+    margin-top: 1px;
+    margin-bottom: 0;
+    margin-left: 10px;
+    height: 28px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.65);
+}
+
+.reset-map {
+    color: red;
+}
+
+.leaflet-container {
+    border: 1px solid darkgray;
+}
+
+.leaflet-map-pane {
+    z-index: 2 !important;
+}
+
+.leaflet-tile-pane {
+    z-index: 1 !important;
+}
+
+.geocoder-icon-override {
+    background: none;
+    /*content: '\f05b';*/
+    /*font-family: FontAwesome;*/
+    width: 22px !important;
+    margin-left: 4px;
+}
+
+.facet-list {
+    max-height: 1000px;
+    overflow: auto;
+}
+
+.facet-group {
+    border-top: 1px solid lightblue;
+}
+
+.facet-list ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 13px;
+    line-height: 1.3em;
+}
+
+.facet-list ul li {
+    font-weight: bold;
+    padding-left: 0;
+    font-size: 13px;
+    line-height: 1.3em;
+}
+
+.facet-list ul li ul li {
+    font-weight: inherit;
+    padding-left: 0;
+    font-size: 13px;
+    line-height: 1.3em;
+}
+
+.facet-item {
+    /*cursor: pointer;*/
+}
+
+.facet-group-items {
+    max-height: 100px;
+    overflow: scroll;
+}
+
+.facet-group-name a {
+    text-decoration: none;
+}
+
+.facet-group-name a:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 12px;
+    margin-right: 10px;
+    content: '\f0da';
+}
+
+.facet-group-name a.collapsed:before {
+    content: '\f0d7'
+}
+
+#chooseMoreModal .modal-body {
+    max-height: 400px;
+    overflow: scroll;
+}
+
+.selected-facet-item {
+    font-weight: normal;
+}
+
+.facet-group-items {
+    margin-bottom: 5px;
+}
+
+.select button, .select button:hover {
+    display: inline-block;
+}
+
+.selector-container {
+    border: none;
+    background-color:rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    border-radius: 5px;
+}
+
+.selector-container label {
+    margin-bottom: 0;
+    padding-right: 5px;
+}
+
+.legend-container {
+    max-width: 250px;
+    max-height: 400px;
+    min-width: 125px;
+    min-height: 20px;
+    overflow: auto;
+    border: none;
+    background-color:rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    border-radius: 5px;
+}
+
+.legend-item {
+    list-style: none;
+    margin-left: -35px;
+}
+
+.legend-colour {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+}
+
+.legend-text {
+    margin-left: 10px;
+    font-size: 13px;
+}
+
+.legend-label {
+    line-height: 22px;
+    padding: 2px 6px 3px;
+    font-weight: bold;
+}
+
+.leaflet-container img.image-logo {
+    max-width: 100% !important;
+}

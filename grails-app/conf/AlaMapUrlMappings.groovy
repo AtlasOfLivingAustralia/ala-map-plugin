@@ -1,5 +1,0 @@
-class AlaMapUrlMappings {
-
-	static mappings = {
-	}
-}

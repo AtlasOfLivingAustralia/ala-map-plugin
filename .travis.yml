@@ -1,48 +1,37 @@
 dist: trusty
 language: groovy
-sudo: false
 jdk:
-- openjdk7
+- openjdk8
+sudo: false
 branches:
   only:
   - master
-  - dev
+  - grails3
+  - /^feature\/.*$/
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+
 before_install:
-- export TZ=Australia/Canberra
-- date
-- nvm install 4.8.4
-- rm -rf ~/.sdkman
-- curl -s get.sdkman.io > ~/install_gvm.sh
-- chmod 775 ~/install_gvm.sh
-- ~/install_gvm.sh
-- echo "sdkman_auto_answer=true" > ~/.sdkman/etc/config
-- source ~/.sdkman/bin/sdkman-init.sh
-- GRAILS_VERSION=`grep '^\s*app.grails.version' application.properties | sed -e 's/^\s*app\.grails\.version=//g'
-  | tr -d "\r"`
-- echo "GRAILS_VERSION:$GRAILS_VERSION"
-- sdk install grails $GRAILS_VERSION || true
+  - export TZ=Australia/Canberra
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+
 before_script:
-- node --version
-- npm install
-- GRAILS_VERSION_NUMBER=`echo $GRAILS_VERSION | sed -e 's/\.[0-9]*$//g' -e 's/\.//g'
-  | tr -d "\r"`
-- echo "GRAILS_VERSION_NUMBER:$GRAILS_VERSION_NUMBER"
-- GRAILS_SETTINGS_FILE="travis_grails_settings_new.groovy"
-- if [ "$GRAILS_VERSION_NUMBER" -lt "23" ]; then GRAILS_SETTINGS_FILE="travis_grails_settings_old.groovy";
-  fi;
-- echo "GRAILS_SETTINGS_FILE:$GRAILS_SETTINGS_FILE"
-- mkdir -p ~/.grails; wget -q -O ~/.grails/settings.groovy https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/$GRAILS_SETTINGS_FILE
-- MAVEN_REPO="ala-repo-snapshot"
-- APP_VERSION=`grep '^\s*def\s*version' *GrailsPlugin.groovy | sed -e 's/^.*= *"//g'
-  | sed -e 's/".*$//g' | tr -d "\r"`
-- echo $APP_VERSION | grep -q "\-SNAPSHOT"; if [ "$?" = "1" ]; then MAVEN_REPO="ala-repo-release";
-  fi;
-- echo "APP_VERSION:$APP_VERSION"
-- echo "MAVEN_REPO:$MAVEN_REPO"
+  - cd $TRAVIS_BUILD_DIR
+  - npm install
+
 script:
-- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
-- grails clean && grails refresh-dependencies --non-interactive && grails test-app --non-interactive && grails prod maven-install --non-interactive && grails prod maven-deploy --repository=$MAVEN_REPO --non-interactive
+- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
+- ./grailsw test-app
+after_success:
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./gradlew publish'
 env:
   global:
+  - TRAVIS_NODE_VERSION="10.8.0"
   - secure: pUfSJ7e11vDOMLvU6aLmDKIzfHZyT7Z7rhtl+xCKRafVHAMkG12/qLKDyjUWDSYKqxAApnOsqEK/M8UEsmuemtBoAssIgoCDq6uU3KBH0rCDG9XdpzF5Hie3qQCIRIr73LOjaJ4PzpMReAULPRn8Hx+zktxBwTbgfBAifxM+e5txdJKhVmI9/A1r9NZpiFHhB/yOMCfzA3lm633uyqWg+m0wc2J9EMGgW/XKCRGwiQJRk+LBNLNSCCh/fqbko2KIuaIzaX/pK1CATREHgKAh2qiW79yQ1C5yIfrmRf+uDu8j9aL4HFzIxWU3mP91KUp6ikFkzgGkWvWvw89EV0nQmVVuP52EK5bpu77bAiGZdviccd+YToHNerrArBnn/jfOMBxAF8Vd7Zjtb4TVEmT5dQgcG1qMeaVi7oGXAiyJ519+hc8Qtnie8o4TmKH34DCbl0qkybz9IRT0W7S/VzdST/Excmco2TqE+siQTvaIKGKmGLMNulJgTA5KGyDJoDbxgRlsr3kjXR24WBuw+JrxjS+Oa6EprfxZhTcFiNPxQagOkCGNWYQGb8xuJcQtCW4n5UAi9y0rWig268RhoT55/oL5MV5eXexc1RzU79mr+T7rRw4AVB9LiRZ0YspOHVSRM/MyzqFXZim4dWhm7+WMm1D7eR+SJeHL0t4CULIH47Q=
   - secure: kdRGe7YzHnythBFmgpMi4pMMK6o0vA9GQKZOuESFyQdO6vNwYwI/3HXyTrmNcuA//Gk2PXW7G1HVOLYLXSfZzwfEvTY5NgguRlmvc2zXgFPRpVFT3uOCG+kAJBQowc7iUd4weBPHbFz6CMR4sQ2Dj/NdoE8ZUCkF+DDhFK4hRzaOG8UA7NkvNKU+Op731+ngsfFImoxZzYrWZze8DqZZqA1u5uvn01tAC1LxrR6Iq0LKbfPdzWRxr7YE+KejgWNlsaC26Y5pBeHapVdE0nOgiHl8mtIQvG77WzCQiHsGcwZpC6+E+DbpnkZZNJ/mOfoNsnhtHZnaDd3irgqzWfckyqD300BgIZTb69IpXfLpetyEkacNI0p6/zZd4X2kHBBBchDQqBtatVJEr6HkccpWpa6wJR795IKbBFllpJkvhZC2tIhKJWzShLTbYBYoVztChmdJkbj7QBnqgkYuHlqPlqr+ythIEv4N5ofT2wElQu8kvhmpRdpO25S/PtIfX0Mb5nD6HM3UHe7bRdN2h/09kKLnGtgAgHKMlmgO16lO6LTElSx5lf3YSLjsFcGCH648lgw58UKoBSGHC7QQQQ00FXphrg838oQlBEfWNXh6tFkVFV5cFSpWPl2SA4ZW3FKPCFiSIlKkvGJbF/76QkO108nrfpdmnaY3x+FUXvfI4xE=

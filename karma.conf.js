@@ -8,19 +8,14 @@ module.exports = function (config) {
         basePath: '',
 
         plugins: [
-            'karma-chrome-launcher',
-            'karma-jquery',
-            'karma-jasmine',
-            'karma-jasmine-jquery',
-            'karma-coverage',
-            'karma-firefox-launcher',
-            'karma-phantomjs-launcher'
+            '@metahub/karma-jasmine-jquery',
+            'karma-*'
         ],
 
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jquery-1.11.0','jasmine-jquery','jasmine'],
+        frameworks: ['jquery-3.4.0','jasmine-jquery','jasmine'],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
@@ -30,9 +25,19 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'web-app/vendor/leaflet-0.7.7/*.js',
-            'web-app/vendor/**/*.js',
-            'web-app/js/**/*.js',
+            'node_modules/underscore/underscore-min.js',
+            'node_modules/handlebars/dist/handlebars.min.js',
+            'node_modules/leaf/dist/handlebars.min.js',
+            'node_modules/leaflet/dist/leaflet.js',
+            'node_modules/leaflet-control-geocoder/dist/Control.Geocoder.js',
+            'node_modules/leaflet-draw/dist/leaflet.draw.js',
+            'node_modules/leaflet-easybutton/src/easy-button.js',
+            'node_modules/leaflet-loading/src/Control.Loading.js',
+            'node_modules/leaflet-sleep/Leaflet.Sleep.js',
+            'node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min.js',
+            'node_modules/leaflet.markercluster/dist/leaflet.markercluster.js',
+            'grails-app/assets/javascripts/*.js',
+            'grails-app/assets/javascripts/plugins/**/*.js',
             'test/js/specs/**/*.js'
         ],
 
@@ -68,7 +73,7 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome','Firefox','PhantomJS'],
+        browsers: ['Chrome', "ChromeHeadless"],
 
 
         // Continuous Integration mode
