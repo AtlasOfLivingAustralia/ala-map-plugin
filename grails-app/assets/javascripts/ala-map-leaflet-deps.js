@@ -4,7 +4,7 @@ Dependencies excluding jquery and underscore, includes:
  - Turf
  */
 
-//= require webjars/leaflet-draw/0.4.14/dist/leaflet.draw.js
+//= require webjars/github-com-Leaflet-Leaflet-draw/0.4.12/leaflet.draw-src.js
 //= require webjars/Leaflet.Coordinates/0.1.5/dist/Leaflet.Coordinates-0.1.5.src.js
 //= require webjars/leaflet-easybutton/1.2.0/src/easy-button.js
 //= require webjars/leaflet-control-geocoder/1.5.5/dist/Control.Geocoder.js
