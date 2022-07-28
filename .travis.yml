@@ -6,8 +6,10 @@ sudo: false
 branches:
   only:
   - master
+  - dev
   - grails3
   - /^feature\/.*$/
+  - /hotfix/.*$/
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -26,8 +28,9 @@ before_script:
   - npm install
 
 script:
-- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
-- ./grailsw test-app
+  - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
+  - ./gradlew test
+
 after_success:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./gradlew publish'
 env:

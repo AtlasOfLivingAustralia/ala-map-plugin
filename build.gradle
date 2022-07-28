@@ -10,7 +10,7 @@ buildscript {
     }
 }
 
-version "3.0"
+version "3.0.1-SNAPSHOT"
 group "org.grails.plugins"
 
 apply plugin:"eclipse"
@@ -52,7 +52,7 @@ dependencies {
     compile 'org.webjars.bowergithub.protonet:jquery.inview:1.1.2'
     compile 'org.webjars:handlebars:4.0.11-1'
     compile 'org.webjars.npm:leaflet:0.7.7'
-    compile 'org.webjars.npm:leaflet-draw:0.4.14'
+    compile 'org.webjars.npm:github-com-Leaflet-Leaflet-draw:0.4.12'
     compile('org.webjars.bower:Leaflet.Coordinates:0.1.5') { // TODO get this NPM package into a webjar
         exclude group: 'org.webjars.bower', module: 'leaflet-dist' // exclude leaflet from bower as we have it from npm
     }
