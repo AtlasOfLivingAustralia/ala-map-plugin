@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.15.1"
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.3.1"
     }
 }
 
@@ -16,7 +16,7 @@ group "org.grails.plugins"
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
+apply plugin:"maven-publish"
 apply plugin:"org.grails.grails-gsp"
 apply plugin:"asset-pipeline"
 
@@ -40,55 +40,42 @@ dependencies {
     profile "org.grails.profiles:web-plugin"
     provided "org.grails:grails-plugin-services"
     provided "org.grails:grails-plugin-domain-class"
-    runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.15.1"
-    testCompile "org.grails:grails-plugin-testing"
+    runtime "com.bertramlabs.plugins:asset-pipeline-grails:3.3.1"
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
     // webjars
-    compile 'org.webjars:underscorejs:1.8.3'
-    compile 'org.webjars:jquery:2.2.4'
+    compile 'org.webjars.npm:underscore:1.13.4'
+    compile 'org.webjars:jquery:3.6.0'
     compile 'org.webjars.bowergithub.protonet:jquery.inview:1.1.2'
-    compile 'org.webjars:handlebars:4.0.11-1'
-    compile 'org.webjars.npm:leaflet:0.7.7'
-    compile 'org.webjars.npm:github-com-Leaflet-Leaflet-draw:0.4.12'
+    compile 'org.webjars.npm:handlebars:4.7.7'
+    compile 'org.webjars.npm:leaflet:1.7.1'
+    compile 'org.webjars.npm:leaflet-draw:1.0.2'
     compile('org.webjars.bower:Leaflet.Coordinates:0.1.5') { // TODO get this NPM package into a webjar
         exclude group: 'org.webjars.bower', module: 'leaflet-dist' // exclude leaflet from bower as we have it from npm
     }
-    compile 'org.webjars.npm:leaflet-easybutton:1.2.0'
+    compile 'org.webjars.npm:leaflet-easybutton:2.4.0'
     compile 'org.webjars.npm:leaflet-control-geocoder:1.5.5'
-    compile 'org.webjars.npm:leaflet.markercluster:0.5.0'
+    compile 'org.webjars.npm:leaflet.markercluster:1.5.3'
     compile 'org.webjars.npm:leaflet-loading:0.1.24'
     compile 'org.webjars.npm:leaflet-sleep:0.5.1'
     compile 'org.webjars:font-awesome:4.7.0'
-    compile 'org.webjars.npm:urijs:1.18.10'
+    compile 'org.webjars.npm:urijs:1.19.11'
 
 //    compile 'org.grails.plugins:grails-google-visualization:2.2.1'
 }
 
 bootRun {
-    jvmArgs('-Dspring.output.ansi.enabled=always')
-    addResources = true
+    ignoreExitValue true
+    jvmArgs(
+            '-Dspring.output.ansi.enabled=always',
+            '-noverify',
+            '-XX:TieredStopAtLevel=1')
+    sourceResources sourceSets.main
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
 }
-// enable if you wish to package this plugin as a standalone application
-bootRepackage.enabled = false
-grailsPublish {
-    // TODO: Provide values here
-//    user = 'user'
-//    key = 'key'
-    websiteUrl = 'https://github.com/AtlasOfLivingAustralia/ala-map-plugin'
-    issueTrackerUrl = 'https://github.com/AtlasOfLivingAustralia/ala-map-plugin/issues'
-    vcsUrl = 'https://github.com/AtlasOfLivingAustralia/ala-map-plugin'
-    githubSlug = 'AtlasOfLivingAustralia/ala-map-plugin'
-    license {
-        name = 'MPL-2.0'
-    }
-    title = "ALA Map Plugin"
-    desc = "Provides occurence maps for ALA applications"
-    developers = ["ALA":"support@ala.org.au"]
-}
-
 
 assets {
     packagePlugin = true
