@@ -56,7 +56,7 @@ dependencies {
         exclude group: 'org.webjars.bower', module: 'leaflet-dist' // exclude leaflet from bower as we have it from npm
     }
     compile 'org.webjars.npm:leaflet-easybutton:2.4.0'
-    compile 'org.webjars.npm:leaflet-control-geocoder:1.5.5'
+    compile 'org.webjars.npm:leaflet-control-geocoder:2.4.0'
     compile 'org.webjars.npm:leaflet.markercluster:1.5.3'
     compile 'org.webjars.npm:leaflet-loading:0.1.24'
     compile 'org.webjars.npm:leaflet-sleep:0.5.1'
