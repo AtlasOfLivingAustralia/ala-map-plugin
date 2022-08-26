@@ -1,7 +1,7 @@
 # ALA Map Plugin
 
 
-## Migration to Grails 3.3.9
+## Migration to Grails 3 and 4
     * If leflet version or resource is changed, the images path in MapTagLib.groovy also need update, 
     otherwise leaflet marker may not be shown  
 
@@ -76,6 +76,9 @@ myOccurrenceMap.map.subscribe(function() {...})
 ```
 
 ## Features
+
+### Version 4
+Updated grails to 4.1.1 and leaflet and other javascript dependencies to newer versions.
 
 ### Version 3
 * Upgraded plugin from Grails 2 to Grails 3.
