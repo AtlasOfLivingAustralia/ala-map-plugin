@@ -1,2 +1,1 @@
-//= require webjars/urijs/1.18.10/src/URI.js
-// require urijs-1.18.0/URI.js
+//= require webjars/urijs/1.19.11/src/URI.js
