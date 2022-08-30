@@ -1,1 +1,1 @@
-//= require webjars/leaflet/1.7.1/dist/leaflet.js
+//= require webjars/leaflet/1.6.0/dist/leaflet.js
