@@ -6,19 +6,19 @@ buildscript {
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.3.1"
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:4.3.0"
     }
 }
 
 version "4.1-SNAPSHOT"
 group "org.grails.plugins"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"maven-publish"
-apply plugin:"org.grails.grails-gsp"
-apply plugin:"asset-pipeline"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.grails.grails-plugin"
+apply plugin: "org.grails.grails-gsp"
+apply plugin: "maven-publish"
+apply plugin: "com.bertramlabs.asset-pipeline"
 
 repositories {
     mavenLocal()
@@ -27,51 +27,63 @@ repositories {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.grails:grails-core"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-tomcat"
-    compile "org.grails:grails-dependencies"
-    compile "org.grails:grails-web-boot"
-    compile "org.grails.plugins:cache"
-    compile "org.grails.plugins:scaffolding"
+    // Grails core dependencies
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.grails:grails-core"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.grails:grails-dependencies"
+    implementation "org.grails:grails-web-boot"
+
+    // Grails plugins
+    implementation "org.grails.plugins:cache:4.0.0"
+    implementation "org.grails.plugins:scaffolding"
+    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:4.3.0"
+
+    // Grails components
+    compileOnly "org.grails:grails-plugin-services"
+    compileOnly "org.grails:grails-plugin-domain-class"
+
+    // Console support
     console "org.grails:grails-console"
-    profile "org.grails.profiles:web-plugin"
-    provided "org.grails:grails-plugin-services"
-    provided "org.grails:grails-plugin-domain-class"
-    runtime "com.bertramlabs.plugins:asset-pipeline-grails:3.3.1"
-    testCompile "org.grails.plugins:geb"
-    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
-    // webjars
-    compile 'org.webjars.npm:underscore:1.13.4'
-    compile 'org.webjars:jquery:3.6.0'
-    compile 'org.webjars.bowergithub.protonet:jquery.inview:1.1.2'
-    compile 'org.webjars.npm:handlebars:4.7.7'
-    compile 'org.webjars.npm:leaflet:1.6.0'
-    compile 'org.webjars.npm:github-com-kbartas-Leaflet-draw:1.0.4'
-    compile('org.webjars.bower:Leaflet.Coordinates:0.1.5') { // TODO get this NPM package into a webjar
-        exclude group: 'org.webjars.bower', module: 'leaflet-dist' // exclude leaflet from bower as we have it from npm
+    // Webjars
+    implementation 'org.webjars.npm:underscore:1.13.4'
+    implementation 'org.webjars:jquery:3.6.0'
+    implementation 'org.webjars.bowergithub.protonet:jquery.inview:1.1.2'
+    implementation 'org.webjars.npm:handlebars:4.7.7'
+    implementation 'org.webjars.npm:leaflet:1.6.0'
+    implementation 'org.webjars.npm:github-com-kbartas-Leaflet-draw:1.0.4'
+    implementation('org.webjars.bower:Leaflet.Coordinates:0.1.5') {
+        exclude group: 'org.webjars.bower', module: 'leaflet-dist'
     }
-    compile 'org.webjars.npm:leaflet-easybutton:2.4.0'
-    compile 'org.webjars.npm:leaflet-control-geocoder:2.4.0'
-    compile 'org.webjars.npm:leaflet.markercluster:1.5.3'
-    compile 'org.webjars.npm:leaflet-loading:0.1.24'
-    compile 'org.webjars.npm:leaflet-sleep:0.5.1'
-    compile 'org.webjars:font-awesome:4.7.0'
-    compile 'org.webjars.npm:urijs:1.19.11'
+    implementation 'org.webjars.npm:leaflet-easybutton:2.4.0'
+    implementation 'org.webjars.npm:leaflet-control-geocoder:2.4.0'
+    implementation 'org.webjars.npm:leaflet.markercluster:1.5.3'
+    implementation 'org.webjars.npm:leaflet-loading:0.1.24'
+    implementation 'org.webjars.npm:leaflet-sleep:0.5.1'
+    implementation 'org.webjars:font-awesome:4.7.0'
+    implementation 'org.webjars.npm:urijs:1.19.11'
 
-//    compile 'org.grails.plugins:grails-google-visualization:2.2.1'
+    // Geb & Selenium for tests
+    testImplementation ("org.grails.plugins:geb") {
+        exclude module: "grails-core"
+    }
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0"
+    testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.44.0"
+
+    // Building a plugin
+    profile "org.grails.profiles:web-plugin:6.0.0"
 }
 
 bootRun {
-    ignoreExitValue true
+    ignoreExitValue = true
     jvmArgs(
-            '-Dspring.output.ansi.enabled=always',
-            '-noverify',
-            '-XX:TieredStopAtLevel=1')
+        '-Dspring.output.ansi.enabled=always',
+        '-noverify',
+        '-XX:TieredStopAtLevel=1'
+    )
     sourceResources sourceSets.main
     String springProfilesActive = 'spring.profiles.active'
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
@@ -85,8 +97,8 @@ assets {
 publishing {
     repositories {
         maven {
-            name 'Nexus'
-            url "https://nexus.ala.org.au/content/repositories/${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases' }"
+            name = 'Nexus'
+            url = "https://nexus.ala.org.au/content/repositories/${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases'}"
             credentials {
                 username = System.getenv('TRAVIS_DEPLOY_USERNAME')
                 password = System.getenv('TRAVIS_DEPLOY_PASSWORD')
@@ -95,21 +107,16 @@ publishing {
     }
     publications {
         mavenJar(MavenPublication) {
+            from components.java
             pom.withXml {
                 def pomNode = asNode()
                 pomNode.dependencyManagement.replaceNode {}
-
-                // simply remove dependencies without a version
-                // version-less dependencies are handled with dependencyManagement
-                // see https://github.com/spring-gradle-plugins/dependency-management-plugin/issues/8 for more complete solutions
                 pomNode.dependencies.dependency.findAll {
                     it.version.text().isEmpty()
                 }.each {
                     it.replaceNode {}
                 }
             }
-            from components.java
-
         }
     }
 }
