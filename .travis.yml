@@ -1,7 +1,11 @@
-dist: xenial
+dist: jammy
 language: groovy
 jdk:
-- openjdk8
+- openjdk11
+
+addons:
+  chrome: stable
+
 sudo: false
 branches:
   only:
