@@ -9,7 +9,7 @@
   "dependencies": {},
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
-    "chromedriver": "^103.0.0",
+    "chromedriver": "^140.0.4",
     "font-awesome": "4.7.0",
     "handlebars": "^4.7.7",
     "jasmine-core": "^3.5.0",
