@@ -52,7 +52,7 @@ jobs:
       - name: Publish
         if: github.event_name == 'push'
         env:
-          TRAVIS_DEPLOY_USERNAME: ${{ secrets.TRAVIS_DEPLOY_USERNAME }}
-          TRAVIS_DEPLOY_PASSWORD: ${{ secrets.TRAVIS_DEPLOY_PASSWORD }}
+          DEPLOY_USERNAME: ${{ secrets.DEPLOY_USERNAME }}
+          DEPLOY_PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
         run: ./gradlew publish
 

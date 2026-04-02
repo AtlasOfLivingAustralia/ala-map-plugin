@@ -114,8 +114,8 @@ publishing {
             name = 'Nexus'
             url = "https://nexus.ala.org.au/content/repositories/${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases'}"
             credentials {
-                username = System.getenv('TRAVIS_DEPLOY_USERNAME')
-                password = System.getenv('TRAVIS_DEPLOY_PASSWORD')
+                username = System.getenv('DEPLOY_USERNAME')
+                password = System.getenv('DEPLOY_PASSWORD')
             }
         }
     }
