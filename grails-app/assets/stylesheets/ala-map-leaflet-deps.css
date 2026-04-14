@@ -1,7 +1,7 @@
 /*
- *= require leaflet-draw/leaflet.draw.css
+ *= require @geoman-io/leaflet-geoman-free/leaflet-geoman.css
  *= require leaflet.coordinates/Leaflet.Coordinates-0.1.5.css
- *= require Leaflet.Coordinates/Leaflet.Coordinates-0.1.5.ie.css
+ *= require leaflet.coordinates/Leaflet.Coordinates-0.1.5.ie.css
  *= require leaflet-easybutton/src/easy-button.css
  *= require leaflet-control-geocoder/Control.Geocoder.css
  *= require leaflet.markercluster/MarkerCluster.css

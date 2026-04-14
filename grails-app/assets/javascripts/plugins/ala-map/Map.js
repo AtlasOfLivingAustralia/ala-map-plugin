@@ -78,6 +78,7 @@ ALA.MapConstants = {
  *  <li><code>markerOrShapeNotBoth</code> whether to allow users to draw both markers and regions/shapes at the same time. Default: true</li>
  *  <li><code>showFitBoundsToggle</code> whether to include a button to toggle between the initial map zoom and the bounds of the data. Default: false</li>
  *  <li><code>useMyLocation</code> whether to include a "Use My Location" button to place a marker on the map at the user's location. Default: true</li>
+ *  <li><code>addGeometryFromLocalFile</code> adds a control to be able to upload file in accepted formats. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
  *  <li><code>allowSearchLocationByAddress</code> whether to allow the user to search by address to place a marker on the map. Default: true</li>
  *  <li><code>allowSearchRegionByAddress</code> whether to allow the user to search by address to draw a polygon on the map. Default: true</li>
  *  <li><code>geocodeRegionOptions</code> additional configuration options when using the allowSearchRegionByAddress control. Only relevant when allowSearchRegionByAddress = true:</li>
@@ -282,7 +283,8 @@ ALA.Map = function (id, options) {
         trackWindowHeight: false,
         minMapHeight: 250,
         autoZIndex: true,
-        preserveZIndex: false
+        preserveZIndex: false,
+        addGeometryFromLocalFile: false
     };
 
     /**
@@ -329,9 +331,13 @@ ALA.Map = function (id, options) {
     var drawControl = null;
     var drawnItems = DEFAULT_EDIT_DRAW_OPTIONS.featureGroup = new L.FeatureGroup();
     var markers = [];
+    var editModeSnapshotGeoJSON = null;
+    var snapshotMode = null;
+    var suppressEditModeNotify = false;
     var subscribers = [];
     var fitToBoundsToggle = options.zoomToObject;
     var layerControl = null;
+    var layerCreatedByGeoJSON = null;
 
     /* Keep track of all available overlay layers. */
     var overlayLayersAvailable = [];
@@ -350,6 +356,9 @@ ALA.Map = function (id, options) {
         fitToBoundsOfLayer = null;
         drawControl = null;
         drawnItems = null;
+        editModeSnapshotGeoJSON = null;
+        snapshotMode = null;
+        suppressEditModeNotify = false;
         markers = [];
         subscribers = [];
     };
@@ -466,38 +475,12 @@ ALA.Map = function (id, options) {
             geoJSON = JSON.parse(geoJSON);
         }
 
-        var layerCreatedByGeoJSON;
+        layerCreatedByGeoJSON = null;
 
         L.geoJson(geoJSON, {
             pointToLayer: pointToLayerCircleSupport,
             onEachFeature: function (feature, layer) {
-                wmsOptions = {};
-                //Create a popup content
-                if(feature.properties && feature.properties.popupContent)
-                    layer.bindPopup(feature.properties.popupContent);
-
-                if (feature.properties && feature.properties.pid) {
-                    if (feature.geometry.type == ALA.MapConstants.DRAW_TYPE.POINT_TYPE){
-                        wmsOptions.layers = "ALA:Points"
-                        wmsOptions.opacity = 1.0
-                      }
-                    layer = createWmsLayer(feature.properties.pid, wmsOptions);
-                }
-
-                if (options.singleDraw) {
-                    drawnItems.clearLayers();
-                }
-                if (options.markerOrShapeNotBoth) {
-                    clearMarkers();
-                }
-
-                drawnItems.addLayer(layer);
-                if (layer.bringToFront) {
-                    layer.bringToFront();
-                }
-
-                applyLayerOptions(layer, layerOptions);
-                layerCreatedByGeoJSON = layer;
+                onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions);
             },
             style: DEFAULT_SHAPE_OPTIONS
         });
@@ -822,7 +805,7 @@ ALA.Map = function (id, options) {
     /**
      * Utility method to add a WMS layer to the map.
      *
-     * Triggers events draw:drawstart and draw:created, and will notify all subscribers
+     * Triggers events pm:drawstart and pm:create, and will notify all subscribers
      *
      * @memberOf ALA.Map
      * @function addWmsLayer
@@ -1267,6 +1250,106 @@ ALA.Map = function (id, options) {
         return layerControl;
     };
 
+    /**
+     * Highlight all features on the map with a property matching the provided name and value.
+     * @param propertyName - feature property name to match
+     * @param propertyValue - feature property value to match
+     */
+    self.highlightFeaturesByProperty = function(propertyName, propertyValue) {
+        self.unHighlightAllFeatures();
+
+    	drawnItems.eachLayer(function (layer) {
+            if (layer.feature && layer.feature.properties && layer.feature.properties[propertyName] === propertyValue) {
+                self.highlightLayer(layer);
+            }
+        });
+    }
+
+    /**
+     * Remove highlight from all features on the map with a property matching the provided name and value.
+     * @param propertyName - feature property name to match
+     * @param propertyValue - feature property value to match
+     */
+    self.unHighlightFeaturesByProperty = function(propertyName, propertyValue) {
+        drawnItems.eachLayer(function (layer) {
+            if (layer.feature && layer.feature.properties && layer.feature.properties[propertyName] === propertyValue) {
+                self.unHighlightLayer(layer);
+            }
+        });
+    }
+
+    /**
+     * Remove highlight from all features on the map.
+     */
+    self.unHighlightAllFeatures = function() {
+        drawnItems.eachLayer(function (layer) {
+            self.unHighlightLayer(layer);
+        });
+    };
+
+    /**
+     * Removes highlight of the provided layer on the map. For shapes, this is done by reducing the stroke weight and fill opacity.
+     * For markers, this is done by reducing the icon size.
+     * @param layer
+     */
+    self.unHighlightLayer = function (layer) {
+        if (!layer) {
+            return;
+        }
+
+        if (layer.setStyle) {
+            var options = layer.options;
+            if (options && layer.setStyle) {
+                var style = {
+                    weight: options.weight / 3,
+                    fillOpacity: DEFAULT_OPACITY,
+                    color: options.color
+                };
+                layer.setStyle(style);
+            }
+        }
+        else if (layer.options && layer.options.icon) {
+            var icon = layer.options.icon;
+            icon.options.iconSize = [icon.options.iconSize[0]/1.5, icon.options.iconSize[1]/1.5];
+            icon.options.iconAnchor = [icon.options.iconAnchor[0]/1.5, icon.options.iconAnchor[1]/1.5];
+            layer.setIcon(icon);
+        }
+    };
+
+    /**
+     * Highlight the provided layer on the map. For shapes, this is done by increasing the stroke weight and fill opacity.
+     * For markers, this is done by increasing the icon size.
+     * @param layer
+     */
+    self.highlightLayer = function (layer) {
+        if (!layer) {
+            return;
+        }
+
+        var options = layer.options;
+        if (!options) {
+            return;  // TODO Known shapes don't have options
+        }
+        if (layer.setStyle) {
+            var style = {
+                weight: options.weight * 3,
+                fillOpacity: 1,
+                color: options.color
+            };
+
+            layer.setStyle(style);
+            if (layer.bringToFront) {
+                layer.bringToFront();
+            }
+        }
+        else if (options.icon) {
+            var icon = options.icon;
+            icon.options.iconSize = [icon.options.iconSize[0]*1.5, icon.options.iconSize[1]*1.5];
+            icon.options.iconAnchor = [icon.options.iconAnchor[0]*1.5, icon.options.iconAnchor[1]*1.5];
+            layer.setIcon(icon);
+        }
+    };
+
     // ----------------------
     // Private functions
     // ----------------------
@@ -1313,6 +1396,10 @@ ALA.Map = function (id, options) {
             initDrawingControls(options);
         }
 
+        if (options.allowKnownShapesControl && options.knownShapesOptions && options.knownShapesOptions.featuresServiceUrl && options.knownShapesOptions.regionListUrl) {
+            addKnownShapeControl(options.knownShapesOptions);
+        }
+
         if(options.trackWindowHeight) {
             addWindowResizeListener();
             adjustMapContainerHeight();
@@ -1320,6 +1407,10 @@ ALA.Map = function (id, options) {
 
         if (options.showReset) {
             self.addButton("<span class='ala-map-reset fa fa-refresh reset-map' title='Reset map'></span>", self.resetMap, "bottomright");
+        }
+
+        if (options.addGeometryFromLocalFile) {
+            addFileInputControl(options);
         }
 
         // If the map container is not visible, add a listener to trigger a redraw once it becomes visible.
@@ -1503,33 +1594,86 @@ ALA.Map = function (id, options) {
             editOptions = false;
         }
 
-        drawControl = new L.Control.Draw({
+        drawControl = {
             edit: editOptions,
             draw: drawOptions
-        });
-        mapImpl.addControl(drawControl);
+        };
+        if (editOptions) {
+            mapImpl.pm.addControls({
+                position: "topleft",
+                drawMarker: drawOptions.marker !== false,
+                drawPolyline: drawOptions.polyline !== false,
+                drawRectangle: drawOptions.rectangle !== false,
+                drawPolygon: drawOptions.polygon !== false,
+                drawCircle: drawOptions.circle !== false,
+                drawCircleMarker:false,
+                drawText: false,
+                cutPolygon: true,
+                limitMarkersToCount: 50,
+                allowSelfIntersection: false,
+                hideMiddleMarkers: true,
+                editMode: {
+                    allowSelfIntersection: false, // disallow self-intersection for polygons
+                    hideMiddleMarkers: true,
+                    limitMarkersToCount: 100
+                },
+                dragMode: true,
+                removalMode: true,
+                rotateMode: true,
+                snappingOption: true
+            });
 
-        mapImpl.on("draw:created", function (event) {
-            if (event.layerType === ALA.MapConstants.LAYER_TYPE.MARKER) {
+            addCustomCancelActionToEditModes();
+        }
+
+        function onLayerCreated(layerType, layer) {
+            if (normaliseLayerType(layerType) === ALA.MapConstants.LAYER_TYPE.MARKER) {
                 if (currentOptions.singleMarker) {
                     markers = [];
                 }
 
                 if (currentOptions.draggableMarkers) {
-                    event.layer.options.draggable = true;
-                    event.layer.on("dragend", self.notifyAll);
+                    layer.options.draggable = true;
+                    layer.on("dragend", self.notifyAll);
                 }
 
-                addMarker(event.layer, true);
+                addMarker(layer, true);
             } else {
-                addLayer(event.layer, true);
+                addLayer(layer, true);
             }
-        });
-        mapImpl.on("draw:editstop", self.notifyAll);
-        mapImpl.on("draw:deletestop", self.notifyAll);
+        }
 
-        mapImpl.on("draw:drawstart", function (event) {
-            drawingStarted(event.layerType);
+        mapImpl.on("pm:create", function (event) {
+            onLayerCreated(event.shape, event.layer);
+        });
+
+        mapImpl.on("pm:globaleditmodetoggled", function (event) {
+            handleGlobalModeToggle("editMode", event.enabled);
+        });
+
+        mapImpl.on("pm:globaldragmodetoggled", function (event) {
+            handleGlobalModeToggle("dragMode", event.enabled);
+        });
+
+        mapImpl.on("pm:globalremovalmodetoggled", function (event) {
+            handleGlobalModeToggle("removalMode", event.enabled);
+        });
+
+        mapImpl.on("pm:globalcutmodetoggled", function (event) {
+            handleGlobalModeToggle("cutPolygon", event.enabled);
+        });
+
+        mapImpl.on("pm:globalrotatemodetoggled", function (event) {
+            handleGlobalModeToggle("rotateMode", event.enabled);
+        });
+
+        mapImpl.on("pm:drawstart", function (event) {
+            drawingStarted(event.shape);
+        });
+
+        mapImpl.on("pm:cut", function (event) {
+            console.log("Cut event", event);
+            drawnItems.removeLayer(event.originalLayer);
         });
 
         registerSpinnerEvents();
@@ -1568,6 +1712,7 @@ ALA.Map = function (id, options) {
 
     // Determines if existing items need to be removed before adding a new item
     function drawingStarted(layerType) {
+        layerType = normaliseLayerType(layerType);
         if (layerType === ALA.MapConstants.LAYER_TYPE.MARKER) {
             if (options.singleMarker) {
                 markers.forEach(function (marker) {
@@ -1589,6 +1734,133 @@ ALA.Map = function (id, options) {
         }
     }
 
+    function normaliseLayerType(layerType) {
+        if (!layerType) {
+            return layerType;
+        }
+
+        if (!_.isString(layerType)) {
+            return layerType;
+        }
+
+        if (layerType.toLowerCase() === "line") {
+            return "polyline";
+        }
+
+        return layerType.toLowerCase();
+    }
+
+    /**
+     * Adding custom cancel button as Geoman free version does not come with cancel button.
+     */
+    function addCustomCancelActionToEditModes() {
+        if (!mapImpl.pm || !mapImpl.pm.Toolbar || !mapImpl.pm.Toolbar.changeActionsOfControl) {
+            return;
+        }
+
+        var modeConfigs = [
+            {name: "editMode", title: "Cancel edit changes"},
+            {name: "dragMode", title: "Cancel drag changes"},
+            {name: "cutPolygon", title: "Cancel cut changes"},
+            {name: "removalMode", title: "Cancel remove changes"},
+            {name: "rotateMode", title: "Cancel rotate changes"}
+        ];
+
+        modeConfigs.forEach(function (modeConfig) {
+            mapImpl.pm.Toolbar.changeActionsOfControl(modeConfig.name, [
+                "finishMode", // complete the mode action and save changes
+                { // custom cancel action
+                    text: "Cancel",
+                    name: "cancel",
+                    title: modeConfig.title,
+                    onClick: function () {
+                        cancelGlobalModeChanges(modeConfig.name);
+                    }
+                }
+            ]);
+        });
+    }
+
+    /**
+     * Take a snapshot of the current map state when an edit mode is enabled to restore state if the action is cancelled in the future.
+     * @param modeName
+     * @param enabled
+     */
+    function handleGlobalModeToggle(modeName, enabled) {
+        if (enabled) {
+            editModeSnapshotGeoJSON = JSON.stringify(self.getGeoJSON());
+            snapshotMode = modeName;
+            return;
+        }
+
+        // Clear the snapshot if the mode has finished operation only if it is the same mode that was turned on
+        // when the snapshot was taken.
+        if (snapshotMode === modeName) {
+            editModeSnapshotGeoJSON = null;
+            snapshotMode = null;
+        }
+
+        if (!suppressEditModeNotify) {
+            self.notifyAll();
+        }
+    }
+
+    /**
+     * Restore map to state before mode was enabled, and disable the mode.
+     * This is triggered when the user clicks the custom cancel button added to the mode actions.
+     * @param modeName
+     */
+    function cancelGlobalModeChanges(modeName) {
+        if (!editModeSnapshotGeoJSON) {
+            return;
+        }
+
+        if (snapshotMode && snapshotMode !== modeName) {
+            return;
+        }
+
+        var snapshot = editModeSnapshotGeoJSON;
+
+        suppressEditModeNotify = true;
+        disableGlobalMode(modeName);
+        suppressEditModeNotify = false;
+
+        restoreGeoJSONSnapshot(snapshot);
+        editModeSnapshotGeoJSON = null;
+        snapshotMode = null;
+    }
+
+    /**
+     * Disable the global mode if it is enabled.
+     * This is used when cancelling an edit action to turn off the mode that was turned on when the snapshot was taken.
+     * @param modeName
+     */
+    function disableGlobalMode(modeName) {
+        if (modeName === "editMode" && mapImpl.pm.globalEditModeEnabled()) {
+            mapImpl.pm.disableGlobalEditMode();
+        } else if (modeName === "dragMode" && mapImpl.pm.globalDragModeEnabled()) {
+            mapImpl.pm.disableGlobalDragMode();
+        } else if (modeName === "cutPolygon" && mapImpl.pm.globalCutModeEnabled()) {
+            mapImpl.pm.disableGlobalCutMode();
+        } else if (modeName === "removalMode" && mapImpl.pm.globalRemovalModeEnabled()) {
+            mapImpl.pm.disableGlobalRemovalMode();
+        } else if (modeName === "rotateMode" && mapImpl.pm.globalRotateModeEnabled()) {
+            mapImpl.pm.disableGlobalRotateMode();
+        }
+    }
+
+    function restoreGeoJSONSnapshot(snapshotGeoJSON) {
+        drawnItems.clearLayers();
+        markers = [];
+
+        if (!snapshotGeoJSON) {
+            self.notifyAll();
+            return;
+        }
+
+        self.setGeoJSON(snapshotGeoJSON);
+    }
+
     // This is a workaround for https://github.com/Leaflet/Leaflet/issues/2888
     // The GeoJSON standard does not support Circle types, so Leaflet treats circles as points. This workaround adds a
     // 'point_type' attribute to the the feature's properties with value 'Circle', and adds the radius, so at least the
@@ -1599,6 +1871,8 @@ ALA.Map = function (id, options) {
             toGeoJSON: function () {
                 var feature = circleToGeoJSON.call(this);
                 feature.properties = {
+                    // adding a generic type property to distinguish MERIT Point of Interest (POI) from types such as circle, pid, marker.
+                    type: ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
                     point_type: ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
                     radius: this.getRadius()
                 };
@@ -1623,6 +1897,111 @@ ALA.Map = function (id, options) {
             markers.push(marker);
             return marker;
         }
+    }
+
+    function defaultPopupContent(feature) {
+        var popupContent = "";
+        var rows = [];
+        for (var property in feature.properties) {
+            if (feature.properties.hasOwnProperty(property))
+                rows.push("<tr><td>" + property + "</td><td>" + feature.properties[property] + "</td></tr>");
+        }
+
+        if (rows.length > 0)
+            popupContent = "<table><tbody>" + rows.join("") + "</tbody></table>";
+
+        return popupContent;
+    }
+
+    /**
+     * Callback function for rendering GeoJSON features. This function supports rendering WMS layers for features with
+     * a 'pid' property, and also supports creating popups based on feature properties.
+     * @param feature
+     * @param layer
+     * @param layerOptions
+     */
+    function onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions) {
+        wmsOptions = {};
+        updateFeatureProperties(feature, layer);
+        assignFeatureId(layer, feature);
+
+        //Create a popup content
+        if(feature.properties && feature.properties.popupContent)
+            layer.bindPopup(feature.properties.popupContent);
+        else if (feature.properties) {
+            var popupContent = defaultPopupContent(feature);
+            popupContent && layer.bindPopup(popupContent);
+        }
+
+        if (feature.properties && feature.properties.pid) {
+            if (feature.geometry.type == ALA.MapConstants.DRAW_TYPE.POINT_TYPE){
+                wmsOptions.layers = "ALA:Points"
+                wmsOptions.opacity = 1.0
+            }
+            layer = createWmsLayer(feature.properties.pid, wmsOptions);
+        }
+
+        if (options.singleDraw) {
+            drawnItems.clearLayers();
+        }
+        if (options.markerOrShapeNotBoth) {
+            clearMarkers();
+        }
+
+        drawnItems.addLayer(layer);
+        if (layer.bringToFront) {
+            layer.bringToFront();
+        }
+
+        applyLayerOptions(layer, layerOptions);
+        layerCreatedByGeoJSON = layer;
+    }
+
+    /**
+     * Assign the feature properties to the layer, ensuring that if the layer already has feature properties,
+     * they are not overwritten but merged with the new properties.
+     * @param feature
+     * @param layer
+     */
+    function updateFeatureProperties(feature, layer) {
+        if (feature.properties) {
+            if (!layer.feature) {
+                layer.feature = {
+                    type: "Feature",
+                    properties: feature.properties
+                };
+            }
+            else if (!layer.feature.properties) {
+                layer.feature.properties = feature.properties;
+            }
+            else {
+                layer.feature.properties = Object.assign(layer.feature.properties, feature.properties);
+            }
+        }
+    }
+
+    /**
+     * Assign a unique featureId property to the feature and layer if it does not already exist.
+     * @param layer
+     * @param feature
+     */
+    function assignFeatureId(layer, feature) {
+        if (typeof UUID === "undefined") {
+            console.error("[ALA-Map] UUID library is not included, cannot assign featureId to layer. Please include a UUID library.");
+            return;
+        }
+
+        var currentFeatureId = feature.properties && feature.properties.featureId;
+        if (!_.contains([undefined, null, ""], currentFeatureId)) {
+            return;
+        }
+
+        var featureId = UUID.generate();
+        feature.properties = feature.properties || {};
+        feature.properties.featureId = featureId;
+        layer.feature = layer.feature || {};
+        layer.feature.properties = layer.feature.properties || {};
+        layer.feature.properties.featureId = featureId;
     }
 
     // Adds the lat/lng coordinates to the bottom of the map panel
@@ -1689,6 +2068,7 @@ ALA.Map = function (id, options) {
                     // when selecting a geocoded region that has a Point type, we will convert it to a circle with a
                     // specific radius
                     if (geojson.geometry.type == ALA.MapConstants.DRAW_TYPE.POINT_TYPE) {
+                        geojson.properties.type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                         geojson.properties.point_type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                         geojson.properties.radius = options.geocodeRegionOptions.pointRadiusMeters;
                     }
@@ -1705,6 +2085,87 @@ ALA.Map = function (id, options) {
             mapImpl.fire("searchEventFired");
 
         }, geocodeControl);
+    }
+
+    /**
+     * Adds a file input control to the map using the leaflet-filelayer plugin, which allows the user to load
+     * GeoJSON, KML, GPX or Shapefile (in zip format) files from their local machine onto the map.
+     * The file is parsed and added as a layer to the map, with support for WMS layers if the GeoJSON features have a 'pid' property.
+     * @param options
+     * @returns {*}
+     */
+    function addFileInputControl(options) {
+        if (typeof L.Control.advancedFileLayerLoad === "undefined") {
+            console.error("[ALA-Map] L.Control.advancedFileLoader is not defined. You must include the leaflet-filelayer plugin to use the file input control.");
+            return;
+        }
+
+        var controlOptions = _.defaults( options.fileInputControlOptions || {}, {
+            addToMap: false,
+            formats: [
+                '.geojson',
+                '.json', // geojson with non-standard file extension
+                '.kml',
+                '.gpx',
+                '.zip' // shapefile in zip format
+            ],
+            layerOptions: {
+                onEachFeature: onEachFeatureWithWMSLayerSupport,
+            },
+            layer: function (geoJSON) {
+                return self.setGeoJSON(geoJSON);
+            }
+        });
+
+        var fileInputControl = L.Control.advancedFileLayerLoad(controlOptions);
+        mapImpl.addControl(fileInputControl);
+        return fileInputControl;
+    }
+
+    /**
+     * Creates an instance of the L.Control.TwoStepSelector control and adds it to the map.
+     * This control allows the user to select a layer from a list of layers, and then select a shape from that layer, which is then added to the map as a WMS layer.
+     * @param options
+     */
+    function addKnownShapeControl (options) {
+        options = Object.assign({
+            id: 'regionSelection',
+            title: 'Select layer',
+            firstStepPlaceholder: 'Choose a layer...',
+            secondStepPlaceholder: 'Choose a shape...',
+        }, options);
+        var featuresServiceUrl = options.featuresServiceUrl,
+            regionListUrl = options.regionListUrl,
+            regionOptions = {
+                firstStepItemLookup: function (populateStep1Callback) {
+                    $.ajax({
+                        url: regionListUrl,
+                        dataType: 'json'
+                    }).done(function (data) {
+                        var regions = _.sortBy(data.regions, 'value');
+                        populateStep1Callback(regions);
+                    });
+                },
+                secondStepItemLookup: function (selectedLayerKey, populateStep2Callback) {
+                    $.ajax({
+                        url: featuresServiceUrl + '?layerId=' + selectedLayerKey,
+                        dataType: 'json'
+                    }).done(function (data) {
+                        var layers = [];
+                        data.forEach(function (layer) {
+                            layers.push({key: layer.pid, value: layer.name});
+                        });
+
+                        layers = _.sortBy(layers, 'value');
+                        populateStep2Callback(layers);
+                    });
+                },
+                selectionAction: function (selectedValue) {
+                    self.addWmsLayer(selectedValue);
+                }
+            };
+
+        mapImpl.addControl(new L.Control.TwoStepSelector(Object.assign({}, options, regionOptions)));
     }
 
     // Internal method to add a non-Marker layer to the map, to fit the map bounds if configured to do so, and optionally
@@ -2018,6 +2479,7 @@ ALA.MapUtils = {
         if (!_.isUndefined(geoJSON) && !_.isEmpty(geoJSON.features)) {
             _.each(geoJSON.features, function (feature) {
                 if (feature.geometry.type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
+                    feature.properties.type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                     feature.properties.point_type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                     feature.properties.radius = feature.geometry.radius;
                     delete feature.geometry.radius;
@@ -2118,7 +2580,7 @@ ALA.MapUtils = {
      * Calculate the area of a given GeoJSON object in square kilometers. The GeoJSON object can be a FeatureCollection or a Feature.
      *
      * For circle geometries, the Properties object must contain an attribute called Radius, with the radius in meters.
-     *
+     * For features with a 'pid' property, the Properties object must contain an attribute called area_km with the area in square kilometers.
      * @param geoJson {Object} GeoJSON object to calculate the area for
      * @returns {number} The calculated area in square kilometers
      */
@@ -2133,10 +2595,16 @@ ALA.MapUtils = {
                 if (feature.properties.radius) {
                     areaSqKm += ((3.14 * feature.properties.radius * feature.properties.radius) / 1000) / 1000;
                 }
+                else if (feature.properties && feature.properties.pid && feature.properties.area_km) {
+                    areaSqKm += feature.properties.area_km;
+                }
             });
         } else if (geoJson.type == "Feature") {
             if (geoJson.properties.radius) {
                 areaSqKm += ((3.14 * geoJson.properties.radius * geoJson.properties.radius) / 1000) / 1000;
+            }
+            else if (geoJson.properties && geoJson.properties.pid && geoJson.properties.area_km) {
+                areaSqKm += geoJson.properties.area_km;
             }
         }
 
