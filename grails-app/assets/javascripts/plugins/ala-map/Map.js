@@ -144,7 +144,7 @@ ALA.Map = function (id, options) {
             defaultInList: true,
             options: {
                 subdomains: "abcd",
-                attribution: 'Map data &copy; <a target="_blank" rel="noopener noreferrer" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, imagery &copy; <a target="_blank" rel="noopener noreferrer" href="http://cartodb.com/attributions">CartoDB</a>',
+                attribution: 'Map data &copy; <a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, imagery &copy; <a target="_blank" rel="noopener noreferrer" href="https://cartodb.com/attributions">CartoDB</a>',
                 maxZoom: DEFAULT_MAX_ZOOM,
                 maxNativeZoom: 21
             }
