@@ -1,1273 +1,91 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <script src="scripts/jquery-2.1.1.min.js"> </script>
-    <script src="scripts/page.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,300,700,600,400' rel='stylesheet' type='text/css'>
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link href="styles/bootstrap.min.css" rel="stylesheet">
-    <link href="styles/docs.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  </head>
-  <body>
-    <header class="header navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            Documentation
-          </a>
-          <div class="navbar-right">
-            <div class="external-links">
-              <i class="fa fa-github"></i>
-            </div>
-          </div>
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Map.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
         </div>
-      </div>
-    </header>
-
-    <div class="primary-content container-fluid">
-      <div class="row-fluid">
-          <div class="sidenav col-md-3">
+        <div class="menu">
             
-
-
-<div class="module-list">
-  <h3>Modules</h3>
-  <ul class="module-listing">
-  
-    <li data-module-name="" class="collapsed collapsable module-item">
-      <span class="collapsed-status">
-        <i class="expand fa fa-plus-square-o"></i>
-        <i class="collapse fa fa-minus-square-o"></i>
-      </span>
-
-      
-      <ul class="thing-list">
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Checkbox.html">Checkbox</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Legend.html">Legend</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.Map.html">Map</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addButton">addButton</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addClusteredPoints">addClusteredPoints</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addControl">addControl</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addLayer">addLayer</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addLayersControl">addLayersControl</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addMarker">addMarker</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addPointsOrIcons">addPointsOrIcons</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addWmsLayer">addWmsLayer</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.clearBoundLimits">clearBoundLimits</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.clearLayers">clearLayers</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.clearMarkers">clearMarkers</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.countFeatures">countFeatures</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.destroy">destroy</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.finishLoading">finishLoading</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.fitBounds">fitBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.fitToBoundsOf">fitToBoundsOf</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getAllMarkers">getAllMarkers</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getBounds">getBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getCentre">getCentre</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getGeoJSON">getGeoJSON</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getMapId">getMapId</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getMapImpl">getMapImpl</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getMarkerLocations">getMarkerLocations</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.markMyLocation">markMyLocation</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.notifyAll">notifyAll</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.redraw">redraw</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.registerListener">registerListener</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.removeLayer">removeLayer</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.removeListener">removeListener</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.resetMap">resetMap</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.setGeoJSON">setGeoJSON</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.setMaxBounds">setMaxBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.startLoading">startLoading</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.subscribe">subscribe</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.toggleFitBounds">toggleFitBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.unsubscribe">unsubscribe</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.zoom">zoom</a>
-  </li>
-
-
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.MapConstants.html">MapConstants</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.MapUtils.html">MapUtils</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.bboxToPointArray">bboxToPointArray</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.calculateAreaKmSq">calculateAreaKmSq</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.createIcon">createIcon</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.createMarker">createMarker</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.getGeometryWithCirclesFromGeoJSON">getGeometryWithCirclesFromGeoJSON</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.getStandardGeoJSONForCircleGeometry">getStandardGeoJSONForCircleGeometry</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.wrapGeometryInGeoJSONFeatureCol">wrapGeometryInGeoJSONFeatureCol</a>
-  </li>
-
-
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.OccurrenceMap.html">OccurrenceMap</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.clearAllFacets">clearAllFacets</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.clearFacet">clearFacet</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.getQueryString">getQueryString</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.selectFacet">selectFacet</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.self.selectMultipleFacets">self.selectMultipleFacets</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.setQueryString">setQueryString</a>
-  </li>
-
-
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Select.html">Select</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Slider.html">Slider</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.TileLayer.SmartWMS.html">SmartWMS</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.TwoStepSelector.html">TwoStepSelector</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-      </ul>
-    </li>
-  
-  </ul>
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
 </div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="ALA.html">ALA</a></li></ul><h3>Classes</h3><ul><li><a href="ALA.Map.html">Map</a></li><li><a href="ALA.MapConstants.html">MapConstants</a></li><li><a href="ALA.MapUtils.html">MapUtils</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>Map.js</h1>
+                </header>
+                
 
-          </div>
-
-          <div class="col-md-9">
-              
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source"><code>/**
+            <pre class="prettyprint source linenums"><code>/**
  * @namespace
  */
 var ALA = ALA || {};
@@ -1283,7 +101,8 @@ ALA.MapConstants = {
     DRAW_TYPE: {
         POINT_TYPE: "Point",
         CIRCLE_TYPE: "Circle",
-        POLYGON_TYPE: "Polygon"
+        POLYGON_TYPE: "Polygon",
+        LINE_TYPE: "LineString"
     },
 
     /**
@@ -1300,12 +119,37 @@ ALA.MapConstants = {
  * &lt;p/>
  * &lt;b>Options&lt;/b>
  * &lt;ul>
- *  &lt;li>&lt;code>baseLayer&lt;/code> Either a Leaflet.Layer, or the name of one of the supported base layers (currently 'Minimal' and 'WorldImagery'. Default: Minimal&lt;/li>
+ *  &lt;li>&lt;code>autoZIndex&lt;/code> If true, the control will assign zIndexes in increasing order to all of its layers so that the order is preserved when switching them on/off. Default: true&lt;/li>
+ *  &lt;li>&lt;code>preserveZIndex&lt;/code> If true, a added layer will not be brought to front. It will be at the zIndex assigned. Default: false&lt;/li>
+ *  &lt;li>&lt;code>baseLayer&lt;/code> The base layer shown by default.
+ *  Can be one of:
+ *  - a Leaflet.Layer object, or
+ *  - a string containing the name of one of the built-in base layers.
+ *  Available built-in base layers: 'Minimal', 'WorldImagery', 'Detailed', 'Topographic'.
+ *  Default: 'Minimal'.
+ *  &lt;/li>
+ *  &lt;li>&lt;code>otherLayers&lt;/code> Specifies the base layers that will be available (including the default baseLayer).
+ *  This is an object, where the keys are the display text, and values are either:
+ *  - a Leaflet.Layer object, or
+ *  - the name of one of the built-in base layers.
+ *  Default: {'Minimal': 'Minimal', 'World Imagery': 'WorldImagery'}.
+ *  &lt;/li>
+ *  &lt;li>&lt;code>overlays&lt;/code> Specify the overlays that should be added to map. The expected format is
+ *   {
+ *      'Australian Corals': L.tileLayer.wms
+ *   }
+ *  &lt;/li>
+ *  &lt;li>
+ *  &lt;code>overlayLayersSelectedByDefault&lt;/code> List of overlays to be shown on map by default. This works in conjunction
+ *  with 'overlays' option. Overlays not on this list will have a checkbox to show on map. The expected format is
+ *  ['Australian Corals']
+ *  &lt;/li>
  *  &lt;li>&lt;code>center&lt;/code> Centre position of the map. Default: -28, 134&lt;/li>
  *  &lt;li>&lt;code>zoom&lt;/code> the initial zoom level. Default: 4&lt;/li>
- *  &lt;li>&lt;code>maxZoom&lt;/code> the maximum allowed zoom level. Default: 20&lt;/li>
+ *  &lt;li>&lt;code>maxZoom&lt;/code> the maximum allowed zoom level. Default: 21&lt;/li>
  *  &lt;li>&lt;code>maxAutoZoom&lt;/code> the maximum zoom level to automatically zoom to (when zoomToObject = true). Default: 15&lt;/li>
  *  &lt;li>&lt;code>defaultLayersControl&lt;/code> true to use the default layers control, false to use your own. Default: true&lt;/li>
+ *  &lt;li>&lt;code>addLayersControlHeading&lt;/code> true to add heading to base layer and overlay sections of the selector, false to use your own. Default: false&lt;/li>
  *  &lt;li>&lt;code>scrollWheelZoom&lt;/code> whether to enable zooming in/out by scrolling the mouse. Default: false&lt;/li>
  *  &lt;li>&lt;code>fullscreenControl&lt;/code> whether to include a full-screen option. Default: true&lt;/li>
  *  &lt;li>&lt;code>fullscreenControlOptions:&lt;/code>
@@ -1321,6 +165,7 @@ ALA.MapConstants = {
  *  &lt;li>&lt;code>markerOrShapeNotBoth&lt;/code> whether to allow users to draw both markers and regions/shapes at the same time. Default: true&lt;/li>
  *  &lt;li>&lt;code>showFitBoundsToggle&lt;/code> whether to include a button to toggle between the initial map zoom and the bounds of the data. Default: false&lt;/li>
  *  &lt;li>&lt;code>useMyLocation&lt;/code> whether to include a "Use My Location" button to place a marker on the map at the user's location. Default: true&lt;/li>
+ *  &lt;li>&lt;code>addGeometryFromLocalFile&lt;/code> adds a control to be able to upload file in accepted formats. Accepted formats are shapefile, geojson, kml, gpx.  Default: false&lt;/li>
  *  &lt;li>&lt;code>allowSearchLocationByAddress&lt;/code> whether to allow the user to search by address to place a marker on the map. Default: true&lt;/li>
  *  &lt;li>&lt;code>allowSearchRegionByAddress&lt;/code> whether to allow the user to search by address to draw a polygon on the map. Default: true&lt;/li>
  *  &lt;li>&lt;code>geocodeRegionOptions&lt;/code> additional configuration options when using the allowSearchRegionByAddress control. Only relevant when allowSearchRegionByAddress = true:&lt;/li>
@@ -1339,6 +184,8 @@ ALA.MapConstants = {
  *  &lt;li>&lt;code>sleepNote&lt;/code> True to display text over the map when it is sleeping. Only relevant if sleep = true. Default: false&lt;/li>
  *  &lt;li>&lt;code>sleepOpacity&lt;/code> Opacity of the sleep text. Only relevant if sleep = true and sleepNote = true. Default: 0.7&lt;/li>
  *  &lt;li>&lt;code>wakeMessage&lt;/code> Text to display over the map when it is sleeping. Only relevant if sleep = true and sleepNote = true. Default: 'Click or hover to wake'.&lt;/li>
+ *  &lt;li>&lt;code>trackWindowHeight&lt;code> Map will adjust its height according to the height of browser window when set to true. Default: false. &lt;/li>
+ *  &lt;li>&lt;code>minMapHeight&lt;code> The height of map will not go below this value. It is only active when trackWindowHeight is true. Default: 250. &lt;/li>
  * &lt;/ul>
  *
  * @class
@@ -1357,10 +204,11 @@ ALA.Map = function (id, options) {
     var DEFAULT_ZOOM = 4;
     var SINGLE_POINT_ZOOM = 16;
     var MAX_AUTO_ZOOM = 15;
-    var DEFAULT_MAX_ZOOM = 20;
-    var DEFAULT_OPACITY = 0.1;
-    var DEFAULT_LINE_WEIGHT = 1;
-    var DEFAULT_FILL_COLOUR = "#03f";
+    var DEFAULT_MAX_ZOOM = 21;
+    var DEFAULT_OPACITY = 0.5;
+    var DEFAULT_LINE_WEIGHT = 4;
+    var DEFAULT_FILL_COLOUR = "#000";
+    var DEFAULT_MAP_HEIGHT_BUFFER = 40;
 
     // There is a bug with Leaflet prior to v1.0 which causes drawing issues with animations enabled.
     // E.g. Calling fitBounds multiple times sometimes causes the drawing of the map to fail, usually leaving some or
@@ -1374,11 +222,57 @@ ALA.Map = function (id, options) {
         color: DEFAULT_FILL_COLOUR
     };
 
-    var DEFAULT_BASE_LAYER = {
-        // HTTPS tile url as per https://cartodb.com/location-data-services/basemaps/
-        url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
-        subdomains: "abcd",
-        attribution: "Map data &amp;copy; &lt;a href='http://www.openstreetmap.org/copyright'>OpenStreetMap&lt;/a>, imagery &amp;copy; &lt;a href='http://cartodb.com/attributions'>CartoDB&lt;/a>"
+    var AVAILABLE_BASE_LAYERS = {
+        Minimal: {
+            // See https://cartodb.com/location-data-services/basemaps/
+            url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+            title: 'Minimal',
+            defaultSelected: true,
+            defaultInList: true,
+            options: {
+                subdomains: "abcd",
+                attribution: 'Map data &amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="http://www.openstreetmap.org/copyright">OpenStreetMap&lt;/a>, imagery &amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="http://cartodb.com/attributions">CartoDB&lt;/a>',
+                maxZoom: DEFAULT_MAX_ZOOM,
+                maxNativeZoom: 21
+            }
+        },
+        WorldImagery: {
+            // see https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            title: 'World Imagery',
+            defaultSelected: false,
+            defaultInList: true,
+            options: {
+                attribution: '&lt;a target="_blank" rel="noopener noreferrer" href="https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9">Tiles from Esri&lt;/a> &amp;mdash; Sources: Esri, DigitalGlobe, Earthstar Geographics, CNES/Airbus DS, GeoEye, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community',
+                maxZoom: DEFAULT_MAX_ZOOM,
+                maxNativeZoom: 17
+            }
+        },
+        Detailed: {
+            // see https://wiki.openstreetmap.org/wiki/Standard_tile_layer
+            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            title: 'Detailed',
+            defaultSelected: false,
+            defaultInList: false,
+            options: {
+                subdomains: "abc",
+                attribution: '&amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors&lt;/a>',
+                maxZoom: DEFAULT_MAX_ZOOM,
+                maxNativeZoom: 18
+            }
+        },
+        Topographic: {
+            // see https://www.arcgis.com/home/item.html?id=30e5fe3149c34df1ba922e6f5bbf808f
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+            title: 'Topographic',
+            defaultSelected: false,
+            defaultInList: false,
+            options: {
+                attribution: '&lt;a target="_blank" rel="noopener noreferrer" href="https://www.arcgis.com/home/item.html?id=30e5fe3149c34df1ba922e6f5bbf808f">Tiles from Esri&lt;/a> &amp;mdash; Sources: Esri, HERE, Garmin, Intermap, INCREMENT P, GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), &amp;copy; OpenStreetMap contributors, GIS User Community',
+                maxZoom: DEFAULT_MAX_ZOOM,
+                maxNativeZoom: 17
+            }
+        }
     };
 
     var DEFAULT_LAYER_CONTROL_OPTIONS = {
@@ -1397,6 +291,7 @@ ALA.Map = function (id, options) {
         circle: {
             shapeOptions: DEFAULT_SHAPE_OPTIONS
         },
+        circlemarker: false,
         edit: true
     };
 
@@ -1421,7 +316,7 @@ ALA.Map = function (id, options) {
     var DEFAULT_WMS_PROPERTIES = {
         tiled: true,
         format: 'image/png',
-        opacity: 0.2,
+        opacity: 0.5,
         transparent: true,
         layers: "ALA:Objects",
         version: "1.1.0",
@@ -1440,6 +335,7 @@ ALA.Map = function (id, options) {
         maxZoom: DEFAULT_MAX_ZOOM,
         maxAutoZoom: MAX_AUTO_ZOOM,
         defaultLayersControl: true,
+        addLayersControlHeading: false,
         scrollWheelZoom: false,
         fullscreenControl: true,
         fullscreenControlOptions: {
@@ -1470,7 +366,12 @@ ALA.Map = function (id, options) {
         sleepTime: 750,
         wakeTime: 750,
         sleepNote: false,
-        hoverToWake: true
+        hoverToWake: true,
+        trackWindowHeight: false,
+        minMapHeight: 250,
+        autoZIndex: true,
+        preserveZIndex: false,
+        addGeometryFromLocalFile: false
     };
 
     /**
@@ -1504,7 +405,7 @@ ALA.Map = function (id, options) {
     var DEFAULT_POINT_MARKER_OPTIONS = {};
 
     if (!id) {
-        console.error("You must define a unique id for your map.")
+        console.error("[ALA-Map] You must define a unique id for your map.")
     }
 
     if (_.isUndefined(options)) {
@@ -1517,8 +418,19 @@ ALA.Map = function (id, options) {
     var drawControl = null;
     var drawnItems = DEFAULT_EDIT_DRAW_OPTIONS.featureGroup = new L.FeatureGroup();
     var markers = [];
+    var editModeSnapshotGeoJSON = null;
+    var snapshotMode = null;
+    var suppressEditModeNotify = false;
     var subscribers = [];
     var fitToBoundsToggle = options.zoomToObject;
+    var layerControl = null;
+    var layerCreatedByGeoJSON = null;
+
+    /* Keep track of all available overlay layers. */
+    var overlayLayersAvailable = [];
+
+    /* Keep track of the selected overlay layers.  */
+    var overlayLayersSelected = [];
 
     /**
      * Destroy the map and clear all related event listeners
@@ -1531,6 +443,9 @@ ALA.Map = function (id, options) {
         fitToBoundsOfLayer = null;
         drawControl = null;
         drawnItems = null;
+        editModeSnapshotGeoJSON = null;
+        snapshotMode = null;
+        suppressEditModeNotify = false;
         markers = [];
         subscribers = [];
     };
@@ -1590,7 +505,7 @@ ALA.Map = function (id, options) {
      */
     self.registerListener = function (eventName, callback) {
         if (!eventName || !callback) {
-            console.error("You must specify the eventName and callback when registering a listener");
+            console.error("[ALA-Map] You must specify the eventName and callback when registering a listener");
         }
 
         mapImpl.on(eventName, callback);
@@ -1647,26 +562,12 @@ ALA.Map = function (id, options) {
             geoJSON = JSON.parse(geoJSON);
         }
 
+        layerCreatedByGeoJSON = null;
+
         L.geoJson(geoJSON, {
             pointToLayer: pointToLayerCircleSupport,
             onEachFeature: function (feature, layer) {
-                if (feature.properties &amp;&amp; feature.properties.pid) {
-                    layer = createWmsLayer(feature.properties.pid);
-                }
-
-                if (options.singleDraw) {
-                    drawnItems.clearLayers();
-                }
-                if (options.markerOrShapeNotBoth) {
-                    clearMarkers();
-                }
-
-                drawnItems.addLayer(layer);
-                if (layer.bringToFront) {
-                    layer.bringToFront();
-                }
-
-                applyLayerOptions(layer, layerOptions);
+                onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions);
             },
             style: DEFAULT_SHAPE_OPTIONS
         });
@@ -1677,6 +578,8 @@ ALA.Map = function (id, options) {
         }
 
         self.notifyAll();
+
+        return layerCreatedByGeoJSON;
     };
 
     /**
@@ -1857,12 +760,12 @@ ALA.Map = function (id, options) {
 
         var layers = [];
         points.forEach(function (point) {
-            var options = _.clone(pointOptions);
+            var newPointOptions = _.clone(pointOptions);
             if (point.options) {
-                _.defaults(options, point.options);
+                _.defaults(newPointOptions, point.options);
             }
 
-            var layer = L.circleMarker(new L.LatLng(point.lat, point.lng), options);
+            var layer = L.circleMarker(new L.LatLng(point.lat, point.lng), newPointOptions);
             if (point.popup) {
                 layer.bindPopup(point.popup);
             }
@@ -1910,20 +813,20 @@ ALA.Map = function (id, options) {
 
         var icon = ALA.MapUtils.createIcon(iconUrl, iconOptions);
         points.forEach(function (point) {
-            var options = _.clone(pointOptions);
+            var newPointOptions = _.clone(pointOptions);
             if (point.options) {
-                _.defaults(options, point.options);
+                _.defaults(newPointOptions, point.options);
             }
 
             var layer;
             switch (point.type){
                 case 'icon':
-                    options.icon = icon;
-                    layer = L.marker([point.lat, point.lng], options);
+                    newPointOptions.icon = icon;
+                    layer = L.marker([point.lat, point.lng], newPointOptions);
                     break;
                 case 'circle':
                 default:
-                    layer = L.circleMarker(new L.LatLng(point.lat, point.lng), options);
+                    layer = L.circleMarker(new L.LatLng(point.lat, point.lng), newPointOptions);
                     break;
             }
 
@@ -1937,19 +840,28 @@ ALA.Map = function (id, options) {
 
     /**
      * Adds a marker at the user's current location.
-     *
      * Will notify all subscribers.
      *
+     * Fire a 'SearchEventFired' for site creation
      * @memberOf ALA.Map
      * @function markMyLocation
      */
     self.markMyLocation = function () {
         self.startLoading();
 
-        mapImpl.locate({setView: true});
+        mapImpl.locate({setView: true, enableHighAccuracy: true});
         mapImpl.on("locationfound", function (locationEvent) {
             self.addMarker(locationEvent.latlng.lat, locationEvent.latlng.lng, null);
             mapImpl.off("locationfound", arguments.callee);
+            mapImpl.fire("searchEventFired");
+            self.finishLoading();
+        });
+
+        mapImpl.on("locationerror", function (event) {
+            mapImpl.off("locationerror", arguments.callee);
+            console.log("[ALA-Map] location lookup failed - " + event.message);
+            console.log("[ALA-Map] location lookup error code - " + event.code);
+            alert("Location lookup failed for the following reason - " + event.message);
             self.finishLoading();
         });
     };
@@ -1980,7 +892,7 @@ ALA.Map = function (id, options) {
     /**
      * Utility method to add a WMS layer to the map.
      *
-     * Triggers events draw:drawstart and draw:created, and will notify all subscribers
+     * Triggers events pm:drawstart and pm:create, and will notify all subscribers
      *
      * @memberOf ALA.Map
      * @function addWmsLayer
@@ -2006,6 +918,60 @@ ALA.Map = function (id, options) {
         applyLayerOptions(layer, layerOptions);
 
         return layer;
+    };
+
+    /**
+     * Add a layer to the map as an overlay layer.
+     *
+     * @memberOf ALA.Map
+     * @function addOverlayLayer
+     * @param {L.Class} layer The tile layer or other type of layer to add as an overlay layer.
+     * @param {string} name The name text to show for this layer.
+     * @param {boolean} isSelected Whether the added overlay layer should start selected, and therefore visible, or not.
+     */
+    self.addOverlayLayer = function (layer, name, isSelected) {
+        overlayLayerAdd(layer, name, isSelected);
+    };
+
+    /**
+     * Remove an overlay layer from the layers control.
+     * @param {L.Class} layer The layer to remove.
+     */
+    self.removeOverlayLayer = function(layer) {
+        overlayLayerRemove(layer);
+    };
+
+    /**
+     * Get the overlay layers.
+     *
+     * @memberOf ALA.Map
+     * @function getOverlayLayers
+     * @param {string} filter Which layers to include: 'all': all layers; 'selected': only selected layers. Default 'all'.
+     * @return {array} selected or all overlay layers, depending on the filter parameter.
+     */
+    self.getOverlayLayers = function (filter) {
+        filter = filter || 'all';
+        switch (filter) {
+            case 'selected':
+                return overlayLayersSelected;
+            case 'all':
+            default:
+                return overlayLayersAvailable;
+        }
+    };
+
+    /**
+     * Get the most recently selected overlay layer.
+     *
+     * @memberOf ALA.Map
+     * @function getTopSelectedOverlayLayer
+     * @return {null|L.Class} The most recently selected layer or null if no layers are selected.
+     */
+    self.getTopSelectedOverlayLayer = function () {
+        if (overlayLayersSelected.length > 0) {
+            return overlayLayersSelected[overlayLayersSelected.length - 1];
+        }
+        return null;
     };
 
     /**
@@ -2241,7 +1207,7 @@ ALA.Map = function (id, options) {
      */
     self.countFeatures = function () {
         var count = 0;
-        drawnItems.eachLayer(function () {
+        drawnItems &amp;&amp; drawnItems.eachLayer(function () {
             count++;
         });
 
@@ -2296,20 +1262,179 @@ ALA.Map = function (id, options) {
      * Add a layer selection control to the map. If options#defaultLayersControl = false, then this function can be used
      * to place the layers control in a position other than the default (top right).
      *
+     * If the layer control has already been added, then the baselayers and overlays will be added to the existing control.
+     * The controlOptions will be ignored.
+     *
      * See http://leafletjs.com/reference.html#control-layers for details.
      *
      * @memberOf ALA.Map
      * @function addLayersControl
-     * @param {Object} baseLayers Collection of base layers to add to the control
-     * @param {Object} overlays Collection of overlay layers to add to the control
-     * @param {Object} controlOptions config options
+     * @param {Object} baseLayers Collection of base layers with names to add to the control
+     * @param {Object} overlays Collection of overlay layers with names to add to the control
+     * @param {Object} controlOptions config options, including overlayLayersSelectedByDefault: List of String
+     * @return {L.Control.Layers} added layer control
      */
-    self.addLayersControl = function(baseLayers, overlays, controlOptions) {
-        _.defaults(controlOptions, DEFAULT_LAYER_CONTROL_OPTIONS);
-        L.control.layers(baseLayers || options.otherLayers, overlays || {}, controlOptions).addTo(mapImpl);
+    self.addLayersControl = function (baseLayers, overlays, controlOptions) {
+        // get overlay layers to select by default
+        var overlayLayersSelectedByDefault = [];
+        if (controlOptions &amp;&amp; controlOptions.overlayLayersSelectedByDefault) {
+            overlayLayersSelectedByDefault = controlOptions.overlayLayersSelectedByDefault;
+            delete controlOptions.overlayLayersSelectedByDefault;
+        }
 
-        // always display the loading indicator below the layer control
-        addLoadingControl();
+        var baseLayersToAdd = baseLayers || options.otherLayers || {};
+        var overlayLayersToAdd = overlays || {};
+
+        var baseLayerCount = Object.keys(baseLayersToAdd).length;
+        var overlayLayerCount = Object.keys(overlayLayersToAdd).length;
+
+        // create control with layers or update layers
+        if (layerControl) {
+            if (baseLayers) {
+                for (var baseLayerName in baseLayers) {
+                    layerControl.addBaseLayer(baseLayers[baseLayerName], baseLayerName);
+                }
+            }
+
+            if (overlays) {
+                for (var existingControlOverlayName in overlays) {
+                    var existingControlOverlayLayer = overlays[existingControlOverlayName];
+                    var existingControlOverlaySelected = overlayLayersSelectedByDefault
+                        .indexOf(existingControlOverlayName) > -1;
+                    overlayLayerAdd(
+                        existingControlOverlayLayer,
+                        existingControlOverlayName,
+                        existingControlOverlaySelected);
+                }
+            }
+
+            console.log("[ALA-Map] Updated layer control to add " + baseLayerCount + " base layers and " + overlayLayerCount + " overlay layers.");
+
+        } else {
+            _.defaults(controlOptions, DEFAULT_LAYER_CONTROL_OPTIONS);
+            layerControl = L.control.layers(baseLayersToAdd, overlayLayersToAdd, controlOptions);
+            layerControl.addTo(mapImpl);
+
+            // always display the loading indicator below the layer control
+            addLoadingControl();
+
+            // add the overlays to the list of overlays
+            for (var newControlOverlayName in overlays) {
+                var newControlOverlayLayer = overlays[newControlOverlayName];
+                var newControlOverlaySelected = overlayLayersSelectedByDefault.indexOf(newControlOverlayName) > -1;
+                overlayLayerAdd(
+                    newControlOverlayLayer,
+                    newControlOverlayName,
+                    newControlOverlaySelected);
+            }
+
+            console.log("[ALA-Map] Created layer control with " + baseLayerCount + " base layers and " + overlayLayerCount + " overlay layers.");
+        }
+
+        if (options.addLayersControlHeading)
+            addBaseLayerAndOverlayHeading('#' + id);
+
+        return layerControl;
+    };
+
+    /**
+     * Highlight all features on the map with a property matching the provided name and value.
+     * @param propertyName - feature property name to match
+     * @param propertyValue - feature property value to match
+     */
+    self.highlightFeaturesByProperty = function(propertyName, propertyValue) {
+        self.unHighlightAllFeatures();
+
+    	drawnItems.eachLayer(function (layer) {
+            if (layer.feature &amp;&amp; layer.feature.properties &amp;&amp; layer.feature.properties[propertyName] === propertyValue) {
+                self.highlightLayer(layer);
+            }
+        });
+    }
+
+    /**
+     * Remove highlight from all features on the map with a property matching the provided name and value.
+     * @param propertyName - feature property name to match
+     * @param propertyValue - feature property value to match
+     */
+    self.unHighlightFeaturesByProperty = function(propertyName, propertyValue) {
+        drawnItems.eachLayer(function (layer) {
+            if (layer.feature &amp;&amp; layer.feature.properties &amp;&amp; layer.feature.properties[propertyName] === propertyValue) {
+                self.unHighlightLayer(layer);
+            }
+        });
+    }
+
+    /**
+     * Remove highlight from all features on the map.
+     */
+    self.unHighlightAllFeatures = function() {
+        drawnItems.eachLayer(function (layer) {
+            self.unHighlightLayer(layer);
+        });
+    };
+
+    /**
+     * Removes highlight of the provided layer on the map. For shapes, this is done by reducing the stroke weight and fill opacity.
+     * For markers, this is done by reducing the icon size.
+     * @param layer
+     */
+    self.unHighlightLayer = function (layer) {
+        if (!layer) {
+            return;
+        }
+
+        if (layer.setStyle) {
+            var options = layer.options;
+            if (options &amp;&amp; layer.setStyle) {
+                var style = {
+                    weight: options.weight / 3,
+                    fillOpacity: DEFAULT_OPACITY,
+                    color: options.color
+                };
+                layer.setStyle(style);
+            }
+        }
+        else if (layer.options &amp;&amp; layer.options.icon) {
+            var icon = layer.options.icon;
+            icon.options.iconSize = [icon.options.iconSize[0]/1.5, icon.options.iconSize[1]/1.5];
+            icon.options.iconAnchor = [icon.options.iconAnchor[0]/1.5, icon.options.iconAnchor[1]/1.5];
+            layer.setIcon(icon);
+        }
+    };
+
+    /**
+     * Highlight the provided layer on the map. For shapes, this is done by increasing the stroke weight and fill opacity.
+     * For markers, this is done by increasing the icon size.
+     * @param layer
+     */
+    self.highlightLayer = function (layer) {
+        if (!layer) {
+            return;
+        }
+
+        var options = layer.options;
+        if (!options) {
+            return;  // TODO Known shapes don't have options
+        }
+        if (layer.setStyle) {
+            var style = {
+                weight: options.weight * 3,
+                fillOpacity: 1,
+                color: options.color
+            };
+
+            layer.setStyle(style);
+            if (layer.bringToFront) {
+                layer.bringToFront();
+            }
+        }
+        else if (options.icon) {
+            var icon = options.icon;
+            icon.options.iconSize = [icon.options.iconSize[0]*1.5, icon.options.iconSize[1]*1.5];
+            icon.options.iconAnchor = [icon.options.iconAnchor[0]*1.5, icon.options.iconAnchor[1]*1.5];
+            layer.setIcon(icon);
+        }
     };
 
     // ----------------------
@@ -2332,7 +1457,7 @@ ALA.Map = function (id, options) {
 
         mapImpl.addLayer(options.baseLayer);
         if (options.defaultLayersControl) {
-            self.addLayersControl(options.otherLayers);
+            self.addLayersControl(options.otherLayers, options.overlays, {overlayLayersSelectedByDefault: options.overlayLayersSelectedByDefault, autoZIndex: options.autoZIndex});
         }
 
 
@@ -2358,8 +1483,21 @@ ALA.Map = function (id, options) {
             initDrawingControls(options);
         }
 
+        if (options.allowKnownShapesControl &amp;&amp; options.knownShapesOptions &amp;&amp; options.knownShapesOptions.featuresServiceUrl &amp;&amp; options.knownShapesOptions.regionListUrl) {
+            addKnownShapeControl(options.knownShapesOptions);
+        }
+
+        if(options.trackWindowHeight) {
+            addWindowResizeListener();
+            adjustMapContainerHeight();
+        }
+
         if (options.showReset) {
             self.addButton("&lt;span class='ala-map-reset fa fa-refresh reset-map' title='Reset map'>&lt;/span>", self.resetMap, "bottomright");
+        }
+
+        if (options.addGeometryFromLocalFile) {
+            addFileInputControl(options);
         }
 
         // If the map container is not visible, add a listener to trigger a redraw once it becomes visible.
@@ -2380,89 +1518,266 @@ ALA.Map = function (id, options) {
                 event.layer.setZIndex(-1);
             }
         });
-    }
 
-    // Populate any missing configuration items with the default values
-    function populateDefaultOptions(options) {
-        _.defaults(options, DEFAULT_OPTIONS);
-
-        var minimalLayer = L.tileLayer(DEFAULT_BASE_LAYER.url, {
-            attribution: DEFAULT_BASE_LAYER.attribution,
-            subdomains: DEFAULT_BASE_LAYER.subdomains,
-            maxZoom: 21,
-            maxNativeZoom: 21
+        // when an overlay layer is selected, bring it to the front and mark it as selected
+        mapImpl.on('overlayadd', function (e) {
+            if (e &amp;&amp; e.layer) {
+                overlayLayerSelect(e.layer);
+            }
         });
 
-        if (_.isEmpty(options.otherLayers)) {
-            options.otherLayers = {
-                Minimal: minimalLayer,
-                WorldImagery: L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Tiles &amp;copy; Esri &amp;mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-                    maxZoom: 17,
-                    maxNativeZoom: 17
-                })
-            };
-        }
-
-        if (_.isUndefined(options.baseLayer)) {
-            options.baseLayer = minimalLayer;
-        } else if (_.isString(options.baseLayer)) {
-            if (options.baseLayer.toLowerCase() == "minimal") {
-                options.baseLayer = minimalLayer;
-            } else if (options.baseLayer.toLowerCase() == "worldimagery") {
-                options.baseLayer = options.otherLayers.WorldImagery;
-            } else {
-                console.warn("Unrecognised base layer name: supported base layers are 'Minimal' and 'WorldImagery'. Defaulting to Minimal.");
-                options.baseLayer = minimalLayer;
+        // when an overlay layer is de-selected, remove selected marker
+        mapImpl.on('overlayremove', function (e) {
+            if (e &amp;&amp; e.layer) {
+                overlayLayerDeselect(e.layer);
             }
-        }
+        });
     }
 
-    // Initialise the drawing controls that appear on the left side of the map panel
-    function initDrawingControls(options) {
-        var drawOptions = options.drawOptions || {},
+    /**
+     * Populate any missing configuration items with the default values.
+     * @param currentOptions
+     */
+    function populateDefaultOptions(currentOptions) {
+        _.defaults(currentOptions, DEFAULT_OPTIONS);
+
+        populateDefaultBaseLayerOptions(currentOptions);
+
+        console.log("[ALA-Map] Default options have been set.");
+    }
+
+    /**
+     * Sets up map base layers - options.baseLayer specifies the default and options.otherLayers specifies the available base layers.
+     * If baseLayer is not set, it will be set to the default base layer.
+     * If otherLayers is not set, it will be set to the default list, with the default base layer included if it is one of the pre-defined base layers.
+     * If otherLayers is provided, the layer set as baseLayer must be included in the otherLayers object.
+     *
+     * @param currentOptions
+     */
+    function populateDefaultBaseLayerOptions(currentOptions){
+        var selectedBaseLayerName = '';
+
+        // get the name and object for the default selected base layer
+        var defaultBaseLayerName = '';
+        var defaultBaseLayerObject = null;
+        for (var availableDefaultLayerName in AVAILABLE_BASE_LAYERS) {
+            var availableDefaultLayerData = AVAILABLE_BASE_LAYERS[availableDefaultLayerName];
+
+            if (availableDefaultLayerData.defaultSelected) {
+                defaultBaseLayerName = availableDefaultLayerName;
+                defaultBaseLayerObject = L.tileLayer(availableDefaultLayerData.url, availableDefaultLayerData.options);
+                break;
+            }
+        }
+        console.log("[ALA-Map] Found default base layer from settings '" + defaultBaseLayerName + "'.");
+
+        // if options.baseLayer is not set, set to default selected base layer object
+        if (_.isUndefined(currentOptions.baseLayer)) {
+            currentOptions.baseLayer = defaultBaseLayerObject;
+            selectedBaseLayerName = defaultBaseLayerName;
+            console.log("[ALA-Map] No default base layer specified, set default base layer '" + selectedBaseLayerName + "'.");
+        }
+
+        // if options.baseLayer is a string, set to matching built-in base layer object
+        if (_.isString(currentOptions.baseLayer)) {
+            for (var availableStringLayerName in AVAILABLE_BASE_LAYERS) {
+                var availableStringLayerData = AVAILABLE_BASE_LAYERS[availableStringLayerName];
+                if (currentOptions.baseLayer.replace(' ', '').toUpperCase() === defaultBaseLayerName.replace(' ', '').toUpperCase()) {
+                    currentOptions.baseLayer = defaultBaseLayerObject;
+                    selectedBaseLayerName = defaultBaseLayerName;
+                    console.log("[ALA-Map] Set default base layer from specified string '" + selectedBaseLayerName + "'.");
+                    break;
+                } else if (
+                    availableStringLayerName.toString().replace(' ', '').toUpperCase() ===
+                    currentOptions.baseLayer.replace(' ', '').toUpperCase() ||
+                    availableStringLayerData.title.replace(' ', '').toUpperCase() ===
+                    currentOptions.baseLayer.replace(' ', '').toUpperCase()) {
+
+                    currentOptions.baseLayer = L.tileLayer(availableStringLayerData.url, availableStringLayerData.options);
+                    selectedBaseLayerName = availableStringLayerName;
+                    console.log("[ALA-Map] Set default base layer from specified string matching title or id '" + selectedBaseLayerName + "'.");
+                    break;
+                }
+            }
+
+            if (_.isString(currentOptions.baseLayer)) {
+                console.warn("[ALA-Map] Unrecognised base layer name: '" + currentOptions.baseLayer + "', " +
+                    "supported base layers are '" + Object.keys(AVAILABLE_BASE_LAYERS).sort().join("', '") + "'. " +
+                    "Using default base layer '" + defaultBaseLayerName + "'.");
+                currentOptions.baseLayer = defaultBaseLayerObject;
+                selectedBaseLayerName = defaultBaseLayerName;
+            }
+        }
+
+        // if options.baseLayer is an object, assume it is a Layer
+        if(!_.isObject(currentOptions.baseLayer)){
+            // anything else for options.baseLayer is an error
+            throw new Error("[ALA-Map] Unexpected value for options.baseLayer: '" + typeof currentOptions.baseLayer + "' - '" + currentOptions.baseLayer + "'.")
+        }
+
+        // if options.otherLayers is not set, set to default base layers (including options.baseLayer)
+        if (_.isNull(currentOptions.otherLayers) || _.isUndefined(currentOptions.otherLayers)) {
+            currentOptions.otherLayers = {};
+            for (var availableOtherLayerName in AVAILABLE_BASE_LAYERS) {
+                var availableOtherLayerData = AVAILABLE_BASE_LAYERS[availableOtherLayerName];
+                if (availableOtherLayerName.replace(' ', '').toUpperCase() === selectedBaseLayerName.replace(' ', '').toUpperCase()) {
+                    currentOptions.otherLayers[availableOtherLayerData.title] = currentOptions.baseLayer;
+                    console.log("[ALA-Map] Added base layer to collection because it matched default base layer name '" + availableOtherLayerData.title + "'.");
+                } else if (availableOtherLayerData.url === currentOptions.baseLayer._url) {
+                    currentOptions.otherLayers[availableOtherLayerData.title] = currentOptions.baseLayer;
+                    console.log("[ALA-Map] Added base layer to collection because it matched default base layer url '" + availableOtherLayerData.title + "'.");
+                } else if (availableOtherLayerData.defaultInList &amp;&amp; currentOptions.defaultLayersControl) {
+                    currentOptions.otherLayers[availableOtherLayerData.title] = L.tileLayer(availableOtherLayerData.url, availableOtherLayerData.options);
+                    console.log("[ALA-Map] Added base layer to collection because defaultLayersControl is true and settings say add by default '" + availableOtherLayerData.title + "'.");
+                }
+            }
+        }
+
+        // if options.otherLayers is set, it must be an object.
+        if(!_.isNull(currentOptions.otherLayers) &amp;&amp; !_.isUndefined(currentOptions.otherLayers) &amp;&amp; !_.isObject(currentOptions.otherLayers)){
+            throw new Error("[ALA-Map] Unexpected value for options.otherLayers: '" + typeof currentOptions.otherLayers + "' - '" + currentOptions.otherLayers + "'.")
+        }
+
+        // For each property of the object,
+        // - if the property is an object, assume it is a Layer.
+        // - if the property is a string, set to the matching built-in layer.
+        // The options.baseLayer object must be one of the property values, it is an error if not.
+        for (var optionsOtherLayerKey in currentOptions.otherLayers) {
+            var optionsOtherLayerValue = currentOptions.otherLayers[optionsOtherLayerKey];
+            if(_.isString(optionsOtherLayerValue)){
+                var optionsOtherLayerData = AVAILABLE_BASE_LAYERS[optionsOtherLayerValue];
+                if (optionsOtherLayerKey.replace(' ', '').toUpperCase() === selectedBaseLayerName.replace(' ', '').toUpperCase()) {
+                    currentOptions.otherLayers[optionsOtherLayerKey] = currentOptions.baseLayer;
+                    console.log("[ALA-Map] Added named base layer to collection because it matched default base layer name '" + optionsOtherLayerKey + "'.");
+                } else if (optionsOtherLayerData.url === currentOptions.baseLayer._url) {
+                    currentOptions.otherLayers[optionsOtherLayerKey] = currentOptions.baseLayer;
+                    console.log("[ALA-Map] Added named base layer to collection because it matched default base layer url '" + optionsOtherLayerKey + "'.");
+                } else {
+                    currentOptions.otherLayers[optionsOtherLayerKey] = L.tileLayer(optionsOtherLayerData.url, optionsOtherLayerData.options);
+                    console.log("[ALA-Map] Added base layer matching string in otherLayers '" + optionsOtherLayerKey + "'.");
+                }
+            } else if(!_.isObject(optionsOtherLayerValue)){
+                throw new Error("[ALA-Map] Unexpected value for options.otherLayers['" + optionsOtherLayerKey + "']: '" + typeof optionsOtherLayerValue + "' - '" + optionsOtherLayerValue + "'.")
+            }
+        }
+
+        console.log("[ALA-Map] Populated defaults for options.baseLayer with url '" + (currentOptions.baseLayer ? currentOptions.baseLayer._url : '') + "'" +
+            " and options.otherLayers '" + (currentOptions.otherLayers ? Object.keys(currentOptions.otherLayers).sort().join(', ') : '') + "'.");
+    }
+
+    /**
+     * Initialise the drawing controls that appear on the left side of the map panel
+     * @param currentOptions
+     */
+    function initDrawingControls(currentOptions) {
+        var drawOptions = currentOptions.drawOptions || {},
             editOptions;
 
         _.defaults(drawOptions, DEFAULT_DRAW_OPTIONS);
         if(drawOptions.edit){
-            editOptions = options.editOptions || {};
+            editOptions = currentOptions.editOptions || {};
             _.defaults(editOptions, DEFAULT_EDIT_DRAW_OPTIONS);
         } else {
             editOptions = false;
         }
 
-        drawControl = new L.Control.Draw({
+        drawControl = {
             edit: editOptions,
             draw: drawOptions
-        });
-        mapImpl.addControl(drawControl);
+        };
+        if (editOptions) {
+            mapImpl.pm.addControls({
+                position: "topleft",
+                drawMarker: drawOptions.marker !== false,
+                drawPolyline: drawOptions.polyline !== false,
+                drawRectangle: drawOptions.rectangle !== false,
+                drawPolygon: drawOptions.polygon !== false,
+                drawCircle: drawOptions.circle !== false,
+                drawCircleMarker:false,
+                drawText: false,
+                cutPolygon: true,
+                limitMarkersToCount: 50,
+                allowSelfIntersection: false,
+                hideMiddleMarkers: true,
+                editMode: {
+                    allowSelfIntersection: false, // disallow self-intersection for polygons
+                    hideMiddleMarkers: true,
+                    limitMarkersToCount: 100
+                },
+                dragMode: true,
+                removalMode: true,
+                rotateMode: true,
+                snappingOption: true
+            });
 
-        mapImpl.on("draw:created", function (event) {
-            if (event.layerType === ALA.MapConstants.LAYER_TYPE.MARKER) {
-                if (options.singleMarker) {
+            addCustomCancelActionToEditModes();
+        }
+
+        function onLayerCreated(layerType, layer) {
+            if (normaliseLayerType(layerType) === ALA.MapConstants.LAYER_TYPE.MARKER) {
+                if (currentOptions.singleMarker) {
                     markers = [];
                 }
 
-                if (options.draggableMarkers) {
-                    event.layer.options.draggable = true;
-                    event.layer.on("dragend", self.notifyAll);
+                if (currentOptions.draggableMarkers) {
+                    layer.options.draggable = true;
+                    layer.on("dragend", self.notifyAll);
                 }
 
-                addMarker(event.layer, true);
+                addMarker(layer, true);
             } else {
-                addLayer(event.layer, true);
+                addLayer(layer, true);
             }
-        });
-        mapImpl.on("draw:editstop", self.notifyAll);
-        mapImpl.on("draw:deletestop", self.notifyAll);
+        }
 
-        mapImpl.on("draw:drawstart", function (event) {
-            drawingStarted(event.layerType);
+        mapImpl.on("pm:create", function (event) {
+            onLayerCreated(event.shape, event.layer);
+        });
+
+        mapImpl.on("pm:globaleditmodetoggled", function (event) {
+            handleGlobalModeToggle("editMode", event.enabled);
+        });
+
+        mapImpl.on("pm:globaldragmodetoggled", function (event) {
+            handleGlobalModeToggle("dragMode", event.enabled);
+        });
+
+        mapImpl.on("pm:globalremovalmodetoggled", function (event) {
+            handleGlobalModeToggle("removalMode", event.enabled);
+        });
+
+        mapImpl.on("pm:globalcutmodetoggled", function (event) {
+            handleGlobalModeToggle("cutPolygon", event.enabled);
+        });
+
+        mapImpl.on("pm:globalrotatemodetoggled", function (event) {
+            handleGlobalModeToggle("rotateMode", event.enabled);
+        });
+
+        mapImpl.on("pm:drawstart", function (event) {
+            drawingStarted(event.shape);
+        });
+
+        mapImpl.on("pm:cut", function (event) {
+            console.log("Cut event", event);
+            drawnItems.removeLayer(event.originalLayer);
         });
 
         registerSpinnerEvents();
 
         updateCircleFeaturesToIncludeTypeAndRadius();
+    }
+
+    function addWindowResizeListener() {
+        window.addEventListener('resize', adjustMapContainerHeight);
+    }
+
+    function adjustMapContainerHeight() {
+        var height = window.innerHeight - DEFAULT_MAP_HEIGHT_BUFFER;
+        if (height >= options.minMapHeight) {
+            $('#'+id).height(height);
+            mapImpl &amp;&amp; mapImpl.invalidateSize();
+        }
     }
 
     function registerSpinnerEvents() {
@@ -2484,6 +1799,7 @@ ALA.Map = function (id, options) {
 
     // Determines if existing items need to be removed before adding a new item
     function drawingStarted(layerType) {
+        layerType = normaliseLayerType(layerType);
         if (layerType === ALA.MapConstants.LAYER_TYPE.MARKER) {
             if (options.singleMarker) {
                 markers.forEach(function (marker) {
@@ -2505,6 +1821,133 @@ ALA.Map = function (id, options) {
         }
     }
 
+    function normaliseLayerType(layerType) {
+        if (!layerType) {
+            return layerType;
+        }
+
+        if (!_.isString(layerType)) {
+            return layerType;
+        }
+
+        if (layerType.toLowerCase() === "line") {
+            return "polyline";
+        }
+
+        return layerType.toLowerCase();
+    }
+
+    /**
+     * Adding custom cancel button as Geoman free version does not come with cancel button.
+     */
+    function addCustomCancelActionToEditModes() {
+        if (!mapImpl.pm || !mapImpl.pm.Toolbar || !mapImpl.pm.Toolbar.changeActionsOfControl) {
+            return;
+        }
+
+        var modeConfigs = [
+            {name: "editMode", title: "Cancel edit changes"},
+            {name: "dragMode", title: "Cancel drag changes"},
+            {name: "cutPolygon", title: "Cancel cut changes"},
+            {name: "removalMode", title: "Cancel remove changes"},
+            {name: "rotateMode", title: "Cancel rotate changes"}
+        ];
+
+        modeConfigs.forEach(function (modeConfig) {
+            mapImpl.pm.Toolbar.changeActionsOfControl(modeConfig.name, [
+                "finishMode", // complete the mode action and save changes
+                { // custom cancel action
+                    text: "Cancel",
+                    name: "cancel",
+                    title: modeConfig.title,
+                    onClick: function () {
+                        cancelGlobalModeChanges(modeConfig.name);
+                    }
+                }
+            ]);
+        });
+    }
+
+    /**
+     * Take a snapshot of the current map state when an edit mode is enabled to restore state if the action is cancelled in the future.
+     * @param modeName
+     * @param enabled
+     */
+    function handleGlobalModeToggle(modeName, enabled) {
+        if (enabled) {
+            editModeSnapshotGeoJSON = JSON.stringify(self.getGeoJSON());
+            snapshotMode = modeName;
+            return;
+        }
+
+        // Clear the snapshot if the mode has finished operation only if it is the same mode that was turned on
+        // when the snapshot was taken.
+        if (snapshotMode === modeName) {
+            editModeSnapshotGeoJSON = null;
+            snapshotMode = null;
+        }
+
+        if (!suppressEditModeNotify) {
+            self.notifyAll();
+        }
+    }
+
+    /**
+     * Restore map to state before mode was enabled, and disable the mode.
+     * This is triggered when the user clicks the custom cancel button added to the mode actions.
+     * @param modeName
+     */
+    function cancelGlobalModeChanges(modeName) {
+        if (!editModeSnapshotGeoJSON) {
+            return;
+        }
+
+        if (snapshotMode &amp;&amp; snapshotMode !== modeName) {
+            return;
+        }
+
+        var snapshot = editModeSnapshotGeoJSON;
+
+        suppressEditModeNotify = true;
+        disableGlobalMode(modeName);
+        suppressEditModeNotify = false;
+
+        restoreGeoJSONSnapshot(snapshot);
+        editModeSnapshotGeoJSON = null;
+        snapshotMode = null;
+    }
+
+    /**
+     * Disable the global mode if it is enabled.
+     * This is used when cancelling an edit action to turn off the mode that was turned on when the snapshot was taken.
+     * @param modeName
+     */
+    function disableGlobalMode(modeName) {
+        if (modeName === "editMode" &amp;&amp; mapImpl.pm.globalEditModeEnabled()) {
+            mapImpl.pm.disableGlobalEditMode();
+        } else if (modeName === "dragMode" &amp;&amp; mapImpl.pm.globalDragModeEnabled()) {
+            mapImpl.pm.disableGlobalDragMode();
+        } else if (modeName === "cutPolygon" &amp;&amp; mapImpl.pm.globalCutModeEnabled()) {
+            mapImpl.pm.disableGlobalCutMode();
+        } else if (modeName === "removalMode" &amp;&amp; mapImpl.pm.globalRemovalModeEnabled()) {
+            mapImpl.pm.disableGlobalRemovalMode();
+        } else if (modeName === "rotateMode" &amp;&amp; mapImpl.pm.globalRotateModeEnabled()) {
+            mapImpl.pm.disableGlobalRotateMode();
+        }
+    }
+
+    function restoreGeoJSONSnapshot(snapshotGeoJSON) {
+        drawnItems.clearLayers();
+        markers = [];
+
+        if (!snapshotGeoJSON) {
+            self.notifyAll();
+            return;
+        }
+
+        self.setGeoJSON(snapshotGeoJSON);
+    }
+
     // This is a workaround for https://github.com/Leaflet/Leaflet/issues/2888
     // The GeoJSON standard does not support Circle types, so Leaflet treats circles as points. This workaround adds a
     // 'point_type' attribute to the the feature's properties with value 'Circle', and adds the radius, so at least the
@@ -2515,6 +1958,8 @@ ALA.Map = function (id, options) {
             toGeoJSON: function () {
                 var feature = circleToGeoJSON.call(this);
                 feature.properties = {
+                    // adding a generic type property to distinguish MERIT Point of Interest (POI) from types such as circle, pid, marker.
+                    type: ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
                     point_type: ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
                     radius: this.getRadius()
                 };
@@ -2527,7 +1972,10 @@ ALA.Map = function (id, options) {
     // as a circle instead of a point. This is because GeoJSON does not support Circle types.
     function pointToLayerCircleSupport(feature, latlng) {
         if (feature.properties &amp;&amp; feature.properties.point_type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
-            return L.circle(latlng, feature.properties.radius, {});
+            if (feature.properties.circleOptions)
+                return L.circle(latlng, feature.properties.radius, feature.properties.circleOptions);
+            else
+                return L.circle(latlng, feature.properties.radius, {});
         } else {
             var marker = L.marker(latlng, {draggable: options.draggableMarkers});
             if (options.draggableMarkers) {
@@ -2536,6 +1984,111 @@ ALA.Map = function (id, options) {
             markers.push(marker);
             return marker;
         }
+    }
+
+    function defaultPopupContent(feature) {
+        var popupContent = "";
+        var rows = [];
+        for (var property in feature.properties) {
+            if (feature.properties.hasOwnProperty(property))
+                rows.push("&lt;tr>&lt;td>" + property + "&lt;/td>&lt;td>" + feature.properties[property] + "&lt;/td>&lt;/tr>");
+        }
+
+        if (rows.length > 0)
+            popupContent = "&lt;table>&lt;tbody>" + rows.join("") + "&lt;/tbody>&lt;/table>";
+
+        return popupContent;
+    }
+
+    /**
+     * Callback function for rendering GeoJSON features. This function supports rendering WMS layers for features with
+     * a 'pid' property, and also supports creating popups based on feature properties.
+     * @param feature
+     * @param layer
+     * @param layerOptions
+     */
+    function onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions) {
+        wmsOptions = {};
+        updateFeatureProperties(feature, layer);
+        assignFeatureId(layer, feature);
+
+        //Create a popup content
+        if(feature.properties &amp;&amp; feature.properties.popupContent)
+            layer.bindPopup(feature.properties.popupContent);
+        else if (feature.properties) {
+            var popupContent = defaultPopupContent(feature);
+            popupContent &amp;&amp; layer.bindPopup(popupContent);
+        }
+
+        if (feature.properties &amp;&amp; feature.properties.pid) {
+            if (feature.geometry.type == ALA.MapConstants.DRAW_TYPE.POINT_TYPE){
+                wmsOptions.layers = "ALA:Points"
+                wmsOptions.opacity = 1.0
+            }
+            layer = createWmsLayer(feature.properties.pid, wmsOptions);
+        }
+
+        if (options.singleDraw) {
+            drawnItems.clearLayers();
+        }
+        if (options.markerOrShapeNotBoth) {
+            clearMarkers();
+        }
+
+        drawnItems.addLayer(layer);
+        if (layer.bringToFront) {
+            layer.bringToFront();
+        }
+
+        applyLayerOptions(layer, layerOptions);
+        layerCreatedByGeoJSON = layer;
+    }
+
+    /**
+     * Assign the feature properties to the layer, ensuring that if the layer already has feature properties,
+     * they are not overwritten but merged with the new properties.
+     * @param feature
+     * @param layer
+     */
+    function updateFeatureProperties(feature, layer) {
+        if (feature.properties) {
+            if (!layer.feature) {
+                layer.feature = {
+                    type: "Feature",
+                    properties: feature.properties
+                };
+            }
+            else if (!layer.feature.properties) {
+                layer.feature.properties = feature.properties;
+            }
+            else {
+                layer.feature.properties = Object.assign(layer.feature.properties, feature.properties);
+            }
+        }
+    }
+
+    /**
+     * Assign a unique featureId property to the feature and layer if it does not already exist.
+     * @param layer
+     * @param feature
+     */
+    function assignFeatureId(layer, feature) {
+        if (typeof UUID === "undefined") {
+            console.error("[ALA-Map] UUID library is not included, cannot assign featureId to layer. Please include a UUID library.");
+            return;
+        }
+
+        var currentFeatureId = feature.properties &amp;&amp; feature.properties.featureId;
+        if (!_.contains([undefined, null, ""], currentFeatureId)) {
+            return;
+        }
+
+        var featureId = UUID.generate();
+        feature.properties = feature.properties || {};
+        feature.properties.featureId = featureId;
+        layer.feature = layer.feature || {};
+        layer.feature.properties = layer.feature.properties || {};
+        layer.feature.properties.featureId = featureId;
     }
 
     // Adds the lat/lng coordinates to the bottom of the map panel
@@ -2568,7 +2121,7 @@ ALA.Map = function (id, options) {
     function addGeocodeControl(drawType) {
         var prompt = "Search for an address or location";
         if (drawType == ALA.MapConstants.DRAW_TYPE.POLYGON_TYPE) {
-            prompt = "Search for a region or area";
+            prompt = "Search for a region, area or address";
         }
 
         var geocodeControl = L.Control.geocoder({
@@ -2586,6 +2139,8 @@ ALA.Map = function (id, options) {
         if (drawType == ALA.MapConstants.DRAW_TYPE.POINT_TYPE) {
             button.addClass("geocoder-icon-override fa fa-crosshairs");
         }
+
+
         geocodeControl.on('markgeocode', function (result) {
             if (drawType == ALA.MapConstants.DRAW_TYPE.POINT_TYPE) {
                 self.addMarker(result.geocode.center.lat, result.geocode.center.lng, null);
@@ -2600,15 +2155,104 @@ ALA.Map = function (id, options) {
                     // when selecting a geocoded region that has a Point type, we will convert it to a circle with a
                     // specific radius
                     if (geojson.geometry.type == ALA.MapConstants.DRAW_TYPE.POINT_TYPE) {
+                        geojson.properties.type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                         geojson.properties.point_type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                         geojson.properties.radius = options.geocodeRegionOptions.pointRadiusMeters;
                     }
                 }
-                self.setGeoJSON(geojson);
+                var layer = self.setGeoJSON(geojson);
+
+                if (options.zoomToObject) {
+                    layer &amp;&amp; layer.getBounds &amp;&amp; mapImpl.fitBounds(layer.getBounds(), {maxZoom: options.maxAutoZoom, animate: ANIMATE});
+                }
             } else {
                 self.addMarker(result.geocode.center.lat, result.geocode.center.lng, null);
             }
+            //Fire a 'SearchEventFired' for site creation
+            mapImpl.fire("searchEventFired");
+
         }, geocodeControl);
+    }
+
+    /**
+     * Adds a file input control to the map using the leaflet-filelayer plugin, which allows the user to load
+     * GeoJSON, KML, GPX or Shapefile (in zip format) files from their local machine onto the map.
+     * The file is parsed and added as a layer to the map, with support for WMS layers if the GeoJSON features have a 'pid' property.
+     * @param options
+     * @returns {*}
+     */
+    function addFileInputControl(options) {
+        if (typeof L.Control.advancedFileLayerLoad === "undefined") {
+            console.error("[ALA-Map] L.Control.advancedFileLoader is not defined. You must include the leaflet-filelayer plugin to use the file input control.");
+            return;
+        }
+
+        var controlOptions = _.defaults( options.fileInputControlOptions || {}, {
+            addToMap: false,
+            formats: [
+                '.geojson',
+                '.json', // geojson with non-standard file extension
+                '.kml',
+                '.gpx',
+                '.zip' // shapefile in zip format
+            ],
+            layerOptions: {
+                onEachFeature: onEachFeatureWithWMSLayerSupport,
+            },
+            layer: function (geoJSON) {
+                return self.setGeoJSON(geoJSON);
+            }
+        });
+
+        var fileInputControl = L.Control.advancedFileLayerLoad(controlOptions);
+        mapImpl.addControl(fileInputControl);
+        return fileInputControl;
+    }
+
+    /**
+     * Creates an instance of the L.Control.TwoStepSelector control and adds it to the map.
+     * This control allows the user to select a layer from a list of layers, and then select a shape from that layer, which is then added to the map as a WMS layer.
+     * @param options
+     */
+    function addKnownShapeControl (options) {
+        options = Object.assign({
+            id: 'regionSelection',
+            title: 'Select layer',
+            firstStepPlaceholder: 'Choose a layer...',
+            secondStepPlaceholder: 'Choose a shape...',
+        }, options);
+        var featuresServiceUrl = options.featuresServiceUrl,
+            regionListUrl = options.regionListUrl,
+            regionOptions = {
+                firstStepItemLookup: function (populateStep1Callback) {
+                    $.ajax({
+                        url: regionListUrl,
+                        dataType: 'json'
+                    }).done(function (data) {
+                        var regions = _.sortBy(data.regions, 'value');
+                        populateStep1Callback(regions);
+                    });
+                },
+                secondStepItemLookup: function (selectedLayerKey, populateStep2Callback) {
+                    $.ajax({
+                        url: featuresServiceUrl + '?layerId=' + selectedLayerKey,
+                        dataType: 'json'
+                    }).done(function (data) {
+                        var layers = [];
+                        data.forEach(function (layer) {
+                            layers.push({key: layer.pid, value: layer.name});
+                        });
+
+                        layers = _.sortBy(layers, 'value');
+                        populateStep2Callback(layers);
+                    });
+                },
+                selectionAction: function (selectedValue) {
+                    self.addWmsLayer(selectedValue);
+                }
+            };
+
+        mapImpl.addControl(new L.Control.TwoStepSelector(Object.assign({}, options, regionOptions)));
     }
 
     // Internal method to add a non-Marker layer to the map, to fit the map bounds if configured to do so, and optionally
@@ -2662,6 +2306,7 @@ ALA.Map = function (id, options) {
             wmsOptions.pid = pid;
             wmsOptions.viewparams = "s:" + pid;
             wmsOptions.wmsFeatureUrl = options.wmsFeatureUrl + pid;
+
         }
 
         wmsOptions.callback = function () {
@@ -2674,8 +2319,8 @@ ALA.Map = function (id, options) {
 
         _.defaults(wmsOptions, DEFAULT_WMS_PROPERTIES);
 
-        if ((_.isUndefined(options.wmsLayerUrl) || options.wmsLayer == null) &amp;&amp; (_.isUndefined(wmsOptions.wmsLayerUrl) || wmsOptions.wmsLayerUrl == null)) {
-            console.error("You must specify the wmsLayerUrl option for this map or for the layer.")
+        if ((_.isUndefined(options.wmsLayerUrl) || options.wmsLayerUrl == null) &amp;&amp; (_.isUndefined(wmsOptions.wmsLayerUrl) || wmsOptions.wmsLayerUrl == null)) {
+            console.error("[ALA-Map] You must specify the wmsLayerUrl option for this map or for the layer.")
         }
 
         return L.tileLayer.smartWms(wmsOptions.wmsLayerUrl || options.wmsLayerUrl, wmsOptions);
@@ -2745,6 +2390,91 @@ ALA.Map = function (id, options) {
         });
         markers = [];
     }
+
+    /**
+     * Internal function to add an overlay layer to the layers control.
+     * @param {L.Class} layer Layer to add.
+     * @param {String} name Text to display for the layer.
+     * @param {Boolean} isSelected Whether to add the layer in the selected state or not.
+     */
+    function overlayLayerAdd(layer, name, isSelected){
+        if (layerControl) {
+            layerControl.addOverlay(layer, name);
+            overlayLayersAvailable.push(layer);
+            if (isSelected) {
+                mapImpl.addLayer(layer);
+                overlayLayerSelect(layer);
+            }
+            console.log("[ALA-Map] Added " + (isSelected ? 'selected' : 'de-selected') + " overlay layer '" + name + "' to map.");
+        } else {
+            console.warn("[ALA-Map] Could not add overlay layer '" + name + "' because the layer control is not available. " +
+                "Create the layer control before adding an overlay layer.")
+        }
+    }
+
+    /**
+     * Internal function to remove an overlay layer from the layers control.
+     * @param {L.Class} layer The layer to remove.
+     */
+    function overlayLayerRemove(layer){
+        if (layerControl) {
+            overlayLayerDeselect(layer);
+            layerControl.removeLayer(layer);
+            var index = overlayLayersAvailable.indexOf(layer);
+            if (index > -1) {
+                overlayLayersAvailable.splice(index, 1);
+            }
+        }
+
+        mapImpl.removeLayer(layer);
+    }
+
+    /**
+     * Internal function to select an overlay layer.
+     * @param {L.Class} layer
+     */
+    function overlayLayerSelect(layer){
+        if (!options.preserveZIndex) {
+            layer.bringToFront();
+        }
+        overlayLayersSelected.push(layer);
+    }
+
+    /**
+     * Internal function to de-select an overlay layer.
+     * @param {L.Class} layer
+     */
+    function overlayLayerDeselect(layer){
+        var index = overlayLayersSelected.indexOf(layer);
+        if (index > -1) {
+            overlayLayersSelected.splice(index, 1);
+        }
+    }
+
+    function addBaseLayerHeading (containerSelector) {
+        var classHeading = 'leaflet-control-layers-base-heading',
+            classBaseLayer = 'leaflet-control-layers-base',
+            isHeadingPresent = $(containerSelector + ' .' + classHeading).length == 1,
+            isBaseLayerPresent = $(containerSelector + ' .' + classBaseLayer).children().length >= 1;
+
+        if (!isHeadingPresent &amp;&amp; isBaseLayerPresent)
+            $('&lt;label class="' + classHeading + '">&lt;strong>Base layer&lt;/strong>&lt;/label>').insertBefore(containerSelector + ' .' + classBaseLayer);
+    };
+
+    function addOverlayHeading(containerSelector) {
+        var classHeading = 'leaflet-control-layers-overlays-heading',
+            classOverlay = 'leaflet-control-layers-overlays',
+            isHeadingPresent = $(containerSelector + ' .' + classHeading).length == 1,
+            isOverlayPresent = $(containerSelector + ' .' + classOverlay).children().length >= 1;
+
+        if (!isHeadingPresent &amp;&amp; isOverlayPresent)
+            $('&lt;label class="' + classHeading + '">&lt;strong>Overlay&lt;/strong>&lt;/label>').insertBefore(containerSelector + ' .' + classOverlay);
+    };
+
+    function addBaseLayerAndOverlayHeading (containerSelector) {
+        addBaseLayerHeading(containerSelector);
+        addOverlayHeading(containerSelector);
+    };
 
     initialiseMap();
 };
@@ -2836,6 +2566,7 @@ ALA.MapUtils = {
         if (!_.isUndefined(geoJSON) &amp;&amp; !_.isEmpty(geoJSON.features)) {
             _.each(geoJSON.features, function (feature) {
                 if (feature.geometry.type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
+                    feature.properties.type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                     feature.properties.point_type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
                     feature.properties.radius = feature.geometry.radius;
                     delete feature.geometry.radius;
@@ -2878,7 +2609,12 @@ ALA.MapUtils = {
         var coords = bboxString.replace(/POLYGON|LINESTRING|POINT/g, "").replace(/[\\(|\\)]/g, "");
         var coordsArray = [];
         coords.split(",").forEach(function (item) {
-            coordsArray.push(latFirst ? item.split(" ").reverse() : item.split(" "));
+            var coordinates = latFirst ? item.split(" ").reverse() : item.split(" ");
+            coordinates = coordinates || [];
+            coordinates.forEach(function (t, index) {
+                coordinates[index]  = Number.parseFloat(t);
+            });
+            coordsArray.push(coordinates);
         });
 
         return coordsArray;
@@ -2931,7 +2667,7 @@ ALA.MapUtils = {
      * Calculate the area of a given GeoJSON object in square kilometers. The GeoJSON object can be a FeatureCollection or a Feature.
      *
      * For circle geometries, the Properties object must contain an attribute called Radius, with the radius in meters.
-     *
+     * For features with a 'pid' property, the Properties object must contain an attribute called area_km with the area in square kilometers.
      * @param geoJson {Object} GeoJSON object to calculate the area for
      * @returns {number} The calculated area in square kilometers
      */
@@ -2946,30 +2682,49 @@ ALA.MapUtils = {
                 if (feature.properties.radius) {
                     areaSqKm += ((3.14 * feature.properties.radius * feature.properties.radius) / 1000) / 1000;
                 }
+                else if (feature.properties &amp;&amp; feature.properties.pid &amp;&amp; feature.properties.area_km) {
+                    areaSqKm += feature.properties.area_km;
+                }
             });
         } else if (geoJson.type == "Feature") {
             if (geoJson.properties.radius) {
                 areaSqKm += ((3.14 * geoJson.properties.radius * geoJson.properties.radius) / 1000) / 1000;
             }
+            else if (geoJson.properties &amp;&amp; geoJson.properties.pid &amp;&amp; geoJson.properties.area_km) {
+                areaSqKm += geoJson.properties.area_km;
+            }
         }
 
         return areaSqKm;
     }
-};</code></pre>
+};
+</code></pre>
         </article>
     </section>
 
 
 
 
-          </div>
-      </div>
-
-        <br clear="both">
-
-      <footer>
-      </footer>
-      <script> prettyPrint(); </script>
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
     </div>
-  </body>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
 </html>

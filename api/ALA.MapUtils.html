@@ -1,1340 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <script src="scripts/jquery-2.1.1.min.js"> </script>
-    <script src="scripts/page.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,300,700,600,400' rel='stylesheet' type='text/css'>
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link href="styles/bootstrap.min.css" rel="stylesheet">
-    <link href="styles/docs.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  </head>
-  <body>
-    <header class="header navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            Documentation
-          </a>
-          <div class="navbar-right">
-            <div class="external-links">
-              <i class="fa fa-github"></i>
-            </div>
-          </div>
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> MapUtils</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
         </div>
-      </div>
-    </header>
-
-    <div class="primary-content container-fluid">
-      <div class="row-fluid">
-          <div class="sidenav col-md-3">
+        <div class="menu">
             
-
-
-<div class="module-list">
-  <h3>Modules</h3>
-  <ul class="module-listing">
-  
-    <li data-module-name="" class="collapsed collapsable module-item">
-      <span class="collapsed-status">
-        <i class="expand fa fa-plus-square-o"></i>
-        <i class="collapse fa fa-minus-square-o"></i>
-      </span>
-
-      
-      <ul class="thing-list">
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Checkbox.html">Checkbox</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Legend.html">Legend</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.Map.html">Map</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addButton">addButton</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addClusteredPoints">addClusteredPoints</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addControl">addControl</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addLayer">addLayer</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addLayersControl">addLayersControl</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addMarker">addMarker</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addPointsOrIcons">addPointsOrIcons</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.addWmsLayer">addWmsLayer</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.clearBoundLimits">clearBoundLimits</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.clearLayers">clearLayers</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.clearMarkers">clearMarkers</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.countFeatures">countFeatures</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.destroy">destroy</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.finishLoading">finishLoading</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.fitBounds">fitBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.fitToBoundsOf">fitToBoundsOf</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getAllMarkers">getAllMarkers</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getBounds">getBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getCentre">getCentre</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getGeoJSON">getGeoJSON</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getMapId">getMapId</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getMapImpl">getMapImpl</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.getMarkerLocations">getMarkerLocations</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.markMyLocation">markMyLocation</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.notifyAll">notifyAll</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.redraw">redraw</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.registerListener">registerListener</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.removeLayer">removeLayer</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.removeListener">removeListener</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.resetMap">resetMap</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.setGeoJSON">setGeoJSON</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.setMaxBounds">setMaxBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.startLoading">startLoading</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.subscribe">subscribe</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.toggleFitBounds">toggleFitBounds</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.unsubscribe">unsubscribe</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.Map.html#.zoom">zoom</a>
-  </li>
-
-
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.MapConstants.html">MapConstants</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.MapUtils.html">MapUtils</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.bboxToPointArray">bboxToPointArray</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.calculateAreaKmSq">calculateAreaKmSq</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.createIcon">createIcon</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.createMarker">createMarker</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.getGeometryWithCirclesFromGeoJSON">getGeometryWithCirclesFromGeoJSON</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.getStandardGeoJSONForCircleGeometry">getStandardGeoJSONForCircleGeometry</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.MapUtils.html#.wrapGeometryInGeoJSONFeatureCol">wrapGeometryInGeoJSONFeatureCol</a>
-  </li>
-
-
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="ALA.OccurrenceMap.html">OccurrenceMap</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.clearAllFacets">clearAllFacets</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.clearFacet">clearFacet</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.getQueryString">getQueryString</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.selectFacet">selectFacet</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.self.selectMultipleFacets">self.selectMultipleFacets</a>
-  </li>
-
-
-            
-              
-
-  <li class="thing">
-
-    
-
-    
-
-    
-
-    
-      <i class="fa fa-cog"></i>
-    
-
-    <a href="ALA.OccurrenceMap.html#.setQueryString">setQueryString</a>
-  </li>
-
-
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Select.html">Select</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.Slider.html">Slider</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.TileLayer.SmartWMS.html">SmartWMS</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-
-          
-
-  <li class="thing">
-
-    
-      <i class="fa fa-cube"></i>
-    
-
-    
-
-    
-
-    
-
-    <a href="L.Control.TwoStepSelector.html">TwoStepSelector</a>
-  </li>
-
-
-
-          <ul class="thing-list">
-            
-          </ul>
-
-        
-      </ul>
-    </li>
-  
-  </ul>
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
 </div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="ALA.html">ALA</a></li></ul><h3>Classes</h3><ul><li><a href="ALA.Map.html">Map</a></li><li><a href="ALA.MapConstants.html">MapConstants</a></li><li><a href="ALA.MapUtils.html">MapUtils</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Class</p>
+                    <h1>MapUtils</h1>
+                </header>
+                
 
-          </div>
-
-          <div class="col-md-9">
-              
 
 
 
 <section>
 
 <header>
-    <h1 class="page-header">
-      MapUtils
-    </h1>
-
     
-
-    <!-- dat inline script LOOKN REAL NASTY -->
-    <script>
-      jQuery('[data-module-name=""]').removeClass('collapsed');
-    </script>
-
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="ALA.html">ALA</a>.</span>MapUtils<span class="signature">()</span><span class="type-signature"></span></h2>
+        
     
 </header>
 
 <article>
-    <div class="container-overview hero-unit">
-    
-
-    
-
-    
-
+    <div class="container-overview">
     
         
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
 
 
-
-    <h3 class="
-        subsection-title name
+    
+    <h4 class="name" id="MapUtils">
+        <a class="href-link" href="#MapUtils">#</a>
         
-      " id="MapUtils">
-
-      
-        
-        Constructor
-      
-
-      
-
-      
-
-    </h3>
-
-    
-      <h4>new MapUtils<span class="signature">()</span><span class="type-signature"></span></h4>
+        <span class="code-name">
+            
+                new MapUtils<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
     
 
     
-
-
-
     
 
 
 
 
-    
 
-    
 
-    
 
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -1356,27 +153,53 @@
 
     
 
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2399">line 2399</a>
+            </span>
+        </p>
     
 </dl>
 
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
     
     </div>
-
+    
     
 
     
@@ -1388,17 +211,65 @@
     
 
     
-        <h3 class="subsection-title">
-          
-          Static Methods
-        </h3>
-        <div class="panel panel-default">
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".bboxToPointArray">
+        <a class="href-link" href="#.bboxToPointArray">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                bboxToPointArray<span class="signature">(bboxString, latFirst)</span><span class="type-signature"> &rarr; {Array}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Converts a bounding box string of format POLYGON((lng1 lat1, lng2 lat2,...)) (POLYGON or LINESTRING) into an
+array of coordinates. The order of the latitude and longitude can be controlled by the latFirst parameter.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
             
 
-<table class="params table table-bordered table-condensed">
-    <thead>
-        <tr>
-            <th>Name</th>
+            <th>Type</th>
+
+            
+
+            
+
             <th class="last">Description</th>
         </tr>
         </thead>
@@ -1406,109 +277,798 @@
         <tbody>
         
 
-        <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.bboxToPointArray">bboxToPointArray</a>
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>bboxString</code></td>
+  
 
-              
-              
-              
-            </td>
-            <td class="description">
-                
-                    Converts a bounding box string of format POLYGON((lng1 lat1, lng2 lat2,...)) (POLYGON or LINESTRING) into an
-array of coordinates. The order of the latitude and longitude can be controlled by the latFirst parameter.
-                
+  <td class="type">
+  
+  </td>
 
-                
+  
 
+  
 
-            </td>
-        </tr>
+  <td class="description last">Bounding box string to convert</td>
+</tr>
+
 
         
 
-        <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.calculateAreaKmSq">calculateAreaKmSq</a>
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>latFirst</code></td>
+  
 
-              
-              
-              
-            </td>
-            <td class="description">
+  <td class="type">
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">True to produce LAT/LNG points, false to produce LNG/LAT points.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2521">line 2521</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>array of points</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Array</code>
+
+
+    </div>
+    
+</div>
+
                 
-                    Calculate the area of a given GeoJSON object in square kilometers. The GeoJSON object can be a FeatureCollection or a Feature.
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".calculateAreaKmSq">
+        <a class="href-link" href="#.calculateAreaKmSq">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                calculateAreaKmSq<span class="signature">(geoJson)</span><span class="type-signature"> &rarr; {number}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Calculate the area of a given GeoJSON object in square kilometers. The GeoJSON object can be a FeatureCollection or a Feature.
 
 For circle geometries, the Properties object must contain an attribute called Radius, with the radius in meters.
-                
+For features with a 'pid' property, the Properties object must contain an attribute called area_km with the area in square kilometers.
+    </div>
+    
 
-                
 
 
-            </td>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
         </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>geoJson</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">GeoJSON object to calculate the area for</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2587">line 2587</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>The calculated area in square kilometers</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">number</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".createIcon">
+        <a class="href-link" href="#.createIcon">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                createIcon<span class="signature">(iconUrl, iconOptions)</span><span class="type-signature"> &rarr; {Object}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Utility function to create a new marker icon with sensible defaults
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>iconUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The URL to the image for the marker. Mandatory.</td>
+</tr>
+
 
         
 
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>iconOptions</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Object containing leaflet Icon configuration options to override the defaults. Optional.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2543">line 2543</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Leaflet Icon object</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Object</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".createMarker">
+        <a class="href-link" href="#.createMarker">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                createMarker<span class="signature">(lat, lng, popup, markerOptions)</span><span class="type-signature"> &rarr; {Object}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Convenience utility for creating a new marker with optional configuration parameters and popup.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
         <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.createIcon">createIcon</a>
+            
+            <th>Name</th>
+            
 
-              
-              
-              
-            </td>
-            <td class="description">
-                
-                    Utility function to create a new marker icon with sensible defaults
-                
+            <th>Type</th>
 
-                
+            
 
+            
 
-            </td>
+            <th class="last">Description</th>
         </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>lat</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Latitude of the marker. Mandatory.</td>
+</tr>
+
 
         
 
-        <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.createMarker">createMarker</a>
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>lng</code></td>
+  
 
-              
-              
-              
-            </td>
-            <td class="description">
-                
-                    Convenience utility for creating a new marker with optional configuration parameters and popup.
-                
-
-                
+  <td class="type">
+  
+      
+<code class="param-type">Number</code>
 
 
-            </td>
-        </tr>
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Longitude of the marker. Mandatory.</td>
+</tr>
+
 
         
 
-        <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.getGeometryWithCirclesFromGeoJSON">getGeometryWithCirclesFromGeoJSON</a>
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>popup</code></td>
+  
 
-              
-              
-              
-            </td>
-            <td class="description">
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Text or HTML to display in a popup when the marker is clicked. Optional.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>markerOptions</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Standard Leaflet L.Marker configuration options. Optional.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2569">line 2569</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Leaflet L.Marker object</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Object</code>
+
+
+    </div>
+    
+</div>
+
                 
-                    Utility method to take a standard GeoJSON object and change the geometry of Point types to Circle types (not
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getGeometryWithCirclesFromGeoJSON">
+        <a class="href-link" href="#.getGeometryWithCirclesFromGeoJSON">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                getGeometryWithCirclesFromGeoJSON<span class="signature">(geoJSON)</span><span class="type-signature"> &rarr; {*}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Utility method to take a standard GeoJSON object and change the geometry of Point types to Circle types (not
 supported by the GeoJSON standard). This function assumes that the properties object of the circle features has
 a property of 'point_type' with a value of 'circle', and a property of 'radius'.
 
@@ -1561,1136 +1121,238 @@ into
     ]
   }
 </code>
-                
+    </div>
+    
 
-                
 
 
-            </td>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
         </tr>
+        </thead>
 
+        <tbody>
         
 
-        <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.getStandardGeoJSONForCircleGeometry">getStandardGeoJSONForCircleGeometry</a>
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>geoJSON</code></td>
+  
 
-              
-              
-              
-            </td>
-            <td class="description">
-                
-                    Performs the opposite of #getGeometryWithCirclesFromGeoJSON to produce valid standard GeoJSON.
-                
+  <td class="type">
+  
+  </td>
 
-                
+  
 
+  
 
-            </td>
-        </tr>
+  <td class="description last"></td>
+</tr>
 
-        
-
-        <tr>
-            <td class="name">
-              
-              <a href="ALA.MapUtils.html#.wrapGeometryInGeoJSONFeatureCol">wrapGeometryInGeoJSONFeatureCol</a>
-
-              
-              
-              
-            </td>
-            <td class="description">
-                
-                    Takes a bare geoJSON geometry object, and wraps it in a full GeoJSON structure with type=FeatureCollection
-                
-
-                
-
-
-            </td>
-        </tr>
 
         
         </tbody>
-</table>
+    </table>
+</div>
 
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2458">line 2458</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">*</code>
+
+
+    </div>
+    
+</div>
+
+                
         </div>
-
-    
-
-    
-
-    
-
-    
-
-    <hr>
-
-    <div class="large-listing">
-      
-        
-            
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
-        
-      " id=".bboxToPointArray">
-
-      
-        bboxToPointArray<span class="signature">(bboxString, latFirst)</span><span class="type-signature"> &rarr; {Array}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
-    
-
-    
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
-    
-    <div class="description">
-        <p>
-        Converts a bounding box string of format POLYGON((lng1 lat1, lng2 lat2,...)) (POLYGON or LINESTRING) into an
-array of coordinates. The order of the latitude and longitude can be controlled by the latFirst parameter.
-        </p>
     </div>
-    
-
-    
-
-    
-
-    
-        <h4>Parameters</h4>
-        
-
-<table class="params table table-bordered table-condensed">
-    <thead>
-        <tr>
-                
-                <th>Name</th>
-                
-
-                <th>Type</th>
-
-                
-
-                <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-        <tr>
-            
-                <td class="name">bboxString
-                  
-                </td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            <td class="description last">Bounding box string to convert</td>
-        </tr>
-
-        
-
-        <tr>
-            
-                <td class="name">latFirst
-                  
-                </td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            <td class="description last">True to produce LAT/LNG points, false to produce LNG/LAT points.</td>
-        </tr>
-
-        
-        </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
-
-
-    
-Array
-
-
-
-
-
-<span class="param-desc">
-    array of points
-</span>
-
-</div>
-
-        
-
-    
-
-
-  </dd>
-</dl>
-
-
-        
-            
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
-        
-      " id=".calculateAreaKmSq">
-
-      
-        calculateAreaKmSq<span class="signature">(geoJson)</span><span class="type-signature"> &rarr; {number}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
-    
-
-    
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
-    
-    <div class="description">
-        <p>
-        Calculate the area of a given GeoJSON object in square kilometers. The GeoJSON object can be a FeatureCollection or a Feature.</p><p>For circle geometries, the Properties object must contain an attribute called Radius, with the radius in meters.
-        </p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h4>Parameters</h4>
-        
-
-<table class="params table table-bordered table-condensed">
-    <thead>
-        <tr>
-                
-                <th>Name</th>
-                
-
-                <th>Type</th>
-
-                
-
-                <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-        <tr>
-            
-                <td class="name">geoJson
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-Object
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">GeoJSON object to calculate the area for</td>
-        </tr>
-
-        
-        </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
-
-
-    
-number
-
-
-
-
-
-<span class="param-desc">
-    The calculated area in square kilometers
-</span>
-
-</div>
-
-        
-
-    
-
-
-  </dd>
-</dl>
-
-
-        
-            
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
-        
-      " id=".createIcon">
-
-      
-        createIcon<span class="signature">(iconUrl, iconOptions)</span><span class="type-signature"> &rarr; {Object}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
-    
-
-    
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
-    
-    <div class="description">
-        <p>
-        Utility function to create a new marker icon with sensible defaults
-        </p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h4>Parameters</h4>
-        
-
-<table class="params table table-bordered table-condensed">
-    <thead>
-        <tr>
-                
-                <th>Name</th>
-                
-
-                <th>Type</th>
-
-                
-
-                <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-        <tr>
-            
-                <td class="name">iconUrl
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-String
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">The URL to the image for the marker. Mandatory.</td>
-        </tr>
-
-        
-
-        <tr>
-            
-                <td class="name">iconOptions
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-Object
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">Object containing leaflet Icon configuration options to override the defaults. Optional.</td>
-        </tr>
-
-        
-        </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
-
-
-    
-Object
-
-
-
-
-
-<span class="param-desc">
-    Leaflet Icon object
-</span>
-
-</div>
-
-        
-
-    
-
-
-  </dd>
-</dl>
-
-
-        
-            
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
-        
-      " id=".createMarker">
-
-      
-        createMarker<span class="signature">(lat, lng, popup, markerOptions)</span><span class="type-signature"> &rarr; {Object}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
-    
-
-    
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
-    
-    <div class="description">
-        <p>
-        Convenience utility for creating a new marker with optional configuration parameters and popup.
-        </p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h4>Parameters</h4>
-        
-
-<table class="params table table-bordered table-condensed">
-    <thead>
-        <tr>
-                
-                <th>Name</th>
-                
-
-                <th>Type</th>
-
-                
-
-                <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-        <tr>
-            
-                <td class="name">lat
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-Number
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">Latitude of the marker. Mandatory.</td>
-        </tr>
-
-        
-
-        <tr>
-            
-                <td class="name">lng
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-Number
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">Longitude of the marker. Mandatory.</td>
-        </tr>
-
-        
-
-        <tr>
-            
-                <td class="name">popup
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-String
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">Text or HTML to display in a popup when the marker is clicked. Optional.</td>
-        </tr>
-
-        
-
-        <tr>
-            
-                <td class="name">markerOptions
-                  
-                </td>
-            
-
-            <td class="type">
-            
-                
-Object
-
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">Standard Leaflet L.Marker configuration options. Optional.</td>
-        </tr>
-
-        
-        </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
-
-
-    
-Object
-
-
-
-
-
-<span class="param-desc">
-    Leaflet L.Marker object
-</span>
-
-</div>
-
-        
-
-    
-
-
-  </dd>
-</dl>
-
-
-        
-            
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
-        
-      " id=".getGeometryWithCirclesFromGeoJSON">
-
-      
-        getGeometryWithCirclesFromGeoJSON<span class="signature">(geoJSON)</span><span class="type-signature"> &rarr; {*}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
-    
-
-    
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
-    
-    <div class="description">
-        <p>
-        Utility method to take a standard GeoJSON object and change the geometry of Point types to Circle types (not
-supported by the GeoJSON standard). This function assumes that the properties object of the circle features has
-a property of 'point_type' with a value of 'circle', and a property of 'radius'.</p><p>I.e. this function will convert
-<code>
-     {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "properties": {
-              "point_type": "circle",
-              "radius": 1027747.8506951465
-            },
-            "geometry": {
-              "type": "Point",
-              "coordinates": [
-                122.51953124999999,
-                -13.410994034321702
-              ]
-            }
-          }
-        ]
-      }
-</code>
-into
-<code>
-{
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {
-          "point_type": "circle",
-          "radius": 1027747.8506951465
-        },
-        "geometry": {
-          "type": "Circle",
-          "coordinates": [
-            122.51953124999999,
-            -13.410994034321702
-          ],
-          "centre": [
-            122.51953124999999,
-            -13.410994034321702
-          ],
-          "radius": 1027747.8506951465
-        }
-      }
-    ]
-  }
-</code>
-        </p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h4>Parameters</h4>
-        
-
-<table class="params table table-bordered table-condensed">
-    <thead>
-        <tr>
-                
-                <th>Name</th>
-                
-
-                <th>Type</th>
-
-                
-
-                <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-        <tr>
-            
-                <td class="name">geoJSON
-                  
-                </td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-        
-        </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
-
-
-    
-*
-
 
 
 
 
 </div>
+            
+                <div class="member">
 
-        
 
     
-
-
-  </dd>
-</dl>
-
-
+    <h4 class="name" id=".getStandardGeoJSONForCircleGeometry">
+        <a class="href-link" href="#.getStandardGeoJSONForCircleGeometry">#</a>
         
             
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
+                <span class='tag'>static</span>
+            
         
-      " id=".getStandardGeoJSONForCircleGeometry">
-
-      
-        getStandardGeoJSONForCircleGeometry<span class="signature">(geoJSON)</span><span class="type-signature"> &rarr; {GeoJSON}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
+        <span class="code-name">
+            
+                getStandardGeoJSONForCircleGeometry<span class="signature">(geoJSON)</span><span class="type-signature"> &rarr; {GeoJSON}</span>
+            
+        </span>
+    </h4>
     
 
     
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
     
     <div class="description">
-        <p>
         Performs the opposite of #getGeometryWithCirclesFromGeoJSON to produce valid standard GeoJSON.
-        </p>
     </div>
     
 
-    
 
-    
 
-    
-        <h4>Parameters</h4>
-        
 
-<table class="params table table-bordered table-condensed">
-    <thead>
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
         <tr>
-                
-                <th>Name</th>
-                
+            
+            <th>Name</th>
+            
 
-                <th>Type</th>
+            <th>Type</th>
 
-                
+            
 
-                <th class="last">Description</th>
+            
+
+            <th class="last">Description</th>
         </tr>
         </thead>
 
         <tbody>
         
 
-        <tr>
             
-                <td class="name">geoJSON
-                  
-                </td>
-            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>geoJSON</code></td>
+  
 
-            <td class="type">
-            
-            </td>
+  <td class="type">
+  
+  </td>
 
-            
+  
 
-            <td class="description last">The modified GeoJSON to be converted back to the standard format.</td>
-        </tr>
+  
+
+  <td class="description last">The modified GeoJSON to be converted back to the standard format.</td>
+</tr>
+
 
         
         </tbody>
-</table>
+    </table>
+</div>
 
-    
 
-    
+
+
+
 <dl class="details">
-    
 
     
 
@@ -2712,203 +1374,249 @@ into
 
     
 
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2478">line 2478</a>
+            </span>
+        </p>
     
 </dl>
 
 
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
 
 
-    
-GeoJSON
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">GeoJSON</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
 
 </div>
+            
+                <div class="member">
 
-        
 
     
-
-
-  </dd>
-</dl>
-
-
+    <h4 class="name" id=".wrapGeometryInGeoJSONFeatureCol">
+        <a class="href-link" href="#.wrapGeometryInGeoJSONFeatureCol">#</a>
         
             
-
-
-<dl class="bs-docs-example bs-members">
-  <dt>
-
-
-    <h3 class="
-        subsection-title name
+                <span class='tag'>static</span>
+            
         
-      " id=".wrapGeometryInGeoJSONFeatureCol">
-
-      
-        wrapGeometryInGeoJSONFeatureCol<span class="signature">(geometry)</span><span class="type-signature"> &rarr; {Object}</span><span class="label label-info">static</span> 
-      
-
-      
-
-      
-
-    </h3>
-
+        <span class="code-name">
+            
+                wrapGeometryInGeoJSONFeatureCol<span class="signature">(geometry)</span><span class="type-signature"> &rarr; {Object}</span>
+            
+        </span>
+    </h4>
     
 
     
-
-
-
-    
-
-
-
-  </dt>
-<dd>
-
-
     
     <div class="description">
-        <p>
         Takes a bare geoJSON geometry object, and wraps it in a full GeoJSON structure with type=FeatureCollection
-        </p>
     </div>
     
 
-    
 
-    
 
-    
-        <h4>Parameters</h4>
-        
 
-<table class="params table table-bordered table-condensed">
-    <thead>
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
         <tr>
-                
-                <th>Name</th>
-                
+            
+            <th>Name</th>
+            
 
-                <th>Type</th>
+            <th>Type</th>
 
-                
+            
 
-                <th class="last">Description</th>
+            
+
+            <th class="last">Description</th>
         </tr>
         </thead>
 
         <tbody>
         
 
-        <tr>
             
-                <td class="name">geometry
-                  
-                </td>
-            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>geometry</code></td>
+  
 
-            <td class="type">
-            
-            </td>
+  <td class="type">
+  
+  </td>
 
-            
+  
 
-            <td class="description last">The geoJSON geometry object to wrap</td>
-        </tr>
+  
+
+  <td class="description last">The geoJSON geometry object to wrap</td>
+</tr>
+
 
         
         </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h4>Returns</h4>
-    
-            <div class="returns">
-
-
-    
-Object
-
-
-
-
-
-<span class="param-desc">
-    Full GeoJSON structure with type=FeatureCollection
-</span>
-
+    </table>
 </div>
 
-        
+
+
+
+
+<dl class="details">
 
     
 
+    
 
-  </dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Map.js.html" class="button">View Source</a>
+            <span>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2500">line 2500</a>
+            </span>
+        </p>
+    
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Full GeoJSON structure with type=FeatureCollection</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
         
-      
+<code class="param-type">Object</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
     </div>
 
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
 </article>
 
 </section>
@@ -2916,14 +1624,26 @@ Object
 
 
 
-          </div>
-      </div>
-
-        <br clear="both">
-
-      <footer>
-      </footer>
-      <script> prettyPrint(); </script>
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
     </div>
-  </body>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
 </html>
