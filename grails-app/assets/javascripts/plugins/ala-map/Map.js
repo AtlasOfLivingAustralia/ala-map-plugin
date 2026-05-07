@@ -860,7 +860,7 @@ ALA.Map = function (id, options) {
      * @memberOf ALA.Map
      * @function getOverlayLayers
      * @param {string} filter Which layers to include: 'all': all layers; 'selected': only selected layers. Default 'all'.
-     * @return
+     * @return {array} selected or all overlay layers, depending on the filter parameter.
      */
     self.getOverlayLayers = function (filter) {
         filter = filter || 'all';

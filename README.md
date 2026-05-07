@@ -156,8 +156,8 @@ git checkout gh-pages
 * In the root of the main directory (not the gh-pages branch):
   * Install npm if you don't already have it
   * Install jsdoc3 if you don't already have it (```npm install jsdoc```)
-  * Install the jsdoc3-bootstrap template if you don't already have it (```npm install jsdoc3-bootstrap```)
-  * Run jsdoc: ```./node_modules/.bin/jsdoc web-app/js/* -t ./node_modules/jsdoc3-bootstrap/ -d [gh_pages_loc]/api```, where ```[gh_pages_loc]``` is the path to the directory you cloned the gh-pages branch to (don't miss the /api on the end).
+  * Install the jsdoc3-bootstrap template if you don't already have it (```npm install better-docs```)
+  * Run jsdoc: ```./node_modules/.bin/jsdoc grails-app/assets/javascripts/plugins/ala-map/*.js -t ./node_modules/better-docs -d [gh_pages_loc]/api```, where ```[gh_pages_loc]``` is the path to the directory you cloned the gh-pages branch to (don't miss the /api on the end).
   * Commit the changes to the gh-branch
 
 ## Custom Leaflet controls and layers
