@@ -1759,11 +1759,11 @@ ALA.Map = function (id, options) {
         }
 
         var modeConfigs = [
-            {name: "editMode", title: "Cancel edit changes"},
-            {name: "dragMode", title: "Cancel drag changes"},
-            {name: "cutPolygon", title: "Cancel cut changes"},
-            {name: "removalMode", title: "Cancel remove changes"},
-            {name: "rotateMode", title: "Cancel rotate changes"}
+            {name: "editMode", title: "Cancel edit changes", cancelActionName: "editModeCancel"},
+            {name: "dragMode", title: "Cancel drag changes", cancelActionName: "dragModeCancel"},
+            {name: "cutPolygon", title: "Cancel cut changes", cancelActionName: "cutPolygonCancel"},
+            {name: "removalMode", title: "Cancel remove changes", cancelActionName: "removalModeCancel"},
+            {name: "rotateMode", title: "Cancel rotate changes", cancelActionName: "rotateModeCancel"}
         ];
 
         modeConfigs.forEach(function (modeConfig) {
@@ -1771,7 +1771,7 @@ ALA.Map = function (id, options) {
                 "finishMode", // complete the mode action and save changes
                 { // custom cancel action
                     text: "Cancel",
-                    name: "cancel",
+                    name: modeConfig.cancelActionName,
                     title: modeConfig.title,
                     onClick: function () {
                         cancelGlobalModeChanges(modeConfig.name);
