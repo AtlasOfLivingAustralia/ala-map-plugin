@@ -43,6 +43,12 @@ jobs:
       - name: Install NPM Dependencies
         run: npm install
 
+      - name: Build turf
+        run: npm run turf
+
+      - name: Build uuid
+        run: npm run uuid
+
       - name: JS Tests (Karma)
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 

@@ -11,7 +11,7 @@ Dependencies excluding jquery and underscore, includes:
 //= require leaflet.markercluster/leaflet.markercluster.js
 //= require leaflet-loading/src/Control.Loading.js
 //= require leaflet-sleep/Leaflet.Sleep.js
-//= require turf-2.0.2/turf.min.js
+//= require turf/turf-packaged.js
 //= require @tmcw/togeojson/togeojson.umd.js
 //= require shapefile-js-6.2.0/dist/shp.min.js
 //= require leaflet-filelayer/src/leaflet.filelayer.js

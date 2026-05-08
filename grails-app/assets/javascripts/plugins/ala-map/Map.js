@@ -78,7 +78,9 @@ ALA.MapConstants = {
  *  <li><code>markerOrShapeNotBoth</code> whether to allow users to draw both markers and regions/shapes at the same time. Default: true</li>
  *  <li><code>showFitBoundsToggle</code> whether to include a button to toggle between the initial map zoom and the bounds of the data. Default: false</li>
  *  <li><code>useMyLocation</code> whether to include a "Use My Location" button to place a marker on the map at the user's location. Default: true</li>
- *  <li><code>addGeometryFromLocalFile</code> adds a control to be able to upload file in accepted formats. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
+ *  <li><code>addGeometryFromLocalFile</code> add a shape from a file. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
+ *  <li><code>simplifyImportedShapes</code> True to simplify shapes imported from files. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
+ *  <li><code>simplifyOptions</code> Options to pass to the turf's simplify method. Only relevant if addGeometryFromLocalFile = true and simplifyImportedShapes = true. Default: {tolerance: 0.001, highQuality: true, mutate: true}</li>
  *  <li><code>allowSearchLocationByAddress</code> whether to allow the user to search by address to place a marker on the map. Default: true</li>
  *  <li><code>allowSearchRegionByAddress</code> whether to allow the user to search by address to draw a polygon on the map. Default: true</li>
  *  <li><code>geocodeRegionOptions</code> additional configuration options when using the allowSearchRegionByAddress control. Only relevant when allowSearchRegionByAddress = true:</li>
@@ -236,6 +238,12 @@ ALA.Map = function (id, options) {
         srs: "EPSG:900913"
     };
 
+    var DEFAULT_SIMPLIFICATION_OPTIONS = {
+        tolerance: 0.001,
+        highQuality: true,
+        mutate: true
+    }
+
     /**
      * Default Map options
      *
@@ -284,7 +292,9 @@ ALA.Map = function (id, options) {
         minMapHeight: 250,
         autoZIndex: true,
         preserveZIndex: false,
-        addGeometryFromLocalFile: false
+        addGeometryFromLocalFile: false,
+        simplifyImportedShapes: false,
+        simplifyOptions: DEFAULT_SIMPLIFICATION_OPTIONS
     };
 
     /**
@@ -2113,6 +2123,16 @@ ALA.Map = function (id, options) {
                 onEachFeature: onEachFeatureWithWMSLayerSupport,
             },
             layer: function (geoJSON) {
+                if (options.simplifyImportedShapes) {
+                    if (typeof turf === "undefined") {
+                        console.error("[ALA-Map] turf is not defined. You must include the turf library to use the simplifyImportedShapes option.");
+                        return ;
+                    }
+
+                    var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
+                    geoJSON = turf.simplify(geoJSON, config);
+                }
+
                 return self.setGeoJSON(geoJSON);
             }
         });
