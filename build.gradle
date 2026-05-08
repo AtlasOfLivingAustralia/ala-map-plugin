@@ -90,7 +90,6 @@ clientDependencies {
         'leaflet.gridlayer.googlemutant'('0.16.0')
         '@tmcw/togeojson'('7.1.2')
         'leaflet-filelayer'('1.2.0')
-        'uuidjs'('5.1.0')
     }
 }
 
