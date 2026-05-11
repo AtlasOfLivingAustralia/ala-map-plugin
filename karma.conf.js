@@ -50,16 +50,6 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            // {pattern: 'grails-app/assets/vendor-external/leaflet/images/*.png', included: false, served: true, watched: false},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet/leaflet.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/@geoman-io/leaflet-geoman-free/leaflet-geoman.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet.coordinates/Leaflet.Coordinates-0.1.5.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet.coordinates/Leaflet.Coordinates-0.1.5.ie.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet-easybutton/src/easy-button.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet-control-geocoder/Control.Geocoder.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet.markercluster/MarkerCluster.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet.markercluster/MarkerCluster.Default.css', type: 'css', included: true, served: true},
-            // {pattern: 'grails-app/assets/vendor-external/leaflet-loading/src/Control.Loading.css', type: 'css', included: true, served: true},
             'grails-app/assets/vendor-external/underscore/underscore-min.js',
             'grails-app/assets/vendor-external/handlebars/handlebars.js',
             'grails-app/assets/vendor-external/leaflet/leaflet.js',
