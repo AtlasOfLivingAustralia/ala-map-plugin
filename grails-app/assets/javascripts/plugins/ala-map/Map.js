@@ -1619,18 +1619,16 @@ ALA.Map = function (id, options) {
                 drawCircleMarker:false,
                 drawText: false,
                 cutPolygon: true,
-                limitMarkersToCount: 50,
-                allowSelfIntersection: false,
-                hideMiddleMarkers: true,
-                editMode: {
-                    allowSelfIntersection: false, // disallow self-intersection for polygons
-                    hideMiddleMarkers: true,
-                    limitMarkersToCount: 100
-                },
                 dragMode: true,
                 removalMode: true,
                 rotateMode: true,
                 snappingOption: true
+            });
+
+            mapImpl.pm.setGlobalOptions({
+                limitMarkersToCount: 100, // adding all marker can cause performance issues when site is large
+                allowSelfIntersection: false, // disallow self-intersection for polygons
+                hideMiddleMarkers: false
             });
 
             addCustomCancelActionToEditModes();
