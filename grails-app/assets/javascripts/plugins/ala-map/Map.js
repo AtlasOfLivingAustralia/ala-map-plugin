@@ -1307,8 +1307,8 @@ ALA.Map = function (id, options) {
             return;
         }
 
-        if (layer.setStyle) {
-            var options = layer.options;
+        var options = layer._originalOptions;
+        if (layer.setStyle && options) {
             if (options && layer.setStyle) {
                 var style = {
                     weight: options.weight / 3,
@@ -1318,8 +1318,7 @@ ALA.Map = function (id, options) {
                 layer.setStyle(style);
             }
         }
-        else if (layer.options && layer.options.icon) {
-            var icon = layer.options.icon;
+        else if (options && options.icon) {
             icon.options.iconSize = [icon.options.iconSize[0]/1.5, icon.options.iconSize[1]/1.5];
             icon.options.iconAnchor = [icon.options.iconAnchor[0]/1.5, icon.options.iconAnchor[1]/1.5];
             layer.setIcon(icon);
@@ -1336,7 +1335,12 @@ ALA.Map = function (id, options) {
             return;
         }
 
-        var options = layer.options;
+        if (!layer._originalOptions) {
+            // deep clone the options to preserve the original values for unHighlightLayer
+            layer._originalOptions = JSON.parse(JSON.stringify(layer.options));
+        }
+
+        var options = layer._originalOptions;
         if (!options) {
             return;  // TODO Known shapes don't have options
         }
@@ -1680,7 +1684,6 @@ ALA.Map = function (id, options) {
         });
 
         mapImpl.on("pm:cut", function (event) {
-            console.log("Cut event", event);
             drawnItems.removeLayer(event.originalLayer);
         });
 
@@ -1929,7 +1932,7 @@ ALA.Map = function (id, options) {
      * @param layerOptions
      */
     function onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions) {
-        wmsOptions = {};
+        var wmsOptions = {};
         updateFeatureProperties(feature, layer);
         assignFeatureId(layer, feature);
 
@@ -2104,7 +2107,7 @@ ALA.Map = function (id, options) {
      */
     function addFileInputControl(options) {
         if (typeof L.Control.advancedFileLayerLoad === "undefined") {
-            console.error("[ALA-Map] L.Control.advancedFileLoader is not defined. You must include the leaflet-filelayer plugin to use the file input control.");
+            console.error("[ALA-Map] L.Control.advancedFileLayerLoad is not defined. You must include the leaflet-filelayer plugin to use the file input control.");
             return;
         }
 

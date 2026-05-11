@@ -1,7 +1,6 @@
 // Karma configuration
 // Generated on Mon Feb 23 2015 15:47:55 GMT+1100 (AEDT)
 
-const {include} = require("underscore");
 module.exports = function (config) {
     config.set({
 
