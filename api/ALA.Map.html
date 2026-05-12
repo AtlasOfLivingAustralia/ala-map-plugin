@@ -170,7 +170,9 @@
  <li><code>markerOrShapeNotBoth</code> whether to allow users to draw both markers and regions/shapes at the same time. Default: true</li>
  <li><code>showFitBoundsToggle</code> whether to include a button to toggle between the initial map zoom and the bounds of the data. Default: false</li>
  <li><code>useMyLocation</code> whether to include a "Use My Location" button to place a marker on the map at the user's location. Default: true</li>
- <li><code>addGeometryFromLocalFile</code> adds a control to be able to upload file in accepted formats. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
+ <li><code>addGeometryFromLocalFile</code> add a shape from a file. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
+ <li><code>simplifyImportedShapes</code> True to simplify shapes imported from files. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
+ <li><code>simplifyOptions</code> Options to pass to the turf's simplify method. Only relevant if addGeometryFromLocalFile = true and simplifyImportedShapes = true. Default: {tolerance: 0.001, highQuality: true, mutate: true}</li>
  <li><code>allowSearchLocationByAddress</code> whether to allow the user to search by address to place a marker on the map. Default: true</li>
  <li><code>allowSearchRegionByAddress</code> whether to allow the user to search by address to draw a polygon on the map. Default: true</li>
  <li><code>geocodeRegionOptions</code> additional configuration options when using the allowSearchRegionByAddress control. Only relevant when allowSearchRegionByAddress = true:</li>
@@ -318,7 +320,7 @@
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line109">line 109</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line111">line 111</a>
             </span>
         </p>
     
@@ -430,7 +432,7 @@
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line245">line 245</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line253">line 253</a>
             </span>
         </p>
     
@@ -506,7 +508,7 @@ options with our default values, where they are different.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line318">line 318</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line328">line 328</a>
             </span>
         </p>
     
@@ -586,7 +588,7 @@ The following configuration options are available:
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line303">line 303</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line313">line 313</a>
             </span>
         </p>
     
@@ -787,7 +789,7 @@ leaflet button. The second parameter will be the leaflet map. I.e.</td>
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1064">line 1064</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1074">line 1074</a>
             </span>
         </p>
     
@@ -977,7 +979,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line636">line 636</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line646">line 646</a>
             </span>
         </p>
     
@@ -1129,7 +1131,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1053">line 1053</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1063">line 1063</a>
             </span>
         </p>
     
@@ -1308,7 +1310,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line782">line 782</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line792">line 792</a>
             </span>
         </p>
     
@@ -1516,7 +1518,7 @@ See http://leafletjs.com/reference.html#control-layers for details.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1174">line 1174</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1184">line 1184</a>
             </span>
         </p>
     
@@ -1770,7 +1772,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line606">line 606</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line616">line 616</a>
             </span>
         </p>
     
@@ -1997,7 +1999,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line836">line 836</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line846">line 846</a>
             </span>
         </p>
     
@@ -2235,7 +2237,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line694">line 694</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line704">line 704</a>
             </span>
         </p>
     
@@ -2414,7 +2416,7 @@ Triggers events pm:drawstart and pm:create, and will notify all subscribers
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line805">line 805</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line815">line 815</a>
             </span>
         </p>
     
@@ -2542,7 +2544,7 @@ bounds (from fitToBoundsOf) if they exist. The map will be reset to the bounds o
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1025">line 1025</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1035">line 1035</a>
             </span>
         </p>
     
@@ -2645,7 +2647,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line546">line 546</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line556">line 556</a>
             </span>
         </p>
     
@@ -2748,7 +2750,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line580">line 580</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line590">line 590</a>
             </span>
         </p>
     
@@ -2849,7 +2851,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1114">line 1114</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1124">line 1124</a>
             </span>
         </p>
     
@@ -2975,7 +2977,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line348">line 348</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line358">line 358</a>
             </span>
         </p>
     
@@ -3078,7 +3080,7 @@ Note: This is done automatically for any direct changes on the map.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1142">line 1142</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1152">line 1152</a>
             </span>
         </p>
     
@@ -3180,7 +3182,7 @@ be set to the default zoom and centre.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line928">line 928</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line938">line 938</a>
             </span>
         </p>
     
@@ -3337,7 +3339,7 @@ outside the provided bounds, whereas this method will allow that.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line958">line 958</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line968">line 968</a>
             </span>
         </p>
     
@@ -3438,7 +3440,7 @@ outside the provided bounds, whereas this method will allow that.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1086">line 1086</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1096">line 1096</a>
             </span>
         </p>
     
@@ -3564,7 +3566,7 @@ outside the provided bounds, whereas this method will allow that.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line890">line 890</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line900">line 900</a>
             </span>
         </p>
     
@@ -3690,7 +3692,7 @@ outside the provided bounds, whereas this method will allow that.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line594">line 594</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line604">line 604</a>
             </span>
         </p>
     
@@ -3820,7 +3822,7 @@ property object (this is still valid GeoJSON).
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line440">line 440</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line450">line 450</a>
             </span>
         </p>
     
@@ -3946,7 +3948,7 @@ property object (this is still valid GeoJSON).
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line498">line 498</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line508">line 508</a>
             </span>
         </p>
     
@@ -4072,7 +4074,7 @@ property object (this is still valid GeoJSON).
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line509">line 509</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line519">line 519</a>
             </span>
         </p>
     
@@ -4198,7 +4200,7 @@ property object (this is still valid GeoJSON).
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1097">line 1097</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1107">line 1107</a>
             </span>
         </p>
     
@@ -4375,7 +4377,7 @@ property object (this is still valid GeoJSON).
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line857">line 857</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line867">line 867</a>
             </span>
         </p>
     
@@ -4501,7 +4503,7 @@ property object (this is still valid GeoJSON).
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line876">line 876</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line886">line 886</a>
             </span>
         </p>
     
@@ -4633,7 +4635,7 @@ Fire a 'SearchEventFired' for site creation
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line754">line 754</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line764">line 764</a>
             </span>
         </p>
     
@@ -4734,7 +4736,7 @@ Fire a 'SearchEventFired' for site creation
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line399">line 399</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line409">line 409</a>
             </span>
         </p>
     
@@ -4835,7 +4837,7 @@ Fire a 'SearchEventFired' for site creation
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1041">line 1041</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1051">line 1051</a>
             </span>
         </p>
     
@@ -5012,7 +5014,7 @@ Fire a 'SearchEventFired' for site creation
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line411">line 411</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line421">line 421</a>
             </span>
         </p>
     
@@ -5164,7 +5166,7 @@ Fire a 'SearchEventFired' for site creation
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line566">line 566</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line576">line 576</a>
             </span>
         </p>
     
@@ -5342,7 +5344,7 @@ callback needs to be provided in order to find the listener to remove.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line427">line 427</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line437">line 437</a>
             </span>
         </p>
     
@@ -5449,7 +5451,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line520">line 520</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line530">line 530</a>
             </span>
         </p>
     
@@ -5636,7 +5638,7 @@ Will notify all subscribers.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line455">line 455</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line465">line 465</a>
             </span>
         </p>
     
@@ -5793,7 +5795,7 @@ the provided bounds, whereas this method will not.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1009">line 1009</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1019">line 1019</a>
             </span>
         </p>
     
@@ -5896,7 +5898,7 @@ Note: This is done automatically for any direct changes on the map.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1130">line 1130</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1140">line 1140</a>
             </span>
         </p>
     
@@ -6050,7 +6052,7 @@ To listen for specific events, use ALA.Map#registerListener instead.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line366">line 366</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line376">line 376</a>
             </span>
         </p>
     
@@ -6176,7 +6178,7 @@ To listen for specific events, use ALA.Map#registerListener instead.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1154">line 1154</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1164">line 1164</a>
             </span>
         </p>
     
@@ -6328,7 +6330,7 @@ To listen for specific events, use ALA.Map#registerListener instead.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line385">line 385</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line395">line 395</a>
             </span>
         </p>
     
@@ -6505,7 +6507,7 @@ To listen for specific events, use ALA.Map#registerListener instead.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line915">line 915</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line925">line 925</a>
             </span>
         </p>
     
@@ -6606,7 +6608,7 @@ To listen for specific events, use ALA.Map#registerListener instead.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1756">line 1756</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1767">line 1767</a>
             </span>
         </p>
     
@@ -6755,7 +6757,7 @@ The file is parsed and added as a layer to the map, with support for WMS layers 
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2097">line 2097</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2108">line 2108</a>
             </span>
         </p>
     
@@ -6926,7 +6928,7 @@ This control allows the user to select a layer from a list of layers, and then s
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2130">line 2130</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2151">line 2151</a>
             </span>
         </p>
     
@@ -7093,7 +7095,7 @@ This control allows the user to select a layer from a list of layers, and then s
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1988">line 1988</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1999">line 1999</a>
             </span>
         </p>
     
@@ -7241,7 +7243,7 @@ This is triggered when the user clicks the custom cancel button added to the mod
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1813">line 1813</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1824">line 1824</a>
             </span>
         </p>
     
@@ -7389,7 +7391,7 @@ This is used when cancelling an edit action to turn off the mode that was turned
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1838">line 1838</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1849">line 1849</a>
             </span>
         </p>
     
@@ -7556,7 +7558,7 @@ This is used when cancelling an edit action to turn off the mode that was turned
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1789">line 1789</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1800">line 1800</a>
             </span>
         </p>
     
@@ -7703,7 +7705,7 @@ This is used when cancelling an edit action to turn off the mode that was turned
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1585">line 1585</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1599">line 1599</a>
             </span>
         </p>
     
@@ -7891,7 +7893,7 @@ a 'pid' property, and also supports creating popups based on feature properties.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1923">line 1923</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1934">line 1934</a>
             </span>
         </p>
     
@@ -8093,7 +8095,7 @@ a 'pid' property, and also supports creating popups based on feature properties.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2313">line 2313</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2334">line 2334</a>
             </span>
         </p>
     
@@ -8245,7 +8247,7 @@ a 'pid' property, and also supports creating popups based on feature properties.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2360">line 2360</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2381">line 2381</a>
             </span>
         </p>
     
@@ -8397,7 +8399,7 @@ a 'pid' property, and also supports creating popups based on feature properties.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2332">line 2332</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2353">line 2353</a>
             </span>
         </p>
     
@@ -8549,7 +8551,7 @@ a 'pid' property, and also supports creating popups based on feature properties.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2349">line 2349</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line2370">line 2370</a>
             </span>
         </p>
     
@@ -8699,7 +8701,7 @@ If otherLayers is provided, the layer set as baseLayer must be included in the o
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1470">line 1470</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1484">line 1484</a>
             </span>
         </p>
     
@@ -8846,7 +8848,7 @@ If otherLayers is provided, the layer set as baseLayer must be included in the o
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1454">line 1454</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1468">line 1468</a>
             </span>
         </p>
     
@@ -9014,7 +9016,7 @@ they are not overwritten but merged with the new properties.
         <p class="tag-source">
             <a href="Map.js.html" class="button">View Source</a>
             <span>
-                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1966">line 1966</a>
+                <a href="Map.js.html">Map.js</a>, <a href="Map.js.html#line1977">line 1977</a>
             </span>
         </p>
     

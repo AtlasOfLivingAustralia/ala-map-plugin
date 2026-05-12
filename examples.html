@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/jquery-2.1.4/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/underscore-1.8.3/underscore.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/leaflet.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.EasyButton-1.2.0/easy-button.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.draw-0.2.4/leaflet.draw.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.loading-0.1.16/Control.Loading.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.markercluster-0.4.0-hotfix.1/leaflet.markercluster.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-control-geocoder-1.3.2/Control.Geocoder.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/onImpressions/jquery.onimpression.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/handlebars-4.0.5/handlebars.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/turf-2.0.2/turf.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/urijs-1.18.0/URI.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/controls/TwoStepSelector.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/controls/Select.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/controls/Legend.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/OccurrenceMap.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/font-awesome-4.5.0/css/font-awesome.min.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/leaflet.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.EasyButton-1.2.0/easy-button.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.draw-0.2.4/leaflet.draw.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.loading-0.1.16/Control.Loading.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.markercluster-0.4.0-hotfix.1/MarkerCluster.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.markercluster-0.4.0-hotfix.1/MarkerCluster.Default.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-control-geocoder-1.3.2/Control.Geocoder.css"></link>
-    <link rel="stylesheet" href="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/css/map.css"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.coordinates@0.1.5/dist/Leaflet.Coordinates-0.1.5.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2.4.0/src/easy-button.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder@3.3.1/dist/Control.Geocoder.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-loading@0.1.24/src/Control.Loading.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@geoman-io/leaflet-geoman-free@2.19.3/dist/leaflet-geoman.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/stylesheets/plugins/ala-map/map.css">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/underscore@1.13.8/underscore-min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/vendor-external/uuidjs/uuid.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@turf/turf@7.3.0/turf.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-inview@1.1.2/jquery.inview.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@geoman-io/leaflet-geoman-free@2.19.3/dist/leaflet-geoman.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet.coordinates@0.1.5/dist/Leaflet.Coordinates-0.1.5.src.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2.4.0/src/easy-button.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder@3.3.1/dist/Control.Geocoder.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet-loading@0.1.24/src/Control.Loading.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet-sleep@0.5.2/Leaflet.Sleep.js"></script>
+
+    <script type="module">
+        import * as toGeoJSON from 'https://cdn.jsdelivr.net/npm/@tmcw/togeojson@7.1.2/dist/togeojson.es.js';
+    </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/vendor/shapefile-js-6.2.0/dist/shp.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet-filelayer@1.2.0/src/leaflet.filelayer.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/AdvancedFileLayerLoad.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/Checkbox.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/Fullscreen.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/Legend.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/LegendImage.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/Radio.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/Select.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/Slider.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/controls/TwoStepSelector.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/layers/AdvancedFileLoader.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/layers/SmartWmsLayer.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/Map.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AtlasOfLivingAustralia/ala-map-plugin@feature/issue3710-fieldcapture//grails-app/assets/javascripts/plugins/ala-map/OccurrenceMap.js"></script>
 
     <style>
         .code {
@@ -48,8 +68,8 @@
         <h1>Default Map</h1>
         <div class="col-md-6">
             <div id="defaultMap"
-                 data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"
-                 style="width:550px; height:450px"></div>
+                 data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"
+                 style="width:550px; height:600px"></div>
         </div>
         <div class="col-md-6">
             <div class="code">
@@ -66,8 +86,8 @@
         <h1>Read-only Map</h1>
         <div class="col-md-6">
             <div id="readonlyMap"
-                 data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"
-                 style="width:550px; height:450px"></div>
+                 data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"
+                 style="width:550px; height:600px"></div>
         </div>
         <div class="col-md-6">
             <div class="code">
@@ -99,8 +119,8 @@
         <h1>Two-step selector</h1>
         <div class="col-md-6">
             <div id="twoStepMap"
-                 data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"
-                 style="width:550px; height:450px"></div>
+                 data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"
+                 style="width:550px; height:600px"></div>
         </div>
         <div class="col-md-6">
             <div class="code">
@@ -168,8 +188,8 @@
         <h1>Clustered Points</h1>
         <div class="col-md-6">
             <div id="clusterMap"
-                 data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"
-                 style="width:550px; height:450px"></div>
+                 data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"
+                 style="width:550px; height:600px"></div>
         </div>
         <div class="col-md-6">
             <div class="code">
@@ -215,8 +235,8 @@
         <h1>GeoJSON</h1>
         <div class="col-md-6">
             <div id="geoMap"
-                 data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"
-                 style="width:550px; height:450px"></div>
+                 data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"
+                 style="width:550px; height:600px"></div>
         </div>
         <div class="col-md-6">
             <div class="code">
@@ -257,8 +277,8 @@
         <h1>Hidden Polygon with marker and mouseover</h1>
         <div class="col-md-6">
             <div id="mouseoverMap"
-                 data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"
-                 style="width:550px; height:450px"></div>
+                 data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"
+                 style="width:550px; height:600px"></div>
         </div>
         <div class="col-md-6">
             <div class="code">
@@ -284,12 +304,12 @@
             var geoJson = {
                 type: "Feature",
                 properties: {},
-                geometry: {
-                    type: "Point",
-                    coordinates: [[133.06640625, -22.10599879975055]]
-                },
-                properties: {
-                    radius: "2000"
+                 geometry: {
+                    type: "Polygon",
+                    coordinates: [[[133.06640625, -22.10599879975055],
+                        [124.8046875, -28.998531814051795],
+                        [144.580078125, -30.06909396443886],
+                        [133.06640625, -22.10599879975055]]]
                 }
             };
             map4.setGeoJSON(geoJson, {
@@ -302,7 +322,7 @@
         <h1>ALA Occurrence Map</h1>
         <div class="col-md-12">
             <div class="code">
-                var map = new ALA.OccurrenceMap("occurrenceMap", "http://biocache.ala.org.au", "q=Acacia+dealbata&colourBy=life_stage", {});
+                var map = new ALA.OccurrenceMap("occurrenceMap", "https://biocache.ala.org.au", "q=Acacia+dealbata&colourBy=life_stage", {});
             </div>
         </div>
 
@@ -316,12 +336,12 @@
 
                 <div class="col-md-9">
                     <div id="occurrenceMap" style="width: 100%; height: 600px;"
-                         data-leaflet-img="https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/images"></div>
+                         data-leaflet-img="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/"></div>
                 </div>
             </div>
 
             <script type="text/javascript">
-                var map5 = new ALA.OccurrenceMap("occurrenceMap", "http://biocache.ala.org.au", "q=Acacia+dealbata&colourBy=life_stage", {});
+                var map5 = new ALA.OccurrenceMap("occurrenceMap", "https://biocache.ala.org.au", "q=Acacia+dealbata&colourBy=life_stage", {});
             </script>
 
             <div class="modal fade" id="chooseMoreModal" tabindex="-1" role="dialog"

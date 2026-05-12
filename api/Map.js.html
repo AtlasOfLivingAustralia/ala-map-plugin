@@ -165,7 +165,9 @@ ALA.MapConstants = {
  *  &lt;li>&lt;code>markerOrShapeNotBoth&lt;/code> whether to allow users to draw both markers and regions/shapes at the same time. Default: true&lt;/li>
  *  &lt;li>&lt;code>showFitBoundsToggle&lt;/code> whether to include a button to toggle between the initial map zoom and the bounds of the data. Default: false&lt;/li>
  *  &lt;li>&lt;code>useMyLocation&lt;/code> whether to include a "Use My Location" button to place a marker on the map at the user's location. Default: true&lt;/li>
- *  &lt;li>&lt;code>addGeometryFromLocalFile&lt;/code> adds a control to be able to upload file in accepted formats. Accepted formats are shapefile, geojson, kml, gpx.  Default: false&lt;/li>
+ *  &lt;li>&lt;code>addGeometryFromLocalFile&lt;/code> add a shape from a file. Accepted formats are shapefile, geojson, kml, gpx.  Default: false&lt;/li>
+ *  &lt;li>&lt;code>simplifyImportedShapes&lt;/code> True to simplify shapes imported from files. Only relevant if addGeometryFromLocalFile = true. Default: false&lt;/li>
+ *  &lt;li>&lt;code>simplifyOptions&lt;/code> Options to pass to the turf's simplify method. Only relevant if addGeometryFromLocalFile = true and simplifyImportedShapes = true. Default: {tolerance: 0.001, highQuality: true, mutate: true}&lt;/li>
  *  &lt;li>&lt;code>allowSearchLocationByAddress&lt;/code> whether to allow the user to search by address to place a marker on the map. Default: true&lt;/li>
  *  &lt;li>&lt;code>allowSearchRegionByAddress&lt;/code> whether to allow the user to search by address to draw a polygon on the map. Default: true&lt;/li>
  *  &lt;li>&lt;code>geocodeRegionOptions&lt;/code> additional configuration options when using the allowSearchRegionByAddress control. Only relevant when allowSearchRegionByAddress = true:&lt;/li>
@@ -231,7 +233,7 @@ ALA.Map = function (id, options) {
             defaultInList: true,
             options: {
                 subdomains: "abcd",
-                attribution: 'Map data &amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="http://www.openstreetmap.org/copyright">OpenStreetMap&lt;/a>, imagery &amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="http://cartodb.com/attributions">CartoDB&lt;/a>',
+                attribution: 'Map data &amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/copyright">OpenStreetMap&lt;/a>, imagery &amp;copy; &lt;a target="_blank" rel="noopener noreferrer" href="https://cartodb.com/attributions">CartoDB&lt;/a>',
                 maxZoom: DEFAULT_MAX_ZOOM,
                 maxNativeZoom: 21
             }
@@ -323,6 +325,12 @@ ALA.Map = function (id, options) {
         srs: "EPSG:900913"
     };
 
+    var DEFAULT_SIMPLIFICATION_OPTIONS = {
+        tolerance: 0.001,
+        highQuality: true,
+        mutate: true
+    }
+
     /**
      * Default Map options
      *
@@ -371,7 +379,9 @@ ALA.Map = function (id, options) {
         minMapHeight: 250,
         autoZIndex: true,
         preserveZIndex: false,
-        addGeometryFromLocalFile: false
+        addGeometryFromLocalFile: false,
+        simplifyImportedShapes: false,
+        simplifyOptions: DEFAULT_SIMPLIFICATION_OPTIONS
     };
 
     /**
@@ -1384,8 +1394,8 @@ ALA.Map = function (id, options) {
             return;
         }
 
-        if (layer.setStyle) {
-            var options = layer.options;
+        var options = layer._originalOptions;
+        if (layer.setStyle &amp;&amp; options) {
             if (options &amp;&amp; layer.setStyle) {
                 var style = {
                     weight: options.weight / 3,
@@ -1395,8 +1405,7 @@ ALA.Map = function (id, options) {
                 layer.setStyle(style);
             }
         }
-        else if (layer.options &amp;&amp; layer.options.icon) {
-            var icon = layer.options.icon;
+        else if (options &amp;&amp; options.icon) {
             icon.options.iconSize = [icon.options.iconSize[0]/1.5, icon.options.iconSize[1]/1.5];
             icon.options.iconAnchor = [icon.options.iconAnchor[0]/1.5, icon.options.iconAnchor[1]/1.5];
             layer.setIcon(icon);
@@ -1413,7 +1422,12 @@ ALA.Map = function (id, options) {
             return;
         }
 
-        var options = layer.options;
+        if (!layer._originalOptions) {
+            // deep clone the options to preserve the original values for unHighlightLayer
+            layer._originalOptions = JSON.parse(JSON.stringify(layer.options));
+        }
+
+        var options = layer._originalOptions;
         if (!options) {
             return;  // TODO Known shapes don't have options
         }
@@ -1696,18 +1710,16 @@ ALA.Map = function (id, options) {
                 drawCircleMarker:false,
                 drawText: false,
                 cutPolygon: true,
-                limitMarkersToCount: 50,
-                allowSelfIntersection: false,
-                hideMiddleMarkers: true,
-                editMode: {
-                    allowSelfIntersection: false, // disallow self-intersection for polygons
-                    hideMiddleMarkers: true,
-                    limitMarkersToCount: 100
-                },
                 dragMode: true,
                 removalMode: true,
                 rotateMode: true,
                 snappingOption: true
+            });
+
+            mapImpl.pm.setGlobalOptions({
+                limitMarkersToCount: 100, // adding all marker can cause performance issues when site is large
+                allowSelfIntersection: false, // disallow self-intersection for polygons
+                hideMiddleMarkers: false
             });
 
             addCustomCancelActionToEditModes();
@@ -1759,7 +1771,6 @@ ALA.Map = function (id, options) {
         });
 
         mapImpl.on("pm:cut", function (event) {
-            console.log("Cut event", event);
             drawnItems.removeLayer(event.originalLayer);
         });
 
@@ -1846,11 +1857,11 @@ ALA.Map = function (id, options) {
         }
 
         var modeConfigs = [
-            {name: "editMode", title: "Cancel edit changes"},
-            {name: "dragMode", title: "Cancel drag changes"},
-            {name: "cutPolygon", title: "Cancel cut changes"},
-            {name: "removalMode", title: "Cancel remove changes"},
-            {name: "rotateMode", title: "Cancel rotate changes"}
+            {name: "editMode", title: "Cancel edit changes", cancelActionName: "editModeCancel"},
+            {name: "dragMode", title: "Cancel drag changes", cancelActionName: "dragModeCancel"},
+            {name: "cutPolygon", title: "Cancel cut changes", cancelActionName: "cutPolygonCancel"},
+            {name: "removalMode", title: "Cancel remove changes", cancelActionName: "removalModeCancel"},
+            {name: "rotateMode", title: "Cancel rotate changes", cancelActionName: "rotateModeCancel"}
         ];
 
         modeConfigs.forEach(function (modeConfig) {
@@ -1858,7 +1869,7 @@ ALA.Map = function (id, options) {
                 "finishMode", // complete the mode action and save changes
                 { // custom cancel action
                     text: "Cancel",
-                    name: "cancel",
+                    name: modeConfig.cancelActionName,
                     title: modeConfig.title,
                     onClick: function () {
                         cancelGlobalModeChanges(modeConfig.name);
@@ -2008,7 +2019,7 @@ ALA.Map = function (id, options) {
      * @param layerOptions
      */
     function onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions) {
-        wmsOptions = {};
+        var wmsOptions = {};
         updateFeatureProperties(feature, layer);
         assignFeatureId(layer, feature);
 
@@ -2183,7 +2194,7 @@ ALA.Map = function (id, options) {
      */
     function addFileInputControl(options) {
         if (typeof L.Control.advancedFileLayerLoad === "undefined") {
-            console.error("[ALA-Map] L.Control.advancedFileLoader is not defined. You must include the leaflet-filelayer plugin to use the file input control.");
+            console.error("[ALA-Map] L.Control.advancedFileLayerLoad is not defined. You must include the leaflet-filelayer plugin to use the file input control.");
             return;
         }
 
@@ -2200,6 +2211,16 @@ ALA.Map = function (id, options) {
                 onEachFeature: onEachFeatureWithWMSLayerSupport,
             },
             layer: function (geoJSON) {
+                if (options.simplifyImportedShapes) {
+                    if (typeof turf === "undefined") {
+                        console.error("[ALA-Map] turf is not defined. You must include the turf library to use the simplifyImportedShapes option.");
+                        return ;
+                    }
+
+                    var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
+                    geoJSON = turf.simplify(geoJSON, config);
+                }
+
                 return self.setGeoJSON(geoJSON);
             }
         });
