@@ -2113,6 +2113,7 @@ ALA.Map = function (id, options) {
 
         var controlOptions = _.defaults( options.fileInputControlOptions || {}, {
             addToMap: false,
+            fitBounds: false,
             formats: [
                 '.geojson',
                 '.json', // geojson with non-standard file extension
@@ -2134,7 +2135,15 @@ ALA.Map = function (id, options) {
                     geoJSON = turf.simplify(geoJSON, config);
                 }
 
-                return self.setGeoJSON(geoJSON);
+                var layer = self.setGeoJSON(geoJSON);
+                // add an intercepting method to layer to ensure file loader functions correctly
+                if (layer && !layer.getLayers) {
+                    layer.getLayers = function () {
+                        return [layer];
+                    }
+                }
+
+                return layer;
             }
         });
 
