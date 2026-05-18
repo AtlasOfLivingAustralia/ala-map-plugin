@@ -2140,13 +2140,13 @@ ALA.Map = function (id, options) {
 
         var fileInputControl = L.Control.advancedFileLayerLoad(controlOptions);
         mapImpl.addControl(fileInputControl);
-        mapImpl.on("data:error", function (event) {
+        fileInputControl.loader.on("data:error", function (event) {
             console.error("[ALA-Map] Error loading file: ");
             console.error(event);
             alert("Error loading file. Please fix the file and try again." + event.error);
         });
 
-        mapImpl.on("data:loaded", function (event) {
+        fileInputControl.loader.on("data:loaded", function (event) {
             console.log("[ALA-Map] File loaded successfully.");
         });
         return fileInputControl;
