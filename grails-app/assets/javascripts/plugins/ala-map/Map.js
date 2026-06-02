@@ -1308,7 +1308,7 @@ ALA.Map = function (id, options) {
         }
 
         var options = layer._originalOptions;
-        if (layer.setStyle && options) {
+        if (layer.setStyle) {
             if (options && layer.setStyle) {
                 var style = {
                     weight: options.weight / 3,
@@ -1318,10 +1318,8 @@ ALA.Map = function (id, options) {
                 layer.setStyle(style);
             }
         }
-        else if (options && options.icon) {
-            icon.options.iconSize = [icon.options.iconSize[0]/1.5, icon.options.iconSize[1]/1.5];
-            icon.options.iconAnchor = [icon.options.iconAnchor[0]/1.5, icon.options.iconAnchor[1]/1.5];
-            layer.setIcon(icon);
+        else if (layer.getIcon) {
+            increaseOrDecreaseIconSize(layer, 1);
         }
     };
 
@@ -1335,16 +1333,17 @@ ALA.Map = function (id, options) {
             return;
         }
 
-        if (!layer._originalOptions) {
-            // deep clone the options to preserve the original values for unHighlightLayer
-            layer._originalOptions = JSON.parse(JSON.stringify(layer.options));
-        }
-
-        var options = layer._originalOptions;
-        if (!options) {
-            return;  // TODO Known shapes don't have options
-        }
         if (layer.setStyle) {
+            if (!layer._originalOptions) {
+                // deep clone the options to preserve the original values for unHighlightLayer
+                layer._originalOptions = JSON.parse(JSON.stringify(layer.options));
+            }
+
+            var options = layer._originalOptions;
+            if (!options) {
+                return;  // TODO Known shapes don't have options
+            }
+
             var style = {
                 weight: options.weight * 3,
                 fillOpacity: 1,
@@ -1356,17 +1355,42 @@ ALA.Map = function (id, options) {
                 layer.bringToFront();
             }
         }
-        else if (options.icon) {
-            var icon = options.icon;
-            icon.options.iconSize = [icon.options.iconSize[0]*1.5, icon.options.iconSize[1]*1.5];
-            icon.options.iconAnchor = [icon.options.iconAnchor[0]*1.5, icon.options.iconAnchor[1]*1.5];
-            layer.setIcon(icon);
+        else if (layer.getIcon) {
+            increaseOrDecreaseIconSize(layer, 1.5);
         }
     };
 
     // ----------------------
     // Private functions
     // ----------------------
+
+    function increaseOrDecreaseIconSize (layer, factor) {
+        var icon = layer.getIcon(),
+            newIcon, options;
+        if (!icon) {
+            return;
+        }
+
+        if (!layer._originalOptions) {
+            // Copy original options to the layer so that we can use the original options to create icon for highlighting and unHighlighting.
+            if (icon.options && icon.options.iconSize && icon.options.iconAnchor) {
+                layer._originalOptions = {};
+                for (var key in icon.options) {
+                    layer._originalOptions[key] = icon.options[key];
+                }
+            }
+            else {
+                return;
+            }
+        }
+
+        options = Object.assign({}, layer._originalOptions);
+        options.iconSize = [options.iconSize[0]*factor, options.iconSize[1]*factor];
+        options.iconAnchor = [options.iconAnchor[0]*factor, options.iconAnchor[1]*factor];
+        // create a new icon as default icon is shared across all markers, so we cannot modify the existing one
+        newIcon = icon instanceof L.DivIcon ? L.divIcon(options) : new L.Icon.Default(options);
+        layer.setIcon(newIcon);
+    }
 
     // Main initialiser
     function initialiseMap() {
@@ -1380,7 +1404,7 @@ ALA.Map = function (id, options) {
 
         addCoordinates();
 
-        L.Icon.Default.imagePath = getLeafletImageLocation();
+        L.Icon.imagePath = L.Icon.Default.imagePath = getLeafletImageLocation();
 
         mapImpl.addLayer(options.baseLayer);
         if (options.defaultLayersControl) {
@@ -1625,14 +1649,14 @@ ALA.Map = function (id, options) {
                 cutPolygon: true,
                 dragMode: true,
                 removalMode: true,
-                rotateMode: true,
-                snappingOption: true
+                rotateMode: true
             });
 
             mapImpl.pm.setGlobalOptions({
                 limitMarkersToCount: 100, // adding all marker can cause performance issues when site is large
                 allowSelfIntersection: false, // disallow self-intersection for polygons
-                hideMiddleMarkers: false
+                hideMiddleMarkers: false,
+                snappable: false
             });
 
             addCustomCancelActionToEditModes();
@@ -2118,9 +2142,11 @@ ALA.Map = function (id, options) {
                 '.geojson',
                 '.json', // geojson with non-standard file extension
                 '.kml',
+                '.kmz', // KML in zip format
                 '.gpx',
                 '.zip' // shapefile in zip format
             ],
+            fileSizeLimit: 5120, // in KB, i.e. 5MB
             layerOptions: {
                 onEachFeature: onEachFeatureWithWMSLayerSupport,
             },
@@ -2152,7 +2178,7 @@ ALA.Map = function (id, options) {
         fileInputControl.loader.on("data:error", function (event) {
             console.error("[ALA-Map] Error loading file: ");
             console.error(event);
-            alert("Error loading file. Please fix the file and try again." + event.error);
+            alert("An error occurred while reading the file. Please fix the file and try again. Error details - " + event.error);
         });
 
         fileInputControl.loader.on("data:loaded", function (event) {

@@ -35,6 +35,15 @@ describe("AdvancedFileLoader tests", function () {
         return blob;
     }
 
+    // Helper to create a fake butUnzip entry iterable
+    function makeButUnzipMock(entries) {
+        return {
+            iter: jasmine.createSpy('iter').and.callFake(function (uint8) {
+                return entries[Symbol.iterator]();
+            })
+        };
+    }
+
     // Helper function to create a mock FileReader
     function mockFileReader(result, isArrayBuffer) {
         var originalFileReader = window.FileReader;
@@ -214,6 +223,21 @@ describe("AdvancedFileLoader tests", function () {
                     }
                 }]
             }));
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = makeButUnzipMock([
+                {
+                    filename: 'doc.shp'
+                },
+                {
+                    filename: 'doc.shx'
+                },
+                {
+                    filename: 'doc.dbf'
+                },
+                {
+                    filename: 'doc.prj'
+                }
+            ]);
 
             var restore = mockFileReader(mockArrayBuffer, true);
 
@@ -223,12 +247,14 @@ describe("AdvancedFileLoader tests", function () {
                 expect(e.format).toBe('zip');
                 expect(window.shp).toHaveBeenCalledWith(mockArrayBuffer);
                 window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
                 restore();
                 done();
             });
 
             loader.on('data:error', function (e) {
                 window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
                 restore();
                 fail('Should not trigger error: ' + e.error);
                 done();
@@ -254,17 +280,34 @@ describe("AdvancedFileLoader tests", function () {
             );
 
             var restore = mockFileReader(mockArrayBuffer, true);
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = makeButUnzipMock([
+                {
+                    filename: 'doc.shp'
+                },
+                {
+                    filename: 'doc.shx'
+                },
+                {
+                    filename: 'doc.dbf'
+                },
+                {
+                    filename: 'doc.prj'
+                }
+            ]);
 
             loader.on('data:error', function (e) {
                 expect(e.error).toBeDefined();
                 expect(e.error.message).toBe('Invalid shapefile');
                 window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
                 restore();
                 done();
             });
 
             loader.on('data:loaded', function (e) {
                 window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
                 restore();
                 fail('Should not trigger loaded event for invalid shapefile');
                 done();
@@ -274,6 +317,64 @@ describe("AdvancedFileLoader tests", function () {
             delete file.testing;
             loader.load(file, 'zip');
         });
+
+        it("should check for required shapefile components when checkShapeFileValidity option is set", function (done) {
+            // Mock ArrayBuffer for shapefile
+            var mockArrayBuffer = new ArrayBuffer(8);
+
+            // Mock the global shp function to return valid GeoJSON
+            var originalShp = window.shp;
+            window.shp = jasmine.createSpy('shp').and.returnValue(Promise.resolve({
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [125.6, 10.1]
+                    },
+                    "properties": {
+                        "name": "Test Point"
+                    }
+                }]
+            }));
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = makeButUnzipMock([
+                {
+                    filename: 'doc.shp'
+                },
+                {
+                    filename: 'doc.shx'
+                },
+                {
+                    filename: 'doc.dbf'
+                }
+            ]);
+
+            var restore = mockFileReader(mockArrayBuffer, true);
+
+            loader.on('data:loaded', function (e) {
+                window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
+                fail('Should not trigger data:loaded event: ' + e);
+                restore();
+                done();
+            });
+
+            loader.on('data:error', function (e) {
+                window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
+                var expectedMessage = 'The shapefile zip file is missing the following required files: prj';
+                expect(e.error).toBeDefined();
+                expect(e.error.message).toBe(expectedMessage);
+                restore();
+                done();
+            });
+
+            var file = createMockFile('test.zip', mockArrayBuffer, 'application/zip');
+            delete file.testing;
+            loader.load(file, 'zip');
+
+        })
     });
 
     describe("GPX and KML conversion", function () {
@@ -357,6 +458,160 @@ describe("AdvancedFileLoader tests", function () {
             var file = createMockFile('test.kml', kmlContent, 'application/vnd.google-earth.kml+xml');
             delete file.testing;
             loader.load(file, 'kml');
+        });
+    });
+
+    describe("KMZ loading", function () {
+
+        it("should have a parser registered for kmz", function () {
+            expect(loader._parsers.kmz).toBeDefined();
+        });
+
+        it("should convert KMZ to GeoJSON by extracting embedded KML", function (done) {
+            var kmlString = '<?xml version="1.0"?><kml xmlns="http://www.opengis.net/kml/2.2"><Placemark><Point><coordinates>125.6,10.1</coordinates></Point></Placemark></kml>';
+            var mockArrayBuffer = new ArrayBuffer(16);
+
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = makeButUnzipMock([
+                {
+                    filename: 'doc.kml',
+                    read: function () {
+                        return Promise.resolve(new TextEncoder().encode(kmlString));
+                    }
+                }
+            ]);
+
+            var originalToGeoJSONKml = window.toGeoJSON.kml;
+            window.toGeoJSON.kml = jasmine.createSpy('kml').and.returnValue({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": { "type": "Point", "coordinates": [125.6, 10.1] },
+                        "properties": {}
+                    }]
+                });
+
+            var restore = mockFileReader(mockArrayBuffer, true);
+
+            loader.on('data:loaded', function (e) {
+                expect(e.layer).toBeDefined();
+                expect(e.filename).toBe('test.kmz');
+                expect(e.format).toBe('kmz');
+                expect(window.butUnzip.iter).toHaveBeenCalled();
+                expect(window.toGeoJSON.kml).toHaveBeenCalled();
+                window.butUnzip = originalButUnzip;
+                window.toGeoJSON.kml = originalToGeoJSONKml;
+                restore();
+                done();
+            });
+
+            loader.on('data:error', function (e) {
+                window.butUnzip = originalButUnzip;
+                window.toGeoJSON.kml = originalToGeoJSONKml;
+                restore();
+                fail('Should not trigger error: ' + (e.error && e.error.message));
+                done();
+            });
+
+            var file = createMockFile('test.kmz', mockArrayBuffer, 'application/vnd.google-earth.kmz');
+            delete file.testing;
+            loader.load(file, 'kmz');
+        });
+
+        it("should read KMZ file as ArrayBuffer", function () {
+            var mockArrayBuffer = new ArrayBuffer(8);
+            var file = createMockFile('test.kmz', mockArrayBuffer, 'application/vnd.google-earth.kmz');
+            file.testing = false;
+
+            spyOn(FileReader.prototype, 'readAsArrayBuffer');
+            spyOn(FileReader.prototype, 'readAsText');
+
+            loader.load(file, 'kmz');
+
+            expect(FileReader.prototype.readAsArrayBuffer).toHaveBeenCalled();
+            expect(FileReader.prototype.readAsText).not.toHaveBeenCalled();
+        });
+
+        it("should pick the .kml entry when KMZ contains multiple files", function (done) {
+            var kmlString = '<?xml version="1.0"?><kml xmlns="http://www.opengis.net/kml/2.2"><Placemark><Point><coordinates>10,20</coordinates></Point></Placemark></kml>';
+            var mockArrayBuffer = new ArrayBuffer(16);
+
+            var kmlReadSpy = jasmine.createSpy('kmlRead').and.returnValue(
+                Promise.resolve(new TextEncoder().encode(kmlString))
+            );
+            var imageReadSpy = jasmine.createSpy('imageRead');
+
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = makeButUnzipMock([
+                { filename: 'images/icon.png', read: imageReadSpy },
+                { filename: 'doc.kml', read: kmlReadSpy }
+            ]);
+
+            var originalToGeoJSONKml = window.toGeoJSON.kml;
+            window.toGeoJSON.kml = jasmine.createSpy('kml').and.returnValue({
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": { "type": "Point", "coordinates": [10, 20] },
+                    "properties": {}
+                }]
+            });
+
+            var restore = mockFileReader(mockArrayBuffer, true);
+
+            loader.on('data:loaded', function (e) {
+                expect(kmlReadSpy).toHaveBeenCalled();
+                expect(imageReadSpy).not.toHaveBeenCalled();
+                expect(window.toGeoJSON.kml).toHaveBeenCalled();
+                window.butUnzip = originalButUnzip;
+                window.toGeoJSON.kml = originalToGeoJSONKml;
+                restore();
+                done();
+            });
+
+            loader.on('data:error', function (e) {
+                window.butUnzip = originalButUnzip;
+                window.toGeoJSON.kml = originalToGeoJSONKml;
+                restore();
+                fail('Should not trigger error: ' + (e.error && e.error.message));
+                done();
+            });
+
+            var file = createMockFile('multi.kmz', mockArrayBuffer, 'application/vnd.google-earth.kmz');
+            delete file.testing;
+            loader.load(file, 'kmz');
+        });
+
+        it("should fire data:error when KMZ extraction fails", function (done) {
+            var mockArrayBuffer = new ArrayBuffer(8);
+
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = {
+                iter: jasmine.createSpy('iter').and.callFake(function () {
+                    throw new Error('Corrupt KMZ');
+                })
+            };
+
+            var restore = mockFileReader(mockArrayBuffer, true);
+
+            loader.on('data:error', function (e) {
+                expect(e.error).toBeDefined();
+                expect(e.error.message).toBe('Corrupt KMZ');
+                window.butUnzip = originalButUnzip;
+                restore();
+                done();
+            });
+
+            loader.on('data:loaded', function () {
+                window.butUnzip = originalButUnzip;
+                restore();
+                fail('Should not trigger loaded event for corrupt KMZ');
+                done();
+            });
+
+            var file = createMockFile('bad.kmz', mockArrayBuffer, 'application/vnd.google-earth.kmz');
+            delete file.testing;
+            loader.load(file, 'kmz');
         });
     });
 

@@ -1,4 +1,8 @@
 L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
+    options: {
+        checkShapeFileValidity: true,
+        shapeFileMustContain: ['shp', 'shx', 'dbf', 'prj']
+    },
     initialize: function (map, options) {
         this._map = map;
         L.Util.setOptions(this, options);
@@ -8,12 +12,51 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
             json: this._loadGeoJSON,
             gpx: this._convertToGeoJSON,
             kml: this._convertToGeoJSON,
+            kmz: this._convertKmzToGeoJSON,
             zip: this._convertShpToGeoJSON
         };
     },
+    _convertKmzToGeoJSON: async function (content) {
+        for (const entry of butUnzip.iter(new Uint8Array(content))) {
+            if (entry.filename.toLowerCase().endsWith('.kml')) {
+                var kmlContent = await entry.read();
+                var textDecoder = new TextDecoder('utf-8');
+                kmlContent = textDecoder.decode(kmlContent);
+                return this._convertToGeoJSON(kmlContent, 'kml');
+            }
+        }
+    },
     _convertShpToGeoJSON: async function (content) {
-        var geoJson = await shp(content);
-        return this._loadGeoJSON(geoJson);
+        if (await this.checkShapeFile(content)) {
+            var geoJson = await shp(content);
+            return this._loadGeoJSON(geoJson);
+        }
+    },
+    checkShapeFile: async function (arrayBuffer) {
+        if (this.options.checkShapeFileValidity) {
+            if (typeof butUnzip === 'undefined') {
+                throw new Error('butUnzip library is required to validate shapefile zip files');
+            }
+
+            var files = [];
+            for (const entry of butUnzip.iter(new Uint8Array(arrayBuffer))) {
+                files.push(entry.filename);
+            }
+
+            var missingFiles = this.options.shapeFileMustContain.filter(function (file) {
+                return !files.some(function (f) {
+                    return f.toLowerCase().endsWith('.' + file);
+                });
+            });
+
+            if (missingFiles.length > 0) {
+                throw new Error('The shapefile zip file is missing the following required files: ' + missingFiles.join(', '));
+            }
+
+            return true;
+        }
+        else
+            return true;
     },
     load: function (file, ext) {
         var parser,
@@ -62,6 +105,7 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
         if (!file.testing) {
             switch (parser.ext) {
                 case 'zip':
+                case 'kmz':
                     reader.readAsArrayBuffer(file);
                     break;
                 default:

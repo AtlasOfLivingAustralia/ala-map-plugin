@@ -1,6 +1,6 @@
 var AdvancedFileLayerLoad = L.Control.FileLayerLoad.extend({
     statics: {
-        TITLE: 'Load local file (Shapefile, GPX, KML, GeoJSON)',
+        TITLE: 'Load geometry file (Shapefile, GPX, KML, KMZ, GeoJSON)',
         LABEL: '&#128194;'
     },
     onAdd: function (map) {

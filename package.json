@@ -45,11 +45,13 @@
     "urijs": "1.19.11",
     "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2",
-    "uuidjs": "^5.1.0"
+    "uuidjs": "^5.1.0",
+    "but-unzip": "^0.1.10"
   },
   "scripts": {
     "turf": "npx esbuild turf-package-instructions.js --bundle --format=iife --outfile=./grails-app/assets/vendor-external/turf/turf-packaged.js --global-name=turf",
     "uuid": "npx esbuild uuid-package-instruction.js --minify --bundle --format=iife --global-name=UUIDLib --outfile=./grails-app/assets/vendor-external/uuidjs/uuid.min.js --footer:js=\"window.UUID=UUIDLib.UUID;\"",
+    "butUnzip": "npx esbuild node_modules/but-unzip/index.browser.min.mjs --format=iife --outfile=./grails-app/assets/vendor-external/but-unzip/but-unzip.min.js --global-name=butUnzip",
     "test": "karma start karma.conf.js",
     "debug": "karma start --debug --browsers=ChromeHeadless,Chrome --single-run=false"
   },

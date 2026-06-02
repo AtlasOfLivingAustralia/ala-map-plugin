@@ -49,6 +49,9 @@ jobs:
       - name: Build uuid
         run: npm run uuid
 
+      - name: Build butUnzip
+        run: npm run butUnzip
+
       - name: JS Tests (Karma)
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 

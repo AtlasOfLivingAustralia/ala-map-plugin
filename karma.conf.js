@@ -62,6 +62,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor-external/leaflet.markercluster/leaflet.markercluster.js',
             'grails-app/assets/vendor-external/@tmcw/togeojson/togeojson.umd.js',
             'grails-app/assets/vendor/shapefile-js-6.2.0/dist/shp.min.js',
+            'grails-app/assets/vendor-external/but-unzip/but-unzip.min.js',
             'grails-app/assets/vendor-external/leaflet-filelayer/src/leaflet.filelayer.js',
             'grails-app/assets/vendor-external/uuidjs/uuid.js',
             'grails-app/assets/javascripts/*.js',
@@ -101,7 +102,7 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome', "ChromeHeadless"],
+        browsers: ['Chrome'],
 
 
         // Continuous Integration mode
