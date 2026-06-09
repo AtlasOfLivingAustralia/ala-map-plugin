@@ -117,7 +117,8 @@ publishing {
             from components.java
             pom.withXml {
                 def pomNode = asNode()
-                pomNode.dependencyManagement.replaceNode {}
+                // Grails 7 poms may not contain a dependencyManagement section
+                pomNode.dependencyManagement.each { it.replaceNode {} }
                 pomNode.dependencies.dependency.findAll {
                     it.version.text().isEmpty()
                 }.each {
