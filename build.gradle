@@ -1,52 +1,49 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven { url "https://nexus.ala.org.au/content/groups/public/" }
-        maven { url "https://repo.grails.org/grails/core" }
+        maven { url = "https://nexus.ala.org.au/content/groups/public/" }
+        mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:4.3.0"
+        classpath "org.apache.grails:grails-gradle-plugins:$grailsVersion"
+        classpath "cloud.wondrify:asset-pipeline-gradle:$assetPipelineVersion"
     }
 }
 
-version "4.1-SNAPSHOT"
+version "5.0-SNAPSHOT"
 group "org.grails.plugins"
 
 apply plugin: "eclipse"
 apply plugin: "idea"
-apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-gsp"
+apply plugin: "org.apache.grails.gradle.grails-plugin"
+apply plugin: "org.apache.grails.gradle.grails-gsp"
 apply plugin: "maven-publish"
-apply plugin: "com.bertramlabs.asset-pipeline"
+apply plugin: "cloud.wondrify.asset-pipeline"
 
 repositories {
     mavenLocal()
-    maven { url "https://nexus.ala.org.au/content/groups/public/" }
-    maven { url "https://repo.grails.org/grails/core" }
+    maven { url = "https://nexus.ala.org.au/content/groups/public/" }
+    mavenCentral()
 }
 
 dependencies {
     // Grails core dependencies
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-autoconfigure"
-    implementation "org.grails:grails-core"
+    implementation "org.apache.grails:grails-core"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
-    implementation "org.grails:grails-dependencies"
-    implementation "org.grails:grails-web-boot"
+    implementation "org.apache.grails:grails-web-boot"
 
     // Grails plugins
-    implementation "org.grails.plugins:cache:4.0.0"
-    implementation "org.grails.plugins:scaffolding"
-    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:4.3.0"
+    implementation "org.apache.grails:grails-cache"
+    implementation "org.apache.grails:grails-scaffolding"
+    runtimeOnly "cloud.wondrify:asset-pipeline-grails:$assetPipelineVersion"
 
     // Grails components
-    compileOnly "org.grails:grails-plugin-services"
-    compileOnly "org.grails:grails-plugin-domain-class"
-
-    // Console support
-    console "org.grails:grails-console"
+    compileOnly "org.apache.grails:grails-services"
+    compileOnly "org.apache.grails:grails-domain-class"
 
     // Webjars
     implementation 'org.webjars.npm:underscore:1.13.4'
@@ -65,23 +62,12 @@ dependencies {
     implementation 'org.webjars.npm:leaflet-sleep:0.5.1'
     implementation 'org.webjars:font-awesome:4.7.0'
     implementation 'org.webjars.npm:urijs:1.19.11'
-
-    // Geb & Selenium for tests
-    testImplementation ("org.grails.plugins:geb") {
-        exclude module: "grails-core"
-    }
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0"
-    testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.44.0"
-
-    // Building a plugin
-    profile "org.grails.profiles:web-plugin:6.0.0"
 }
 
 bootRun {
     ignoreExitValue = true
     jvmArgs(
         '-Dspring.output.ansi.enabled=always',
-        '-noverify',
         '-XX:TieredStopAtLevel=1'
     )
     sourceResources sourceSets.main
@@ -92,6 +78,27 @@ bootRun {
 assets {
     packagePlugin = true
     minifyJs = true
+    // ES-module variants shipped inside webjars are never required by this plugin
+    // and cannot be parsed by the Closure Compiler minifier.
+    excludes = [
+        'webjars/underscore/**/amd/**',
+        'webjars/underscore/**/cjs/**',
+        'webjars/underscore/**/modules/**',
+        'webjars/handlebars/**/lib/**',
+        'webjars/leaflet/**/src/**',
+        'webjars/leaflet.markercluster/**/src/**',
+        'webjars/leaflet.markercluster/**/build/**',
+        'webjars/leaflet-control-geocoder/**/Control.Geocoder.modern.js',
+        // jshint config file with a .js extension; not valid JavaScript
+        'webjars/github-com-kbartas-Leaflet-draw/**/spec.hintrc.js',
+        // demo/doc pages inside webjars contain relative links that escape the
+        // asset root and crash asset-pipeline 5's HTML url rewriting
+        'webjars/**/*.html',
+        'webjars/**/*.htm',
+        'webjars/**/*-esm.js',
+        'webjars/**/*.esm.js',
+        'webjars/**/*.mjs'
+    ]
 }
 
 publishing {

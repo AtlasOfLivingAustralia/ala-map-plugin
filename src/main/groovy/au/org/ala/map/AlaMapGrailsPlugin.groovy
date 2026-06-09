@@ -2,7 +2,7 @@ package au.org.ala.map
 
 class AlaMapGrailsPlugin {
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "3.3.11 > *"
+    def grailsVersion = "7.1.1 > *"
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
     ]
