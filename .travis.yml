@@ -1,7 +1,7 @@
 dist: jammy
 language: groovy
 jdk:
-- openjdk11
+- openjdk17
 
 addons:
   chrome: stable
