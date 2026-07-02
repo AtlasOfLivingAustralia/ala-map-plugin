@@ -1,14 +1,14 @@
 # ALA Map Plugin
 
+A Grails plugin providing reusable [Leaflet](https://leafletjs.com/)-based mapping components for ALA applications, including [BioCollect](https://github.com/AtlasOfLivingAustralia/biocollect).
 
-## Migration to Grails 3 and 4
-    * If leflet version or resource is changed, the images path in MapTagLib.groovy also need update, 
-    otherwise leaflet marker may not be shown  
+## Technologies
+* Grails framework 7.1.1
+* Java 17
+* Groovy 4
+* Leaflet 1.6
 
-## Status
-Master: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin)
-
-Dev: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin.svg?branch=dev)](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin)
+> **Note:** If the Leaflet version or resource is changed, the images path in `MapTagLib.groovy` also needs to be updated, otherwise the Leaflet marker may not be shown.
 
 
 ## API
@@ -76,6 +76,9 @@ myOccurrenceMap.map.subscribe(function() {...})
 ```
 
 ## Features
+
+### Version 5
+Upgraded the plugin to Grails 7.1.1, Java 17 and Groovy 4, with updated Leaflet and JavaScript dependencies.
 
 ### Version 4
 Updated grails to 4.1.1 and leaflet and other javascript dependencies to newer versions.
