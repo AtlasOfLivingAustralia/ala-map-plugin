@@ -1,6 +1,6 @@
 {
   "name": "ala-map-plugin",
-  "version": "3.1-SNAPSHOT",
+  "version": "5.0-SNAPSHOT",
   "description": "Karma / jasmine configuration for testing project javascript",
   "main": "test/unit/js",
   "directories": {
