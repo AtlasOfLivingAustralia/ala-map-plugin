@@ -106,7 +106,7 @@ describe("ALA.Map tests", function () {
         expect(notifyCount).toBe(1);
     });
 
-    it("should notify subscribers once when a draw:created event occurs with layer type MARKER", function() {
+    it("should notify subscribers once when a pm:create event occurs with marker shape", function() {
         var map = new ALA.Map(ID);
         var notifyCount = 0;
 
@@ -114,8 +114,8 @@ describe("ALA.Map tests", function () {
             notifyCount++;
         });
 
-        map.getMapImpl().fire("draw:created", {
-            layerType: ALA.MapConstants.LAYER_TYPE.MARKER,
+        map.getMapImpl().fire("pm:create", {
+            shape: ALA.MapConstants.LAYER_TYPE.MARKER,
             layer: {
                 on: function(){},
                 addTo: function(){},
@@ -127,7 +127,7 @@ describe("ALA.Map tests", function () {
         expect(notifyCount).toBe(1);
     });
 
-    it("should notify subscribers once when a draw:created event occurs with layer type not = MARKER", function() {
+    it("should notify subscribers once when a pm:create event occurs with non-marker shape", function() {
         var map = new ALA.Map(ID);
         var notifyCount = 0;
 
@@ -135,15 +135,15 @@ describe("ALA.Map tests", function () {
             notifyCount++;
         });
 
-        map.getMapImpl().fire("draw:created", {
-            layerType: "bla",
+        map.getMapImpl().fire("pm:create", {
+            shape: "polygon",
             layer: L.circle([1, 1], 100)
         });
 
         expect(notifyCount).toBe(1);
     });
 
-    it("should notify subscribers once when a draw:editstop event occurs", function() {
+    it("should notify subscribers once when pm:globaleditmodetoggled is disabled", function() {
         var map = new ALA.Map(ID);
         var notifyCount = 0;
 
@@ -151,12 +151,12 @@ describe("ALA.Map tests", function () {
             notifyCount++;
         });
 
-        map.getMapImpl().fire("draw:editstop");
+        map.getMapImpl().fire("pm:globaleditmodetoggled", {enabled: false});
 
         expect(notifyCount).toBe(1);
     });
 
-    it("should notify subscribers once when a draw:deletestop event occurs", function() {
+    it("should notify subscribers once when pm:globalremovalmodetoggled is disabled", function() {
         var map = new ALA.Map(ID);
         var notifyCount = 0;
 
@@ -164,7 +164,7 @@ describe("ALA.Map tests", function () {
             notifyCount++;
         });
 
-        map.getMapImpl().fire("draw:deletestop");
+        map.getMapImpl().fire("pm:globalremovalmodetoggled", {enabled: false});
 
         expect(notifyCount).toBe(1);
     });

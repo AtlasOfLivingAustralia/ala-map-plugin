@@ -39,7 +39,7 @@ L.TileLayer.SmartWMS = L.TileLayer.WMS.extend({
                 if (data) {
                     self._lngLatBounds = ALA.MapUtils.bboxToPointArray(data.bbox, false);
                     self._latLngBounds = ALA.MapUtils.bboxToPointArray(data.bbox, true);
-
+                    data.type = "pid";
                     self._properties = data;
 
                     self.getBounds = function () {

@@ -8,7 +8,7 @@
         },
 
         onAdd: function (map) {
-            var className = 'leaflet-control-zoom-fullscreen', container;
+            var className = 'fa fa-arrows-alt', container;
 
             if (map.zoomControl && !this.options.forceSeparateButton) {
                 container = map.zoomControl._container;

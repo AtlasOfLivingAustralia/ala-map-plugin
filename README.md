@@ -1,14 +1,12 @@
 # ALA Map Plugin
 
 
-## Migration to Grails 3 and 4
-    * If leflet version or resource is changed, the images path in MapTagLib.groovy also need update, 
-    otherwise leaflet marker may not be shown  
-
 ## Status
-Master: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin)
+![Build Status](https://github.com/AtlasOfLivingAustralia/ala-map-plugin/actions/workflows/build.yml/badge.svg)
 
-Dev: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin.svg?branch=dev)](https://travis-ci.org/AtlasOfLivingAustralia/ala-map-plugin)
+Master: [![Build Status](https://github.com/AtlasOfLivingAustralia/ala-map-plugin/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/AtlasOfLivingAustralia/ala-map-plugin/actions/workflows/build.yml?query=branch%3Amaster)
+
+Dev: [![Build Status](https://github.com/AtlasOfLivingAustralia/ala-map-plugin/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/AtlasOfLivingAustralia/ala-map-plugin/actions?query=branch%3Adev)
 
 
 ## API
@@ -76,6 +74,13 @@ myOccurrenceMap.map.subscribe(function() {...})
 ```
 
 ## Features
+
+## Version 5
+* Updated leaflet to 1.9.4.
+* Replaced leaflet draw plugin with Geoman plugin v2.19.3
+* Added a feature to load shapes from local file. Supported formats are geojson, kml, gpx and shapefile.
+* Added a control to add known shapes from ALA layers service.
+* Added feature to highlight and un-highlight features matching certain properties. This is useful for highlighting features matching a search result.
 
 ### Version 4
 Updated grails to 4.1.1 and leaflet and other javascript dependencies to newer versions.
@@ -151,8 +156,8 @@ git checkout gh-pages
 * In the root of the main directory (not the gh-pages branch):
   * Install npm if you don't already have it
   * Install jsdoc3 if you don't already have it (```npm install jsdoc```)
-  * Install the jsdoc3-bootstrap template if you don't already have it (```npm install jsdoc3-bootstrap```)
-  * Run jsdoc: ```./node_modules/.bin/jsdoc web-app/js/* -t ./node_modules/jsdoc3-bootstrap/ -d [gh_pages_loc]/api```, where ```[gh_pages_loc]``` is the path to the directory you cloned the gh-pages branch to (don't miss the /api on the end).
+  * Install the jsdoc3-bootstrap template if you don't already have it (```npm install better-docs```)
+  * Run jsdoc: ```./node_modules/.bin/jsdoc grails-app/assets/javascripts/plugins/ala-map/*.js -t ./node_modules/better-docs -d [gh_pages_loc]/api```, where ```[gh_pages_loc]``` is the path to the directory you cloned the gh-pages branch to (don't miss the /api on the end).
   * Commit the changes to the gh-branch
 
 ## Custom Leaflet controls and layers
@@ -315,6 +320,7 @@ This plugin makes use of:
 * The GeoJSON standard: [http://geojson.org/](http://geojson.org/)
 * The Underscore JS library: [http://underscorejs.org/](http://underscorejs.org/)
 * Turf, a geospatial library from Mapbox: [http://turfjs.org/static/docs/](http://turfjs.org/static/docs/)
-* Leaflet.Draw, a Leaflet plugin which provides the drawing controls we use: [https://github.com/Leaflet/Leaflet.draw](https://github.com/Leaflet/Leaflet.draw)
+* Leaflet Geoman, a Leaflet plugin which provides the drawing controls we use: [https://github.com/geoman-io/leaflet-geoman](https://github.com/geoman-io/leaflet-geoman)
 * Leaflet.markercluster, a Leaflet plugin which provides clustering support for markers: [https://github.com/Leaflet/Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster)
+* Leaflet filelayer, a control to load shapes from local files [https://github.com/makinacorpus/Leaflet.FileLayer/](https://github.com/makinacorpus/Leaflet.FileLayer/)
 * ...plus other, more specific, plugins

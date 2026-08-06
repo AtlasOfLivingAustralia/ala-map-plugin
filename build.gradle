@@ -3,14 +3,19 @@ buildscript {
         mavenLocal()
         maven { url "https://nexus.ala.org.au/content/groups/public/" }
         maven { url "https://repo.grails.org/grails/core" }
+        gradlePluginPortal()
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath "org.grails:grails-gradle-plugin:6.1.2"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:4.3.0"
     }
 }
 
-version "4.1-SNAPSHOT"
+plugins {
+    id "com.magnetichq.client-dependencies" version "2.0.0"
+}
+
+version "5.0-SNAPSHOT"
 group "org.grails.plugins"
 
 apply plugin: "eclipse"
@@ -48,24 +53,6 @@ dependencies {
     // Console support
     console "org.grails:grails-console"
 
-    // Webjars
-    implementation 'org.webjars.npm:underscore:1.13.4'
-    implementation 'org.webjars:jquery:3.6.0'
-    implementation 'org.webjars.bowergithub.protonet:jquery.inview:1.1.2'
-    implementation 'org.webjars.npm:handlebars:4.7.7'
-    implementation 'org.webjars.npm:leaflet:1.6.0'
-    implementation 'org.webjars.npm:github-com-kbartas-Leaflet-draw:1.0.4'
-    implementation('org.webjars.bower:Leaflet.Coordinates:0.1.5') {
-        exclude group: 'org.webjars.bower', module: 'leaflet-dist'
-    }
-    implementation 'org.webjars.npm:leaflet-easybutton:2.4.0'
-    implementation 'org.webjars.npm:leaflet-control-geocoder:2.4.0'
-    implementation 'org.webjars.npm:leaflet.markercluster:1.5.3'
-    implementation 'org.webjars.npm:leaflet-loading:0.1.24'
-    implementation 'org.webjars.npm:leaflet-sleep:0.5.1'
-    implementation 'org.webjars:font-awesome:4.7.0'
-    implementation 'org.webjars.npm:urijs:1.19.11'
-
     // Geb & Selenium for tests
     testImplementation ("org.grails.plugins:geb") {
         exclude module: "grails-core"
@@ -75,6 +62,35 @@ dependencies {
 
     // Building a plugin
     profile "org.grails.profiles:web-plugin:6.0.0"
+}
+
+clientDependencies {
+    installDir = "grails-app/assets/vendor-external"
+    npm {
+        // Add your NPM dependencies here in the format: 'package-name'('version')
+        'underscore'('1.13.8') {
+            include 'underscore-min.js', 'underscore.js'
+        }
+        'jquery'('3.6.0')
+        'jquery-inview'('1.1.2')
+        'handlebars'('4.7.7') {
+            include 'handlebars.js'
+        }
+        'leaflet'('1.9.4')
+        '@geoman-io/leaflet-geoman-free'('2.19.3')
+        'leaflet.coordinates'('0.1.5')
+        'leaflet-easybutton'('2.4.0')
+        'leaflet-control-geocoder'('2.4.0')
+        'leaflet.markercluster'('1.5.3')
+        'leaflet-loading'('0.1.24')
+        'leaflet-sleep'('0.5.1')
+        'font-awesome'('4.7.0')
+        'urijs'('1.19.11')
+        'leaflet-plugins'('3.4.0')
+        'leaflet.gridlayer.googlemutant'('0.16.0')
+        '@tmcw/togeojson'('7.1.2')
+        'leaflet-filelayer'('1.2.0')
+    }
 }
 
 bootRun {
@@ -100,8 +116,8 @@ publishing {
             name = 'Nexus'
             url = "https://nexus.ala.org.au/content/repositories/${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases'}"
             credentials {
-                username = System.getenv('TRAVIS_DEPLOY_USERNAME')
-                password = System.getenv('TRAVIS_DEPLOY_PASSWORD')
+                username = System.getenv('DEPLOY_USERNAME')
+                password = System.getenv('DEPLOY_PASSWORD')
             }
         }
     }

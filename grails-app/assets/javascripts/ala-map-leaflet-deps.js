@@ -4,11 +4,15 @@ Dependencies excluding jquery and underscore, includes:
  - Turf
  */
 
-//= require webjars/github-com-kbartas-Leaflet-draw/1.0.4/leaflet.draw-src.js
-//= require webjars/Leaflet.Coordinates/0.1.5/dist/Leaflet.Coordinates-0.1.5.src.js
-//= require webjars/leaflet-easybutton/2.4.0/src/easy-button.js
-//= require webjars/leaflet-control-geocoder/2.4.0/dist/Control.Geocoder.js
-//= require webjars/leaflet.markercluster/1.5.3/dist/leaflet.markercluster-src.js
-//= require webjars/leaflet-loading/0.1.24/src/Control.Loading.js
-//= require webjars/leaflet-sleep/0.5.1/Leaflet.Sleep.js
-//= require turf-2.0.2/turf.min.js
+//= require @geoman-io/leaflet-geoman-free/leaflet-geoman.js
+//= require leaflet.coordinates/Leaflet.Coordinates-0.1.5.src.js
+//= require leaflet-easybutton/src/easy-button.js
+//= require leaflet-control-geocoder/Control.Geocoder.js
+//= require leaflet.markercluster/leaflet.markercluster.js
+//= require leaflet-loading/src/Control.Loading.js
+//= require leaflet-sleep/Leaflet.Sleep.js
+//= require turf/turf-packaged.js
+//= require @tmcw/togeojson/togeojson.umd.js
+//= require but-unzip/but-unzip.min.js
+//= require shapefile-js-6.2.0/dist/shp.min.js
+//= require leaflet-filelayer/src/leaflet.filelayer.js
