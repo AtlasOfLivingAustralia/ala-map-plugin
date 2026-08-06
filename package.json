@@ -7,9 +7,6 @@
     "test": "test"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.3",
-    "@babel/traverse": ">=7.23.2",
     "@geoman-io/leaflet-geoman-free": "2.19.3",
     "@metahub/karma-jasmine-jquery": "^2.0.1",
     "@turf/area": "^7.3.5",
@@ -24,7 +21,6 @@
     "@turf/rewind": "^7.3.5",
     "@turf/simplify": "^7.3.5",
     "@turf/unkink-polygon": "^7.3.5",
-    "babel-loader": "^10.1.1",
     "better-docs": "^2.7.3",
     "chromedriver": "^145.0.6",
     "font-awesome": "4.7.0",

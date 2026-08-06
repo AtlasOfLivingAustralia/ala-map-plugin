@@ -20,32 +20,7 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'web-app/js/**/*.js': ['coverage'],
-            'grails-app/assets/vendor-external/uuidjs/uuid.js': ['webpack']
-        },
-
-        webpack: {
-            mode: 'development',
-            module: {
-                rules: [
-                    {
-                        test: /uuid\.js$/,
-                        exclude: /node_modules/,
-                        use: {
-                            loader: 'babel-loader',
-                            options: {
-                                presets: ['@babel/preset-env'],
-                                plugins: []
-                            }
-                        }
-                    }
-                ]
-            },
-            output: {
-                library: {
-                    type: 'window'
-                }
-            }
+            'web-app/js/**/*.js': ['coverage']
         },
 
         // list of files / patterns to load in the browser
@@ -64,7 +39,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor/shapefile-js-6.2.0/dist/shp.min.js',
             'grails-app/assets/vendor-external/but-unzip/but-unzip.min.js',
             'grails-app/assets/vendor-external/leaflet-filelayer/src/leaflet.filelayer.js',
-            'grails-app/assets/vendor-external/uuidjs/uuid.js',
+            'grails-app/assets/vendor-external/uuidjs/uuid.min.js',
             'grails-app/assets/javascripts/*.js',
             'grails-app/assets/javascripts/plugins/**/*.js',
             'test/js/specs/**/*.js'
