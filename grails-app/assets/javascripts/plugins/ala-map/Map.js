@@ -72,6 +72,7 @@ ALA.MapConstants = {
  *  <li><code>drawControl</code> whether to include drawing controls or not. Default: true</li>
  *  <li><code>drawOptions</code> if drawing control is to be included, then specify options to pass to drawing control here.</li>
  *  <li><code>editOptions</code> if edit option in drawing control is enabled, then specify options to pass to edit control here.</li>
+ *  <li><code>allowSelfIntersection</code> whether to allow self-intersecting polygons to be drawn. Default: false</li>
  *  <li><code>singleDraw</code> whether to allow more than 1 shape or region to be drawn at a time. This does NOT apply to markers - only layers and other shapes. See also singleMarker and markerOrShapeNotBoth. Default: true</li>
  *  <li><code>singleMarker</code> whether to allow more than 1 marker to be drawn at a time.. Default: true</li>
  *  <li><code>markerZoomToMax</code> whether to allow zoom to maximum permitted level of current base layer</li>
@@ -81,6 +82,9 @@ ALA.MapConstants = {
  *  <li><code>addGeometryFromLocalFile</code> add a shape from a file. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
  *  <li><code>simplifyImportedShapes</code> True to simplify shapes imported from files. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
  *  <li><code>simplifyOptions</code> Options to pass to the turf's simplify method. Only relevant if addGeometryFromLocalFile = true and simplifyImportedShapes = true. Default: {tolerance: 0.001, highQuality: true, mutate: true}</li>
+ *  <li><code>flattenMultiGeometries</code> True to flatten MultiPolygons, MultiLineStrings and MultiPoint into individual Polygons and LineStrings. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
+ *  <li><code>validateImportedShapes</code> a function that will return a Promise that resolves to true if the imported shape is valid, or false if it is not. Only relevant if addGeometryFromLocalFile = true. Default: null</li>
+ *  <li><code>addAllFeaturesFromFile</code> True to add all features from a file, rather than show a modal dialog that lets users pick features to add. Only relevant if addGeometryFromLocalFile = true. Default: true</li>
  *  <li><code>allowSearchLocationByAddress</code> whether to allow the user to search by address to place a marker on the map. Default: true</li>
  *  <li><code>allowSearchRegionByAddress</code> whether to allow the user to search by address to draw a polygon on the map. Default: true</li>
  *  <li><code>geocodeRegionOptions</code> additional configuration options when using the allowSearchRegionByAddress control. Only relevant when allowSearchRegionByAddress = true:</li>
@@ -92,6 +96,7 @@ ALA.MapConstants = {
  *  <li><code>draggableMarkers</code> whether to allow point markers to be draggable by default. Default: true</li>
  *  <li><code>wmsFeatureUrl</code> the URL to call to fetch features of a WMS layer (e.g. http://spatial-dev.ala.org.au/geoserver/wms/reflect?). The PID will be appended to this URL. Default: </li>
  *  <li><code>wmsLayerUrl</code> the URL to call to retrieve a WMS layer. The PID will be appended to this URL. Default: </li>
+ *  <li><code>style</code> default style to use for drawn shapes. Default: {weight: 4, fillOpacity: 0.5, color: "#000"}</li>
  *  <li><code>sleep</code> True to disable mouse wheel zooming once the mouse has been out of the map for a certain time. Clicking in the map re-enables it. Overrides scrollWheelZoom. Default: true</li>
  *  <li><code>sleepTime</code> Time (milliseconds) until the map 'sleeps' up after the mouse moves away from the map. Only relevant if sleep = true. Default: 750</li>
  *  <li><code>hoverToWake</code> True to wake the map up after the mouse has been held over the map for a certain time (wakeTime). Only relevant if sleep = true. Default: true</li>
@@ -294,7 +299,12 @@ ALA.Map = function (id, options) {
         preserveZIndex: false,
         addGeometryFromLocalFile: false,
         simplifyImportedShapes: false,
-        simplifyOptions: DEFAULT_SIMPLIFICATION_OPTIONS
+        simplifyOptions: DEFAULT_SIMPLIFICATION_OPTIONS,
+        flattenMultiGeometries: false,
+        style: DEFAULT_SHAPE_OPTIONS,
+        allowSelfIntersection: false,
+        validateImportedShapes: null,
+        addAllFeaturesFromFile: true
     };
 
     /**
@@ -448,6 +458,22 @@ ALA.Map = function (id, options) {
     };
 
     /**
+     * Set style on each drawn layer
+     * @param style
+     * @returns {null}
+     */
+    self.setStyle = function (style) {
+        options.style = _.extend({}, DEFAULT_SHAPE_OPTIONS, style);
+
+        drawnItems.eachLayer(function (layer) {
+            if (layer.setStyle)
+                layer.setStyle(options.style);
+        });
+
+        return options.style;
+    };
+
+    /**
      * Retrieves the standard GeoJSON representation of all features that have been drawn on the map.
      *
      * Note that Circle objects are not supported by GeoJSON. Therefore, they are represented as Points in the resulting
@@ -461,6 +487,155 @@ ALA.Map = function (id, options) {
     self.getGeoJSON = function () {
         return drawnItems.toGeoJSON();
     };
+
+    function checkTurfAvailability() {
+        if (typeof turf === 'undefined') {
+            throw new Error("Turf.js is required.");
+        }
+    }
+
+    /**
+     * Filter out polygons and lines that are self intersecting.
+     * @param featureCollection - GeoJSON FeatureCollection object
+     * @returns {*|null}
+     */
+    self.filterOutSelfIntersectingFeatures = function (featureCollection) {
+        if (!featureCollection || !featureCollection.features)
+            return null;
+
+        var featureGroup = L.geoJSON(featureCollection), layersToRemove = [];
+        featureGroup.eachLayer(function (layer) {
+            if(layer.pm && layer.pm.hasSelfIntersection && layer.pm.hasSelfIntersection()) {
+                console.warn("[ALA-Map] Skipping layer with self-intersection (id): ", layer.id);
+                layersToRemove.push(layer);
+            }
+        });
+
+        layersToRemove.forEach(function (layer) {
+            featureGroup.removeLayer(layer);
+        });
+
+        return featureGroup.toGeoJSON();
+    }
+
+    /**
+     * Converts a GeoJSON instance to a FeatureCollection.
+     * @param geoJSON
+     * @returns {FeatureCollection|null}
+     */
+    self.toFeatureCollection = function (geoJSON) {
+        checkTurfAvailability()
+        switch (geoJSON.type) {
+            case "FeatureCollection":
+                return geoJSON;
+            case "Feature":
+            case "Polygon":
+            case "MultiPolygon":
+            case "LineString":
+            case "MultiLineString":
+            case "Point":
+            case "MultiPoint":
+                return turf.featureCollection([geoJSON]);
+            default:
+                console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
+                return null;
+
+        }
+    }
+
+    /**
+     * Attempts to repair an invalid Polygon or MultiPolygon.
+     *
+     * @param {FeatureCollection} feature
+     * @returns {Feature|FeatureCollection}
+     */
+    self.repairGeoJSON = function (geoJSON) {
+        geoJSON = self.toFeatureCollection(geoJSON);
+
+        if (!geoJSON) {
+            return null;
+        }
+
+        var features = [];
+        geoJSON.features.forEach(function (feature) {
+            if (turf.booleanValid(geoJSON)) {
+                features.push(feature);
+                return;
+            }
+
+            // Remove duplicate coordinates
+            let repaired = turf.cleanCoords(feature);
+
+            // Fix ring winding order
+            repaired = self.rewindFeature(repaired);
+
+            if (turf.booleanValid(repaired)) {
+                features.push(repaired);
+                return;
+            }
+
+            // Split self-intersecting polygons into valid polygons
+            repaired = self.repairPolygon(repaired);
+            switch (repaired.type) {
+                case "FeatureCollection":
+                    repaired.features.forEach(function (repairedFeature) {
+                        if (turf.booleanValid(repairedFeature)) {
+                            features.push(repairedFeature);
+                        }
+                    });
+                    break;
+                case "Feature":
+                    if (turf.booleanValid(repaired))
+                        features.push(repaired);
+                    break;
+                default:
+                    repaired = turf.feature(repaired);
+                    if (turf.booleanValid(repaired))
+                        features.push(repaired);
+                    break;
+            }
+        });
+
+        // no feature could be repaired, return null
+        if (features.length === 0) {
+            return null;
+        }
+
+        geoJSON.features = features;
+        return geoJSON;
+    }
+
+    /**
+     * Attempts to repair the winding order of a Polygon, MultiPolygon, LineString or MultiLineString.
+     * @param feature
+     * @returns {Feature}
+     */
+    self.rewindFeature = function (feature) {
+        switch (feature.geometry.type) {
+            case "LineString":
+            case "MultiLineString":
+            case "Polygon":
+            case "MultiPolygon":
+                return turf.rewind(feature, { reverse: false });
+            default:
+                return feature;
+        }
+    }
+
+    /**
+     * Attempts to repair an invalid Polygon or MultiPolygon.
+     * @param feature
+     * @returns {*}
+     */
+    self.repairPolygon = function (feature) {
+        switch (feature.geometry.type) {
+            case "Polygon":
+            case "MultiPolygon":
+                return turf.unkinkPolygon(feature);
+            default:
+                return feature;
+        }
+    }
 
     /**
      * Populate the map with the provided GeoJSON data.
@@ -485,14 +660,12 @@ ALA.Map = function (id, options) {
             geoJSON = JSON.parse(geoJSON);
         }
 
-        layerCreatedByGeoJSON = null;
-
-        L.geoJson(geoJSON, {
-            pointToLayer: pointToLayerCircleSupport,
+        var geoJSONLayer = L.geoJson(geoJSON, {
+            pointToLayer: self.pointToLayerCircleSupport,
             onEachFeature: function (feature, layer) {
                 onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions);
             },
-            style: DEFAULT_SHAPE_OPTIONS
+            style: options.style
         });
 
 
@@ -501,8 +674,7 @@ ALA.Map = function (id, options) {
         }
 
         self.notifyAll();
-
-        return layerCreatedByGeoJSON;
+        return geoJSONLayer;
     };
 
     /**
@@ -582,7 +754,9 @@ ALA.Map = function (id, options) {
      */
     self.removeLayer = function (layer) {
         drawnItems.removeLayer(layer);
-        self.fitBounds();
+        if (options.zoomToObject) {
+            self.fitBounds();
+        }
 
         self.notifyAll();
     };
@@ -987,7 +1161,7 @@ ALA.Map = function (id, options) {
         var geoJsonLayer = new L.FeatureGroup();
 
         L.geoJson(geoJSON, {
-            pointToLayer: pointToLayerCircleSupport,
+            pointToLayer: self.pointToLayerCircleSupport,
             onEachFeature: function (feature, layer) {
                 if (feature.properties && feature.properties.pid) {
                     var wmsOptions = {
@@ -1388,7 +1562,16 @@ ALA.Map = function (id, options) {
         options.iconSize = [options.iconSize[0]*factor, options.iconSize[1]*factor];
         options.iconAnchor = [options.iconAnchor[0]*factor, options.iconAnchor[1]*factor];
         // create a new icon as default icon is shared across all markers, so we cannot modify the existing one
-        newIcon = icon instanceof L.DivIcon ? L.divIcon(options) : new L.Icon.Default(options);
+        if (icon instanceof L.DivIcon) {
+            newIcon = L.divIcon(options)
+        }
+        else if (icon instanceof L.Icon.Default) {
+            newIcon = new L.Icon.Default(options)
+        }
+        else {
+            newIcon = L.icon(options);
+        }
+
         layer.setIcon(newIcon);
     }
 
@@ -1482,6 +1665,10 @@ ALA.Map = function (id, options) {
             if (e && e.layer) {
                 overlayLayerDeselect(e.layer);
             }
+        });
+
+        mapImpl.on('pm:remove', function (e) {
+            self.removeLayer(e.layer);
         });
     }
 
@@ -1654,9 +1841,13 @@ ALA.Map = function (id, options) {
 
             mapImpl.pm.setGlobalOptions({
                 limitMarkersToCount: 100, // adding all marker can cause performance issues when site is large
-                allowSelfIntersection: false, // disallow self-intersection for polygons
+                allowSelfIntersection: options.allowSelfIntersection, // enable or disable self-intersection for polygons
                 hideMiddleMarkers: false,
-                snappable: false
+                snappable: false,
+                // below are styles for drawn shapes
+                hintlineStyle: options.style,
+                templineStyle: options.style,
+                pathOptions: options.style
             });
 
             addCustomCancelActionToEditModes();
@@ -1905,12 +2096,12 @@ ALA.Map = function (id, options) {
         L.Circle.include({
             toGeoJSON: function () {
                 var feature = circleToGeoJSON.call(this);
-                feature.properties = {
-                    // adding a generic type property to distinguish MERIT Point of Interest (POI) from types such as circle, pid, marker.
-                    type: ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
-                    point_type: ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
-                    radius: this.getRadius()
-                };
+                // keep existing properties if they exist
+                feature.properties = feature.properties || {};
+                // adding a generic type property to distinguish MERIT Point of Interest (POI) from types such as circle, pid, marker.
+                feature.properties.type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
+                feature.properties.point_type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE,
+                feature.properties.radius = this.getRadius()
                 return feature;
             }
         });
@@ -1918,7 +2109,7 @@ ALA.Map = function (id, options) {
 
     // Render any GeoJSON feature where the geometry type = Point but the properties contains point_type = 'Circle'
     // as a circle instead of a point. This is because GeoJSON does not support Circle types.
-    function pointToLayerCircleSupport(feature, latlng) {
+    self.pointToLayerCircleSupport = function (feature, latlng) {
         if (feature.properties && feature.properties.point_type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
             if (feature.properties.circleOptions)
                 return L.circle(latlng, feature.properties.radius, feature.properties.circleOptions);
@@ -1958,7 +2149,8 @@ ALA.Map = function (id, options) {
     function onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions) {
         var wmsOptions = {};
         updateFeatureProperties(feature, layer);
-        assignFeatureId(layer, feature);
+        self.assignFeatureId(layer, feature);
+        assignNameToFeature(layer, feature);
 
         //Create a popup content
         if(feature.properties && feature.properties.popupContent)
@@ -2019,24 +2211,65 @@ ALA.Map = function (id, options) {
      * Assign a unique featureId property to the feature and layer if it does not already exist.
      * @param layer
      * @param feature
+     * @param force - if true, will assign a new featureId even if one already exists
      */
-    function assignFeatureId(layer, feature) {
+    self.assignFeatureId = function (layer, feature, force) {
         if (typeof UUID === "undefined") {
             console.error("[ALA-Map] UUID library is not included, cannot assign featureId to layer. Please include a UUID library.");
             return;
         }
 
+        force = force || false;
+        feature = feature || {};
         var currentFeatureId = feature.properties && feature.properties.featureId;
-        if (!_.contains([undefined, null, ""], currentFeatureId)) {
+        // Only return if featureId is present and force is false.
+        // If force is true, we will assign a new featureId regardless of whether one already exists.
+        if (!!currentFeatureId && !force) {
             return;
         }
 
         var featureId = UUID.generate();
         feature.properties = feature.properties || {};
         feature.properties.featureId = featureId;
-        layer.feature = layer.feature || {};
-        layer.feature.properties = layer.feature.properties || {};
-        layer.feature.properties.featureId = featureId;
+        if (layer) {
+            layer.feature = layer.feature || {};
+            layer.feature.type = layer.feature.type || "Feature";
+            layer.feature.properties = layer.feature.properties || {};
+            layer.feature.properties.featureId = featureId;
+        }
+    }
+
+    function assignNameToFeature(layer, feature, additionalNamesList) {
+        if (feature.properties && feature.properties.name) {
+            return;
+        }
+
+        var listOfFeatureNames = additionalNamesList || [];
+        console.log("[ALA-Map] Assigning name to feature, checking existing features for names.");
+        drawnItems.eachLayer(function (layer) {
+            if (layer.feature && layer.feature.properties && layer.feature.properties.name) {
+                listOfFeatureNames.push(layer.feature.properties.name);
+            }
+        });
+
+        var namePrefix = options.namePrefix || 'Feature ',
+            nextNameIndex = listOfFeatureNames.length + 1,
+            newName = namePrefix + nextNameIndex;
+
+        while (listOfFeatureNames.includes(newName)) {
+            nextNameIndex++;
+            newName = namePrefix + nextNameIndex;
+        }
+
+        if (layer) {
+            layer.feature = layer.feature || {};
+            layer.feature.type = layer.feature.type || "Feature";
+            layer.feature.properties = layer.feature.properties || {};
+            layer.feature.properties.name = newName;
+        }
+        feature.properties = feature.properties || {};
+        feature.properties.name = newName;
+        listOfFeatureNames.push(newName);
     }
 
     // Adds the lat/lng coordinates to the bottom of the map panel
@@ -2108,10 +2341,10 @@ ALA.Map = function (id, options) {
                         geojson.properties.radius = options.geocodeRegionOptions.pointRadiusMeters;
                     }
                 }
-                var layer = self.setGeoJSON(geojson);
 
+                var featureGroup = self.setGeoJSON(geojson);
                 if (options.zoomToObject) {
-                    layer && layer.getBounds && mapImpl.fitBounds(layer.getBounds(), {maxZoom: options.maxAutoZoom, animate: ANIMATE});
+                    featureGroup && featureGroup.getBounds && mapImpl.fitBounds(featureGroup.getBounds(), {maxZoom: options.maxAutoZoom, animate: ANIMATE});
                 }
             } else {
                 self.addMarker(result.geocode.center.lat, result.geocode.center.lng, null);
@@ -2150,26 +2383,76 @@ ALA.Map = function (id, options) {
             layerOptions: {
                 onEachFeature: onEachFeatureWithWMSLayerSupport,
             },
-            layer: function (geoJSON) {
-                if (options.simplifyImportedShapes) {
-                    if (typeof turf === "undefined") {
-                        console.error("[ALA-Map] turf is not defined. You must include the turf library to use the simplifyImportedShapes option.");
-                        return ;
-                    }
+            layer: async function (geoJSON) {
+                var additionalNamesList = [];
+                geoJSON.features.forEach(function (feature) {
+                    var clonedAdditionalNamesList = additionalNamesList.slice();
+                    self.assignFeatureId(null, feature);
+                    assignNameToFeature(null, feature, clonedAdditionalNamesList);
+                    additionalNamesList.push(feature.properties.name);
+                });
 
+                // pop-up a modal to select the feature they like to load.
+                if (options.addAllFeaturesFromFile === false) {
+                    geoJSON = await selectFeaturesFromGeoJSON(geoJSON);
+                }
+
+                if (options.simplifyImportedShapes) {
+                    checkTurfAvailability();
                     var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
                     geoJSON = turf.simplify(geoJSON, config);
                 }
 
-                var layer = self.setGeoJSON(geoJSON);
-                // add an intercepting method to layer to ensure file loader functions correctly
-                if (layer && !layer.getLayers) {
-                    layer.getLayers = function () {
-                        return [layer];
+                if (options.flattenMultiGeometries) {
+                    checkTurfAvailability();
+                    geoJSON = turf.flatten(geoJSON);
+                }
+
+                geoJSON = self.repairGeoJSON(geoJSON);
+                if (!geoJSON) {
+                    console.error("[ALA-Map] Invalid GeoJSON provided, and unable to repair it.");
+                    alert("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again.");
+                    return Promise.reject(new Error("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again."));
+                }
+
+                // Having self intersecting polygons when this is disallowed on geoman will cause shape to be uneditable and appear red,
+                // so we will filter them out here to avoid confusing users.
+                if (!options.allowSelfIntersection) {
+                    geoJSON = self.filterOutSelfIntersectingFeatures(geoJSON);
+                    if (geoJSON.features.length === 0) {
+                        console.error("[ALA-Map] All imported features were self-intersecting and have been filtered out.");
+                        alert("All imported features were self-intersecting and have been filtered out. Please check the data and try again.");
+                        return Promise.reject(new Error("All imported features were self-intersecting and have been filtered out. Please check the data and try again."));
                     }
                 }
 
-                return layer;
+                var validate = typeof options.validateImportedShapes == "function" ? options.validateImportedShapes(geoJSON) : {success: true}
+                return Promise.resolve(validate)
+                    .then(function (response) {
+                        if (!response.success) {
+                            console.error("[ALA-Map] Imported geometry was rejected by validateImportedShapes callback.");
+                            var ignore = confirm(response.message + "\nClick OK to NOT load the geometry, or Cancel to add it to the map.");
+                            if (!ignore) {
+                                console.log("[ALA-Map] User asked to add geometry regardless of validation fail.");
+                                // make sure the latest style is applied to the imported layer
+                                controlOptions.layerOptions.style = options.style;
+                                return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
+                            }
+                        }
+
+                        // when geometry is valid
+                        controlOptions.layerOptions.style = options.style;
+                        return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
+                    }, function (response) {
+                        console.error("[ALA-Map] Error validating imported geometry: " + response.message);
+                        var ignore = confirm(response.message + ".\nClick OK to remove the geometry, or Cancel to add it to the map.");
+                        if (!ignore) {
+                            console.log("[ALA-Map] User asked to add geometry regardless of error validating.");
+                            // make sure the latest style is applied to the imported layer
+                            controlOptions.layerOptions.style = options.style;
+                            return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
+                        }
+                    });
             }
         });
 
@@ -2185,6 +2468,283 @@ ALA.Map = function (id, options) {
             console.log("[ALA-Map] File loaded successfully.");
         });
         return fileInputControl;
+    }
+
+    function checkBootstrapModal() {
+        if (typeof bootstrap === "undefined" || typeof bootstrap.Modal === "undefined") {
+            throw new Error("Bootstrap Modal is not available. Please include Bootstrap 5 or later to use the select features modal.");
+        }
+    }
+
+    async function selectFeaturesFromGeoJSON(geoJSON) {
+        checkBootstrapModal();
+        var features = geoJSON.features || [geoJSON],
+            modalId = options.modalId || "ala-map-select-features-modal",
+            modalBodyId = modalId + "-body",
+            scriptId = modalId + "-script",
+            saveButtonId = modalId + "-save",
+            resolve, reject,
+            promise = new Promise(function (res, rej) {
+                resolve = res;
+                reject = rej;
+            });
+        if (!document.getElementById(modalId)) {
+            addModalToBody(modalId);
+        }
+
+        if(!document.getElementById(scriptId)) {
+            addTableScript(scriptId);
+        }
+
+        var modalDOM = document.getElementById(modalId),
+            isShownEventRegistered = bootstrap.Modal.getInstance(modalDOM) !== null,
+            modal = bootstrap.Modal.getOrCreateInstance(modalDOM),
+            handlerPayload = {
+                geoJSON: geoJSON,
+                modalId: modalId,
+                modalBodyId: modalBodyId,
+                saveButtonId: saveButtonId,
+                modal: modal,
+                scriptId: scriptId
+            },
+            shownHandler = L.Util.bind(listFeaturesWhenModalShown, handlerPayload);
+        if (!isShownEventRegistered && modal._shownHandler) {
+            modalDOM.removeEventListener('shown.bs.modal', modal._shownHandler);
+        }
+
+        modalDOM.addEventListener('shown.bs.modal', shownHandler);
+        // make sure the promise is resolved when the modal is closed.
+        modalDOM.addEventListener('hidden.bs.modal', function () {
+            resolve(geoJSON);
+        });
+        modal._shownHandler = shownHandler
+        modal._promise = promise;
+        modal._resolve = resolve;
+        modal._reject = reject;
+        modal.show();
+        return promise;
+    }
+
+    function listFeaturesWhenModalShown() {
+        var geoJSON = this.geoJSON,
+            modalBodyId = this.modalBodyId,
+            scriptId = this.scriptId,
+            saveButtonId = this.saveButtonId,
+            modal = this.modal,
+            modalBody = document.getElementById(modalBodyId),
+            saveButton = document.getElementById(saveButtonId),
+            templateScript = document.getElementById(scriptId).innerHTML,
+            template = Handlebars.compile(templateScript),
+            features = geoJSON.features || [geoJSON],
+            selectedFeatures = {};
+
+
+        modalBody.oninput = function (event) {
+            var target = event.target;
+
+            if (!target.hasAttribute("data-editable-property")) {
+                return;
+            }
+
+            var feature = getFeatureFromEvent(event, features),
+                property = target.getAttribute("data-editable-property");
+
+            if (!feature) {
+                return;
+            }
+
+            feature.properties = feature.properties || {};
+            feature.properties[property] = target.value;
+        };
+
+        modalBody.onchange = function (event) {
+            var target = event.target;
+            if (target.hasAttribute("data-select-all")) {
+                features.forEach(function (feature, index) {
+                    var featureId = feature.properties && feature.properties.featureId;
+                    selectedFeatures[featureId] = target.checked;
+                });
+
+                renderTable(modalBodyId, features, selectedFeatures, template);
+                return;
+            }
+
+            if (!target.hasAttribute("data-feature-selection")) {
+                return;
+            }
+
+            var featureId = target.getAttribute("data-feature-id");
+            selectedFeatures[featureId] = target.checked;
+            renderTable(modalBodyId, features, selectedFeatures, template);
+        };
+
+        saveButton.onclick = function () {
+            var selected = features.filter(function (feature, index) {
+                var featureId = feature.properties && feature.properties.featureId;
+                return selectedFeatures[featureId] === true;
+            });
+
+            if (selected.length === 0) {
+                alert("Please select at least one feature.");
+                return;
+            }
+
+            geoJSON.features = selected
+
+            modal.hide();
+            modal._resolve(geoJSON);
+        };
+
+        renderTable(modalBodyId, features, selectedFeatures, template);
+    }
+
+    function renderTable (modalBodyId, features, selectedFeatures, template) {
+        var viewModel = createViewModel(features, selectedFeatures),
+            html = template(viewModel),
+            modalBody = document.getElementById(modalBodyId);
+
+        modalBody.innerHTML = html;
+        var selectAllCheckbox = modalBody.querySelector(
+            "[data-select-all]"
+        );
+
+        if (!selectAllCheckbox) {
+            return;
+        }
+
+        var selectedCount = features.filter(function (feature, index) {
+            var featureId = feature.properties && feature.properties.featureId;
+            return selectedFeatures[featureId] === true;
+        }).length;
+
+        selectAllCheckbox.indeterminate =
+            selectedCount > 0 &&
+            selectedCount < features.length;
+    }
+
+    function getFeatureFromEvent(event, features) {
+        var index = event.target.getAttribute("data-feature-index");
+        return features[parseInt(index, 10)];
+    }
+
+    function createViewModel(features, selectedFeatures) {
+        var allSelected = features.length > 0 &&
+            features.every(function (feature, index) {
+                var featureId = feature.properties && feature.properties.featureId;
+                return selectedFeatures[featureId] === true;
+            });
+        return {
+            allSelected: allSelected,
+            features: features.map(function (feature, index) {
+                var properties = feature.properties || {},
+                    featureId = feature.properties && feature.properties.featureId,
+                    otherProperties = [];
+
+                Object.keys(properties).forEach(function (property) {
+                    if (
+                        property !== "name"
+                    ) {
+                        otherProperties.push({
+                            name: property,
+                            value: properties[property] || ""
+                        });
+                    }
+                });
+
+                return {
+                    index: index,
+                    id: featureId,
+                    selected: selectedFeatures[index] === true,
+                    name: properties.name || "",
+                    selected: selectedFeatures[featureId] === true,
+                    otherProperties: otherProperties
+                };
+            })
+        };
+    }
+
+    function addModalToBody(modalId) {
+        var modalHtml = `<div id="${modalId}" class="modal" tabindex="-1">
+          <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Select shapes to add</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="${modalId}-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="${modalId}-save" type="button" class="btn btn-primary">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    function addTableScript (scriptId) {
+        var scriptHTML = `
+        <script id="${scriptId}" type="text/html">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          data-select-all="true"
+                          {{#if allSelected}}checked{{/if}}
+                        >
+                        <span class="ms-1">Select all</span>
+                    </th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Other properties</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each features}}
+                    <tr data-feature-index="{{index}}">
+                      <td class="text-center">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          data-feature-index="{{index}}"
+                          data-feature-id="{{id}}"
+                          data-feature-selection="true"
+                          {{#if selected}}checked{{/if}}
+                        >
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          value="{{name}}"
+                          data-feature-index="{{index}}"
+                          data-editable-property="name"
+                        >
+                      </td>
+                      <td>
+                        <dl class="mb-0">
+                          {{#each otherProperties}}
+                            <div class="row">
+                              <dt class="col-sm-4">{{name}}</dt>
+                              <dd class="col-sm-8 mb-1">{{value}}</dd>
+                            </div>
+                          {{/each}}
+                        </dl>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+        </script>
+        `
+
+        document.body.insertAdjacentHTML('beforeend', scriptHTML);
     }
 
     /**
@@ -2239,6 +2799,8 @@ ALA.Map = function (id, options) {
         self.startLoading();
 
         layer.addTo(drawnItems);
+        self.assignFeatureId(layer, layer.feature);
+        assignNameToFeature(layer, layer.feature);
 
         if (options.zoomToObject && layer.getBounds) {
             mapImpl.fitBounds(drawnItems.getBounds(), {maxZoom: options.maxAutoZoom, animate: ANIMATE});
@@ -2334,6 +2896,10 @@ ALA.Map = function (id, options) {
             // this is not considered to be a 'marker' as with those added via addMarker, so don't add it to
             // the 'markers' list.
             drawnItems.addLayer(placeholder);
+        }
+
+        if (layerOptions.style && layer.setStyle) {
+            layer.setStyle(layerOptions.style);
         }
     }
 

@@ -1,5 +1,6 @@
 //= require underscore/underscore-min.js
 //= require uuidjs/uuid.min.js
+//= require bootstrap/bootstrap-modal.min.js
 //= require ala-map-jquery-plugins
 //= require ala-map-leaflet
 //= require ala-map-leaflet-deps

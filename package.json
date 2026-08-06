@@ -13,10 +13,16 @@
     "@metahub/karma-jasmine-jquery": "^2.0.1",
     "@turf/area": "^7.3.5",
     "@turf/bbox": "^7.3.5",
+    "@turf/boolean-valid": "^7.3.5",
+    "@turf/clean-coords": "^7.3.5",
     "@turf/clone": "^7.3.5",
     "@turf/convex": "^7.3.5",
+    "@turf/flatten": "^7.3.5",
     "@turf/length": "^7.3.5",
+    "@turf/helpers": "^7.3.5",
+    "@turf/rewind": "^7.3.5",
     "@turf/simplify": "^7.3.5",
+    "@turf/unkink-polygon": "^7.3.5",
     "babel-loader": "^10.1.1",
     "better-docs": "^2.7.3",
     "chromedriver": "^145.0.6",
@@ -46,12 +52,14 @@
     "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2",
     "uuidjs": "^5.1.0",
-    "but-unzip": "^0.1.10"
+    "but-unzip": "^0.1.10",
+    "bootstrap": "^5.3.8"
   },
   "scripts": {
     "turf": "npx esbuild turf-package-instructions.js --bundle --format=iife --outfile=./grails-app/assets/vendor-external/turf/turf-packaged.js --global-name=turf",
     "uuid": "npx esbuild uuid-package-instruction.js --minify --bundle --format=iife --global-name=UUIDLib --outfile=./grails-app/assets/vendor-external/uuidjs/uuid.min.js --footer:js=\"window.UUID=UUIDLib.UUID;\"",
     "butUnzip": "npx esbuild node_modules/but-unzip/index.browser.min.mjs --format=iife --outfile=./grails-app/assets/vendor-external/but-unzip/but-unzip.min.js --global-name=butUnzip",
+    "bootstrap-modal": "npx esbuild bootstrap-modal.js  --bundle  --minify  --format=iife  --outfile=./grails-app/assets/vendor-external/bootstrap/bootstrap-modal.min.js",
     "test": "karma start karma.conf.js",
     "debug": "karma start --debug --browsers=ChromeHeadless,Chrome --single-run=false"
   },

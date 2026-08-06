@@ -52,6 +52,9 @@ jobs:
       - name: Build butUnzip
         run: npm run butUnzip
 
+      - name: Build bootstrap with only modal
+        run: npm run bootstrap-modal
+
       - name: JS Tests (Karma)
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 

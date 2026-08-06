@@ -32,6 +32,28 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
             return this._loadGeoJSON(geoJson);
         }
     },
+    _loadGeoJSON: function _loadGeoJSON(content) {
+        var layer;
+        if (typeof content === 'string') {
+            content = JSON.parse(content);
+        }
+        return Promise.resolve(
+            this.options.layer(content, this.options.layerOptions)
+        ).then(L.Util.bind(function (layer) {
+            if (!layer)
+                return null;
+
+            if (layer.getLayers().length === 0) {
+                throw new Error('GeoJSON has no valid layers.');
+            }
+
+            if (this.options.addToMap) {
+                layer.addTo(this._map);
+            }
+
+            return layer;
+        }, this));
+    },
     checkShapeFile: async function (arrayBuffer) {
         if (this.options.checkShapeFileValidity) {
             if (typeof butUnzip === 'undefined') {
@@ -84,17 +106,15 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
             var layer;
             try {
                 this.fire('data:loading', { filename: file.name, format: parser.ext });
-                if (typeof e.target.result === 'string') {
-                    layer = parser.processor.call(this, e.target.result, parser.ext);
-                }
-                else if (e.target.result instanceof ArrayBuffer) {
-                    layer = await parser.processor.call(this, e.target.result, parser.ext);
-                }
-                this.fire('data:loaded', {
-                    layer: layer,
-                    filename: file.name,
-                    format: parser.ext
-                });
+                return Promise.resolve(
+                    parser.processor.call(this, e.target.result, parser.ext)
+                ).then(L.Util.bind(function (layer) {
+                    this.fire('data:loaded', {
+                        layer: layer,
+                        filename: file.name,
+                        format: parser.ext
+                    });
+                }, this));
             } catch (err) {
                 this.fire('data:error', { error: err });
             }
