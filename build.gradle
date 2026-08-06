@@ -73,7 +73,7 @@ clientDependencies {
         }
         'jquery'('3.6.0')
         'jquery-inview'('1.1.2')
-        'handlebars'('4.7.7') {
+        'handlebars'('4.7.9') {
             include 'handlebars.js'
         }
         'leaflet'('1.9.4')
