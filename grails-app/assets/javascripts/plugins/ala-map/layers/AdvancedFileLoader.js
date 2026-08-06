@@ -114,6 +114,8 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
                         filename: file.name,
                         format: parser.ext
                     });
+                }, this)).catch(L.Util.bind(function (err) {
+                    this.fire('data:error', { error: err });
                 }, this));
             } catch (err) {
                 this.fire('data:error', { error: err });
