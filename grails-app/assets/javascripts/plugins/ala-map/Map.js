@@ -488,12 +488,6 @@ ALA.Map = function (id, options) {
         return drawnItems.toGeoJSON();
     };
 
-    function checkTurfAvailability() {
-        if (typeof turf === 'undefined') {
-            throw new Error("Turf.js is required.");
-        }
-    }
-
     /**
      * Filter out polygons and lines that are self intersecting.
      * @param featureCollection - GeoJSON FeatureCollection object
@@ -550,15 +544,14 @@ ALA.Map = function (id, options) {
      * @returns {Feature|FeatureCollection}
      */
     self.repairGeoJSON = function (geoJSON) {
-        geoJSON = self.toFeatureCollection(geoJSON);
-
         if (!geoJSON) {
             return null;
         }
 
+        geoJSON = self.toFeatureCollection(geoJSON);
         var features = [];
         geoJSON.features.forEach(function (feature) {
-            if (turf.booleanValid(geoJSON)) {
+            if (turf.booleanValid(feature)) {
                 features.push(feature);
                 return;
             }
@@ -1534,9 +1527,64 @@ ALA.Map = function (id, options) {
         }
     };
 
+    // Render any GeoJSON feature where the geometry type = Point but the properties contains point_type = 'Circle'
+    // as a circle instead of a point. This is because GeoJSON does not support Circle types.
+    self.pointToLayerCircleSupport = function (feature, latlng) {
+        if (feature.properties && feature.properties.point_type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
+            if (feature.properties.circleOptions)
+                return L.circle(latlng, feature.properties.radius, feature.properties.circleOptions);
+            else
+                return L.circle(latlng, feature.properties.radius, {});
+        } else {
+            var marker = L.marker(latlng, {draggable: options.draggableMarkers});
+            if (options.draggableMarkers) {
+                marker.on("dragend", self.notifyAll);
+            }
+            markers.push(marker);
+            return marker;
+        }
+    }
+
+    /**
+     * Assign a unique featureId property to the feature and layer if it does not already exist.
+     * @param layer
+     * @param feature
+     * @param force - if true, will assign a new featureId even if one already exists
+     */
+    self.assignFeatureId = function (layer, feature, force) {
+        if (typeof UUID === "undefined") {
+            console.error("[ALA-Map] UUID library is not included, cannot assign featureId to layer. Please include a UUID library.");
+            return;
+        }
+
+        force = force || false;
+        feature = feature || {};
+        var currentFeatureId = feature.properties && feature.properties.featureId;
+        // Only return if featureId is present and force is false.
+        // If force is true, we will assign a new featureId regardless of whether one already exists.
+        if (!!currentFeatureId && !force) {
+            return;
+        }
+
+        var featureId = UUID.generate();
+        feature.properties = feature.properties || {};
+        feature.properties.featureId = featureId;
+        if (layer) {
+            layer.feature = layer.feature || {};
+            layer.feature.type = layer.feature.type || "Feature";
+            layer.feature.properties = layer.feature.properties || {};
+            layer.feature.properties.featureId = featureId;
+        }
+    }
+
     // ----------------------
     // Private functions
     // ----------------------
+    function checkTurfAvailability() {
+        if (typeof turf === 'undefined') {
+            throw new Error("Turf.js is required.");
+        }
+    }
 
     function increaseOrDecreaseIconSize (layer, factor) {
         var icon = layer.getIcon(),
@@ -2107,24 +2155,6 @@ ALA.Map = function (id, options) {
         });
     }
 
-    // Render any GeoJSON feature where the geometry type = Point but the properties contains point_type = 'Circle'
-    // as a circle instead of a point. This is because GeoJSON does not support Circle types.
-    self.pointToLayerCircleSupport = function (feature, latlng) {
-        if (feature.properties && feature.properties.point_type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
-            if (feature.properties.circleOptions)
-                return L.circle(latlng, feature.properties.radius, feature.properties.circleOptions);
-            else
-                return L.circle(latlng, feature.properties.radius, {});
-        } else {
-            var marker = L.marker(latlng, {draggable: options.draggableMarkers});
-            if (options.draggableMarkers) {
-                marker.on("dragend", self.notifyAll);
-            }
-            markers.push(marker);
-            return marker;
-        }
-    }
-
     function defaultPopupContent(feature) {
         var popupContent = "";
         var rows = [];
@@ -2204,38 +2234,6 @@ ALA.Map = function (id, options) {
             else {
                 layer.feature.properties = Object.assign(layer.feature.properties, feature.properties);
             }
-        }
-    }
-
-    /**
-     * Assign a unique featureId property to the feature and layer if it does not already exist.
-     * @param layer
-     * @param feature
-     * @param force - if true, will assign a new featureId even if one already exists
-     */
-    self.assignFeatureId = function (layer, feature, force) {
-        if (typeof UUID === "undefined") {
-            console.error("[ALA-Map] UUID library is not included, cannot assign featureId to layer. Please include a UUID library.");
-            return;
-        }
-
-        force = force || false;
-        feature = feature || {};
-        var currentFeatureId = feature.properties && feature.properties.featureId;
-        // Only return if featureId is present and force is false.
-        // If force is true, we will assign a new featureId regardless of whether one already exists.
-        if (!!currentFeatureId && !force) {
-            return;
-        }
-
-        var featureId = UUID.generate();
-        feature.properties = feature.properties || {};
-        feature.properties.featureId = featureId;
-        if (layer) {
-            layer.feature = layer.feature || {};
-            layer.feature.type = layer.feature.type || "Feature";
-            layer.feature.properties = layer.feature.properties || {};
-            layer.feature.properties.featureId = featureId;
         }
     }
 
