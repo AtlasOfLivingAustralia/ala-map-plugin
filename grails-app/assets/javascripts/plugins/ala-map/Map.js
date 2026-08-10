@@ -521,7 +521,7 @@ ALA.Map = function (id, options) {
         checkTurfAvailability()
         switch (geoJSON.type) {
             case "FeatureCollection":
-                return geoJSON;
+                return turf.clone(geoJSON);
             case "Feature":
             case "Polygon":
             case "MultiPolygon":
