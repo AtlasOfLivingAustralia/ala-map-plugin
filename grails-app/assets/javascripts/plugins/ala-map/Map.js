@@ -653,6 +653,8 @@ ALA.Map = function (id, options) {
             geoJSON = JSON.parse(geoJSON);
         }
 
+        layerOptions = layerOptions || {};
+        layerOptions.style = layerOptions.style || options.style;
         var geoJSONLayer = L.geoJson(geoJSON, {
             pointToLayer: self.pointToLayerCircleSupport,
             onEachFeature: function (feature, layer) {
@@ -2205,12 +2207,12 @@ ALA.Map = function (id, options) {
             clearMarkers();
         }
 
+        applyLayerOptions(layer, layerOptions);
         drawnItems.addLayer(layer);
         if (layer.bringToFront) {
             layer.bringToFront();
         }
 
-        applyLayerOptions(layer, layerOptions);
         layerCreatedByGeoJSON = layer;
     }
 
@@ -2413,7 +2415,7 @@ ALA.Map = function (id, options) {
                     return Promise.reject(new Error("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again."));
                 }
 
-                // Having self intersecting polygons when this is disallowed on geoman will cause shape to be uneditable and appear red,
+                // Having self-intersecting polygons when this is disallowed on geoman will cause shape to be uneditable and appear red,
                 // so we will filter them out here to avoid confusing users.
                 if (!options.allowSelfIntersection) {
                     geoJSON = self.filterOutSelfIntersectingFeatures(geoJSON);
