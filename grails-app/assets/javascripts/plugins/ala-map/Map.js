@@ -105,7 +105,8 @@ ALA.MapConstants = {
  *  <li><code>sleepOpacity</code> Opacity of the sleep text. Only relevant if sleep = true and sleepNote = true. Default: 0.7</li>
  *  <li><code>wakeMessage</code> Text to display over the map when it is sleeping. Only relevant if sleep = true and sleepNote = true. Default: 'Click or hover to wake'.</li>
  *  <li><code>trackWindowHeight<code> Map will adjust its height according to the height of browser window when set to true. Default: false. </li>
- *  <li><code>minMapHeight<code> The height of map will not go below this value. It is only active when trackWindowHeight is true. Default: 250. </li>
+ *  <li><code>minMapHeight</code> The height of map will not go below this value. It is only active when trackWindowHeight is true. Default: 250. </li>
+ *  <li><code>tooltipOptions</code> Options passed while creating Leaflet tooltip. Tooltip is created only if GeoJSON has a property by name tooltipContent. </li>
  * </ul>
  *
  * @class
@@ -249,6 +250,11 @@ ALA.Map = function (id, options) {
         mutate: true
     }
 
+    var DEFAULT_TOOLTIP_OPTIONS = {
+        sticky: true,
+        permanent: false
+    }
+
     /**
      * Default Map options
      *
@@ -304,7 +310,8 @@ ALA.Map = function (id, options) {
         style: DEFAULT_SHAPE_OPTIONS,
         allowSelfIntersection: false,
         validateImportedShapes: null,
-        addAllFeaturesFromFile: true
+        addAllFeaturesFromFile: true,
+        tooltipOptions: DEFAULT_TOOLTIP_OPTIONS
     };
 
     /**
@@ -671,6 +678,23 @@ ALA.Map = function (id, options) {
         self.notifyAll();
         return geoJSONLayer;
     };
+
+    /**
+     * Retrieve the current value of the zoomToObject option.
+     * @returns {boolean}
+     */
+    self.getZoomToObject = function () {
+        return options.zoomToObject;
+    }
+
+    /**
+     * Set the zoomToObject option. If true, the map will automatically fit to the bounds of a new object when added.
+     * @param zoomToObject {boolean} true to enable, false to disable
+     * @returns {boolean}
+     */
+    self.setZoomToObject = function (zoomToObject) {
+        return options.zoomToObject = zoomToObject;
+    }
 
     /**
      * Retrieve the unique id for this map
@@ -2190,6 +2214,10 @@ ALA.Map = function (id, options) {
         else if (feature.properties) {
             var popupContent = defaultPopupContent(feature);
             popupContent && layer.bindPopup(popupContent);
+        }
+
+        if (feature.properties && feature.properties.tooltipContent && layer.bindTooltip) {
+            layer.bindTooltip(feature.properties.tooltipContent, options.tooltipOptions);
         }
 
         if (feature.properties && feature.properties.pid) {

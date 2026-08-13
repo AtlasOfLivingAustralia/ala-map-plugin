@@ -68,6 +68,7 @@ L.TileLayer.SmartWMS = L.TileLayer.WMS.extend({
                     };
 
                     self._callback();
+                    self.fire("wmslayer:metadataupdated", data);
                 }
             });
         } else if (!_.isUndefined(this._boundsUrl) && this._boundsUrl != null) {
@@ -89,6 +90,7 @@ L.TileLayer.SmartWMS = L.TileLayer.WMS.extend({
                 };
 
                 self._callback();
+                self.fire("wmslayer:boundsupdated", data);
             });
         }
     },
