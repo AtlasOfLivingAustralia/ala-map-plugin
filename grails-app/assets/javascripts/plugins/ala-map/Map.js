@@ -1603,6 +1603,31 @@ ALA.Map = function (id, options) {
         }
     }
 
+    self.hideLayer = function (layer) {
+        if (layer.setStyle) {
+            layer.setStyle(HIDDEN_LAYER)
+        } else if (layer.setOpacity) {
+            layer.setOpacity(0);
+        } else if (layer.options) {
+            layer.options.opacity = 0;
+        }
+    }
+
+    self.showLayer = function (layer) {
+        if (layer.setStyle) {
+            layer.setStyle(VISIBLE_LAYER)
+        } else if (layer.setOpacity) {
+            layer.setOpacity(DEFAULT_OPACITY);
+        } else if (layer.options) {
+            layer.options.opacity = DEFAULT_OPACITY;
+            layer.options.weight = DEFAULT_LINE_WEIGHT;
+        }
+
+        if (layer.bringToFront) {
+            layer.bringToFront();
+        }
+    }
+
     // ----------------------
     // Private functions
     // ----------------------
@@ -2907,15 +2932,15 @@ ALA.Map = function (id, options) {
         }
 
         if (layerOptions.markerWithMouseOver) {
-            hideLayer(layer);
+            self.hideLayer(layer);
 
             var centre = layerOptions.markerLocation ? layerOptions.markerLocation : layer.getBounds().getCenter();
             var placeholder = L.marker(centre);
             placeholder.on("mouseover", function () {
-                showLayer(layer);
+                self.showLayer(layer);
             });
             placeholder.on("mouseout", function () {
-                hideLayer(layer);
+                self.hideLayer(layer);
             });
 
             if (layerOptions.popup) {
@@ -2928,31 +2953,6 @@ ALA.Map = function (id, options) {
 
         if (layerOptions.style && layer.setStyle) {
             layer.setStyle(layerOptions.style);
-        }
-    }
-
-    function hideLayer(layer) {
-        if (layer.setStyle) {
-            layer.setStyle(HIDDEN_LAYER)
-        } else if (layer.setOpacity) {
-            layer.setOpacity(0);
-        } else if (layer.options) {
-            layer.options.opacity = 0;
-        }
-    }
-
-    function showLayer(layer) {
-        if (layer.setStyle) {
-            layer.setStyle(VISIBLE_LAYER)
-        } else if (layer.setOpacity) {
-            layer.setOpacity(DEFAULT_OPACITY);
-        } else if (layer.options) {
-            layer.options.opacity = DEFAULT_OPACITY;
-            layer.options.weight = DEFAULT_LINE_WEIGHT;
-        }
-
-        if (layer.bringToFront) {
-            layer.bringToFront();
         }
     }
 
