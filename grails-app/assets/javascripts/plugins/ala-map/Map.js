@@ -14,6 +14,8 @@ ALA.MapConstants = {
     DRAW_TYPE: {
         POINT_TYPE: "Point",
         CIRCLE_TYPE: "Circle",
+        CIRCLE_MARKER_TYPE: "CircleMarker",
+        MARKER_TYPE: "Marker",
         POLYGON_TYPE: "Polygon",
         LINE_TYPE: "LineString"
     },
@@ -1556,18 +1558,32 @@ ALA.Map = function (id, options) {
     // Render any GeoJSON feature where the geometry type = Point but the properties contains point_type = 'Circle'
     // as a circle instead of a point. This is because GeoJSON does not support Circle types.
     self.pointToLayerCircleSupport = function (feature, latlng) {
-        if (feature.properties && feature.properties.point_type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
-            if (feature.properties.circleOptions)
-                return L.circle(latlng, feature.properties.radius, feature.properties.circleOptions);
-            else
-                return L.circle(latlng, feature.properties.radius, {});
-        } else {
-            var marker = L.marker(latlng, {draggable: options.draggableMarkers});
-            if (options.draggableMarkers) {
-                marker.on("dragend", self.notifyAll);
-            }
-            markers.push(marker);
-            return marker;
+        var marker, properties = feature.properties || {};
+        switch (properties.point_type) {
+            case ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE:
+                if (properties.circleOptions)
+                    return L.circle(latlng, properties.radius, properties.circleOptions);
+                else
+                    return L.circle(latlng, properties.radius, {});
+            case ALA.MapConstants.DRAW_TYPE.CIRCLE_MARKER_TYPE:
+                if (properties.circleMarkerOptions)
+                    marker =  L.circleMarker(latlng, properties.circleMarkerOptions);
+                else
+                    marker = L.circleMarker(latlng, {});
+
+                if (options.draggableMarkers)
+                    marker.on("dragend", self.notifyAll);
+
+                markers.push(marker);
+                return marker;
+            case ALA.MapConstants.DRAW_TYPE.MARKER_TYPE:
+            default:
+                marker = L.marker(latlng, {draggable: options.draggableMarkers});
+                if (options.draggableMarkers)
+                    marker.on("dragend", self.notifyAll);
+
+                markers.push(marker);
+                return marker;
         }
     }
 
