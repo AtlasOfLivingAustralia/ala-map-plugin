@@ -109,6 +109,7 @@ ALA.MapConstants = {
  *  <li><code>trackWindowHeight<code> Map will adjust its height according to the height of browser window when set to true. Default: false. </li>
  *  <li><code>minMapHeight</code> The height of map will not go below this value. It is only active when trackWindowHeight is true. Default: 250. </li>
  *  <li><code>tooltipOptions</code> Options passed while creating Leaflet tooltip. Tooltip is created only if GeoJSON has a property by name tooltipContent. </li>
+ *  <li><code>assignNameEnabled</code> If true, the map will assign a name to the drawn shapes. Default: true</li>
  * </ul>
  *
  * @class
@@ -313,7 +314,8 @@ ALA.Map = function (id, options) {
         allowSelfIntersection: false,
         validateImportedShapes: null,
         addAllFeaturesFromFile: true,
-        tooltipOptions: DEFAULT_TOOLTIP_OPTIONS
+        tooltipOptions: DEFAULT_TOOLTIP_OPTIONS,
+        assignNameEnabled: true
     };
 
     /**
@@ -2309,6 +2311,9 @@ ALA.Map = function (id, options) {
     }
 
     function assignNameToFeature(layer, feature, additionalNamesList) {
+        if (!options.assignNameEnabled)
+            return;
+
         if (feature.properties && feature.properties.name) {
             return;
         }
@@ -2453,7 +2458,9 @@ ALA.Map = function (id, options) {
                 onEachFeature: onEachFeatureWithWMSLayerSupport,
             },
             layer: async function (geoJSON) {
+                self.startLoading();
                 var additionalNamesList = [];
+                geoJSON = self.toFeatureCollection(geoJSON);
                 geoJSON.features.forEach(function (feature) {
                     var clonedAdditionalNamesList = additionalNamesList.slice();
                     self.assignFeatureId(null, feature);
@@ -2481,6 +2488,7 @@ ALA.Map = function (id, options) {
                 if (!geoJSON) {
                     console.error("[ALA-Map] Invalid GeoJSON provided, and unable to repair it.");
                     alert("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again.");
+                    self.finishLoading();
                     return Promise.reject(new Error("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again."));
                 }
 
@@ -2491,6 +2499,7 @@ ALA.Map = function (id, options) {
                     if (geoJSON.features.length === 0) {
                         console.error("[ALA-Map] All imported features were self-intersecting and have been filtered out.");
                         alert("All imported features were self-intersecting and have been filtered out. Please check the data and try again.");
+                        self.finishLoading();
                         return Promise.reject(new Error("All imported features were self-intersecting and have been filtered out. Please check the data and try again."));
                     }
                 }
@@ -2498,6 +2507,7 @@ ALA.Map = function (id, options) {
                 var validate = typeof options.validateImportedShapes == "function" ? options.validateImportedShapes(geoJSON) : {success: true}
                 return Promise.resolve(validate)
                     .then(function (response) {
+                        self.finishLoading();
                         if (!response.success) {
                             console.error("[ALA-Map] Imported geometry was rejected by validateImportedShapes callback.");
                             var ignore = confirm(response.message + "\nClick OK to NOT load the geometry, or Cancel to add it to the map.");
@@ -2514,7 +2524,9 @@ ALA.Map = function (id, options) {
                         return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
                     }, function (response) {
                         console.error("[ALA-Map] Error validating imported geometry: " + response.message);
-                        var ignore = confirm(response.message + ".\nClick OK to remove the geometry, or Cancel to add it to the map.");
+                        self.finishLoading();
+                        var message = response.message || "";
+                        var ignore = confirm(message + ".\nClick OK to remove the geometry, or Cancel to add it to the map.");
                         if (!ignore) {
                             console.log("[ALA-Map] User asked to add geometry regardless of error validating.");
                             // make sure the latest style is applied to the imported layer
