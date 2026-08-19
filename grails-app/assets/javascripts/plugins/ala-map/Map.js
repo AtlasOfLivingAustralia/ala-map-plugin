@@ -1971,6 +1971,43 @@ ALA.Map = function (id, options) {
         }
 
         function onLayerCreated(layerType, layer) {
+            var geoJSON = layer.toGeoJSON && layer.toGeoJSON();
+            if (geoJSON) {
+                self.startLoading();
+                var promise = typeof options.validateImportedShapes == "function" ? options.validateImportedShapes(geoJSON) : {success: true}
+                Promise.resolve(promise).then(function (response) {
+                    self.finishLoading();
+                    if (!response.success) {
+                        console.error("[ALA-Map] Imported geometry was rejected by validateImportedShapes callback.");
+                        var ignore = confirm(response.message + "\nClick OK to remove the geometry, or Cancel to keep it on the map.");
+                        if (ignore) {
+                            console.log("[ALA-Map] User asked to remove the geometry regardless of validation fail.");
+                            mapImpl.removeLayer(layer);
+                        } else {
+                            console.log("[ALA-Map] User asked to keep the geometry regardless of validation fail.");
+                            addCreatedLayer(layerType, layer);
+                        }
+                    } else {
+                        console.log("[ALA-Map] Geometry passed validation!");
+                        addCreatedLayer(layerType, layer);
+                    }
+                }, function (response) {
+                    console.error("[ALA-Map] Error validating imported geometry: " + response.message);
+                    self.finishLoading();
+                    var message = response.message || "An error occurred while trying find validity of the created shape";
+                    var ignore = confirm(message + ".\nClick OK to remove the geometry, or Cancel to keep it on the map.");
+                    if (ignore) {
+                        console.log("[ALA-Map] User asked to remove the geometry regardless of validation error.");
+                        mapImpl.removeLayer(layer);
+                    } else {
+                        console.log("[ALA-Map] User selected to keep geometry regardless of validation error.");
+                        addCreatedLayer(layerType, layer);
+                    }
+                });
+            }
+        }
+
+        function addCreatedLayer(layerType, layer){
             if (normaliseLayerType(layerType) === ALA.MapConstants.LAYER_TYPE.MARKER) {
                 if (currentOptions.singleMarker) {
                     markers = [];
@@ -2525,7 +2562,7 @@ ALA.Map = function (id, options) {
                     }, function (response) {
                         console.error("[ALA-Map] Error validating imported geometry: " + response.message);
                         self.finishLoading();
-                        var message = response.message || "";
+                        var message = response.message || "An error occurred while trying to find the validity of the shape file";
                         var ignore = confirm(message + ".\nClick OK to remove the geometry, or Cancel to add it to the map.");
                         if (!ignore) {
                             console.log("[ALA-Map] User asked to add geometry regardless of error validating.");
