@@ -106,7 +106,7 @@ describe("ALA.Map tests", function () {
         expect(notifyCount).toBe(1);
     });
 
-    it("should notify subscribers once when a pm:create event occurs with marker shape", function() {
+    it("should notify subscribers once when a pm:create event occurs with marker shape", function(done) {
         var map = new ALA.Map(ID);
         var notifyCount = 0;
 
@@ -117,6 +117,9 @@ describe("ALA.Map tests", function () {
         map.getMapImpl().fire("pm:create", {
             shape: ALA.MapConstants.LAYER_TYPE.MARKER,
             layer: {
+                toGeoJSON: function () {
+                    return {type: "Point", coordinates: [1,1]};
+                },
                 on: function(){},
                 addTo: function(){},
                 getLatLng: function(){return new L.LatLng(1, 1)},
@@ -124,10 +127,13 @@ describe("ALA.Map tests", function () {
             }
         });
 
-        expect(notifyCount).toBe(1);
+        setTimeout(function() {
+            expect(notifyCount).toBe(1);
+            done();
+        }, 1000);
     });
 
-    it("should notify subscribers once when a pm:create event occurs with non-marker shape", function() {
+    it("should notify subscribers once when a pm:create event occurs with non-marker shape", function(done) {
         var map = new ALA.Map(ID);
         var notifyCount = 0;
 
@@ -136,11 +142,14 @@ describe("ALA.Map tests", function () {
         });
 
         map.getMapImpl().fire("pm:create", {
-            shape: "polygon",
+            shape: "point",
             layer: L.circle([1, 1], 100)
         });
 
-        expect(notifyCount).toBe(1);
+        setTimeout(function(){
+            expect(notifyCount).toBe(1);
+            done();
+        }, 1000);
     });
 
     it("should notify subscribers once when pm:globaleditmodetoggled is disabled", function() {
