@@ -524,31 +524,6 @@ ALA.Map = function (id, options) {
     }
 
     /**
-     * Converts a GeoJSON instance to a FeatureCollection.
-     * @param geoJSON
-     * @returns {FeatureCollection|null}
-     */
-    self.toFeatureCollection = function (geoJSON) {
-        checkTurfAvailability()
-        switch (geoJSON.type) {
-            case "FeatureCollection":
-                return turf.clone(geoJSON);
-            case "Feature":
-            case "Polygon":
-            case "MultiPolygon":
-            case "LineString":
-            case "MultiLineString":
-            case "Point":
-            case "MultiPoint":
-                return turf.featureCollection([geoJSON]);
-            default:
-                console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
-                return null;
-
-        }
-    }
-
-    /**
      * Attempts to repair an invalid Polygon or MultiPolygon.
      *
      * @param {FeatureCollection} feature
@@ -559,7 +534,7 @@ ALA.Map = function (id, options) {
             return null;
         }
 
-        geoJSON = self.toFeatureCollection(geoJSON);
+        geoJSON = ALA.MapUtils.toFeatureCollection(geoJSON);
         var features = [];
         geoJSON.features.forEach(function (feature) {
             if (turf.booleanValid(feature)) {
@@ -1649,12 +1624,6 @@ ALA.Map = function (id, options) {
     // ----------------------
     // Private functions
     // ----------------------
-    function checkTurfAvailability() {
-        if (typeof turf === 'undefined') {
-            throw new Error("Turf.js is required.");
-        }
-    }
-
     function increaseOrDecreaseIconSize (layer, factor) {
         var icon = layer.getIcon(),
             newIcon, options;
@@ -2497,7 +2466,7 @@ ALA.Map = function (id, options) {
             layer: async function (geoJSON) {
                 self.startLoading();
                 var additionalNamesList = [];
-                geoJSON = self.toFeatureCollection(geoJSON);
+                geoJSON = ALA.MapUtils.toFeatureCollection(geoJSON);
                 geoJSON.features.forEach(function (feature) {
                     var clonedAdditionalNamesList = additionalNamesList.slice();
                     self.assignFeatureId(null, feature);
@@ -2511,13 +2480,13 @@ ALA.Map = function (id, options) {
                 }
 
                 if (options.simplifyImportedShapes) {
-                    checkTurfAvailability();
+                    ALA.MapUtils.checkTurfAvailability();
                     var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
                     geoJSON = turf.simplify(geoJSON, config);
                 }
 
                 if (options.flattenMultiGeometries) {
-                    checkTurfAvailability();
+                    ALA.MapUtils.checkTurfAvailability();
                     geoJSON = turf.flatten(geoJSON);
                 }
 
@@ -3333,5 +3302,34 @@ ALA.MapUtils = {
         }
 
         return areaSqKm;
+    },
+    checkTurfAvailability: function () {
+        if (typeof turf === 'undefined') {
+            throw new Error("Turf.js is required.");
+        }
+    },
+    /**
+     * Converts a GeoJSON instance to a FeatureCollection.
+     * @param geoJSON
+     * @returns {FeatureCollection|null}
+     */
+    toFeatureCollection: function (geoJSON) {
+        ALA.MapUtils.checkTurfAvailability()
+        switch (geoJSON.type) {
+            case "FeatureCollection":
+                return turf.clone(geoJSON);
+            case "Feature":
+            case "Polygon":
+            case "MultiPolygon":
+            case "LineString":
+            case "MultiLineString":
+            case "Point":
+            case "MultiPoint":
+                return turf.featureCollection([geoJSON]);
+            default:
+                console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
+                return null;
+
+        }
     }
 };
