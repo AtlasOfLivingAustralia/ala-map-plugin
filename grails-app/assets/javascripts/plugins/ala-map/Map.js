@@ -1440,12 +1440,22 @@ ALA.Map = function (id, options) {
     self.highlightFeaturesByProperty = function(propertyName, propertyValue) {
         self.unHighlightAllFeatures();
 
-    	drawnItems.eachLayer(function (layer) {
+        var layers = self.findLayersByProperty(propertyName, propertyValue);
+        layers.forEach(function(layer) {
+            self.highlightLayer(layer);
+        });
+    };
+
+    self.findLayersByProperty = function(propertyName, propertyValue) {
+        var layers = [];
+        drawnItems.eachLayer(function (layer) {
             if (layer.feature && layer.feature.properties && layer.feature.properties[propertyName] === propertyValue) {
-                self.highlightLayer(layer);
+                layers.push(layer);
             }
         });
-    }
+
+        return layers;
+    };
 
     /**
      * Remove highlight from all features on the map with a property matching the provided name and value.
@@ -1453,12 +1463,11 @@ ALA.Map = function (id, options) {
      * @param propertyValue - feature property value to match
      */
     self.unHighlightFeaturesByProperty = function(propertyName, propertyValue) {
-        drawnItems.eachLayer(function (layer) {
-            if (layer.feature && layer.feature.properties && layer.feature.properties[propertyName] === propertyValue) {
-                self.unHighlightLayer(layer);
-            }
+        var layers = self.findLayersByProperty(propertyName, propertyValue);
+        layers.forEach(function(layer) {
+            self.unHighlightLayer(layer);
         });
-    }
+    };
 
     /**
      * Remove highlight from all features on the map.
@@ -2023,6 +2032,8 @@ ALA.Map = function (id, options) {
 
         mapImpl.on("pm:cut", function (event) {
             drawnItems.removeLayer(event.originalLayer);
+            event.layer.feature = event.originalLayer.feature;
+            addLayer(event.layer, true);
         });
 
         registerSpinnerEvents();
@@ -2523,6 +2534,8 @@ ALA.Map = function (id, options) {
                                 controlOptions.layerOptions.style = options.style;
                                 return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
                             }
+
+                            return;
                         }
 
                         // when geometry is valid
@@ -2600,10 +2613,6 @@ ALA.Map = function (id, options) {
         }
 
         modalDOM.addEventListener('shown.bs.modal', shownHandler);
-        // make sure the promise is resolved when the modal is closed.
-        modalDOM.addEventListener('hidden.bs.modal', function () {
-            resolve(geoJSON);
-        });
         modal._shownHandler = shownHandler
         modal._promise = promise;
         modal._resolve = resolve;
@@ -2912,6 +2921,10 @@ ALA.Map = function (id, options) {
             marker.on("dragend", self.notifyAll);
         }
 
+        var feature = {properties: {}};
+        updateFeatureProperties(feature, marker);
+        self.assignFeatureId(marker, feature);
+        assignNameToFeature(marker, feature);
         marker.addTo(drawnItems);
         markers.push(marker);
         self.finishLoading();
