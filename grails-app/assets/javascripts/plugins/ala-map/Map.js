@@ -2019,6 +2019,8 @@ ALA.Map = function (id, options) {
             } else {
                 addLayer(layer, true);
             }
+
+            mapImpl.fire("ala-map:create", {shape: layerType, layer: layer});
         }
 
         mapImpl.on("pm:create", function (event) {
@@ -2051,13 +2053,31 @@ ALA.Map = function (id, options) {
 
         mapImpl.on("pm:cut", function (event) {
             drawnItems.removeLayer(event.originalLayer);
-            event.layer.feature = event.originalLayer.feature;
-            addLayer(event.layer, true);
+            if (event.layer instanceof L.LayerGroup) {
+                event.layer.eachLayer(function (layer) {
+                    copyPropertiesFromSourceToDestination(event.originalLayer, layer);
+                    addLayer(layer, true);
+                });
+            }
+            else {
+                copyPropertiesFromSourceToDestination(event.originalLayer, event.layer);
+                addLayer(event.layer, true);
+            }
         });
 
         registerSpinnerEvents();
 
         updateCircleFeaturesToIncludeTypeAndRadius();
+    }
+
+    function copyPropertiesFromSourceToDestination(sourceLayer, destinationLayer) {
+        if (sourceLayer.feature && sourceLayer.feature.properties) {
+            destinationLayer.feature = destinationLayer.feature || {};
+            destinationLayer.feature.properties = destinationLayer.feature.properties || {};
+            destinationLayer.feature.properties = Object.assign({}, sourceLayer.feature.properties, destinationLayer.feature.properties);
+        }
+
+        return destinationLayer;
     }
 
     function addWindowResizeListener() {
