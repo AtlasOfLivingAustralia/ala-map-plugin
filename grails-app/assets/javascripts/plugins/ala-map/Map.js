@@ -1624,9 +1624,10 @@ ALA.Map = function (id, options) {
         }
     }
 
-    self.hideLayer = function (layer) {
+    self.hideLayer = function (layer, style) {
+        style = style || HIDDEN_LAYER;
         if (layer.setStyle) {
-            layer.setStyle(HIDDEN_LAYER)
+            layer.setStyle(style);
         } else if (layer.setOpacity) {
             layer.setOpacity(0);
         } else if (layer.options) {
@@ -1634,9 +1635,10 @@ ALA.Map = function (id, options) {
         }
     }
 
-    self.showLayer = function (layer) {
+    self.showLayer = function (layer, style) {
+        style = style || VISIBLE_LAYER;
         if (layer.setStyle) {
-            layer.setStyle(VISIBLE_LAYER)
+            layer.setStyle(style);
         } else if (layer.setOpacity) {
             layer.setOpacity(DEFAULT_OPACITY);
         } else if (layer.options) {

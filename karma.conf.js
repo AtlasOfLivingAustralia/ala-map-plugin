@@ -20,7 +20,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'web-app/js/**/*.js': ['coverage']
+            'web-app/js/**/*.js': ['coverage'],
+            'grails-app/assets/javascripts/plugins/ala-map/Map.js': ['coverage']
         },
 
         // list of files / patterns to load in the browser
