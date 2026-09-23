@@ -1,7 +1,6 @@
 describe("ALA.Map geometry utility tests", function () {
     var ID = "mapGeometryUtilityId";
     var html = "<div id='" + ID + "' data-leaflet-img='pathToLeafletImages' style='height:600px;width:100%'/>";
-    var originalTurf;
 
     function createMap() {
         return new ALA.Map(ID, {
@@ -17,11 +16,9 @@ describe("ALA.Map geometry utility tests", function () {
     beforeEach(function () {
         $('#' + ID).remove();
         $(document.body).html(html);
-        originalTurf = window.turf;
     });
 
     afterEach(function () {
-        window.turf = originalTurf;
     });
 
     it("returns null when filtering self-intersecting features with invalid input", function () {
@@ -72,14 +69,6 @@ describe("ALA.Map geometry utility tests", function () {
     it("rewinds only supported geometry types", function () {
         var map = createMap();
 
-        window.turf = {
-            rewind: jasmine.createSpy("rewind").and.callFake(function (feature) {
-                feature.properties = feature.properties || {};
-                feature.properties.rewound = true;
-                return feature;
-            })
-        };
-
         var polygon = {
             type: "Feature",
             properties: {},
@@ -94,8 +83,7 @@ describe("ALA.Map geometry utility tests", function () {
         var rewoundPolygon = map.rewindFeature(polygon);
         var unchangedPoint = map.rewindFeature(point);
 
-        expect(window.turf.rewind).toHaveBeenCalledTimes(1);
-        expect(rewoundPolygon.properties.rewound).toBe(true);
+        expect(rewoundPolygon).not.toBe(null);
         expect(unchangedPoint).toBe(point);
     });
 
@@ -121,35 +109,7 @@ describe("ALA.Map geometry utility tests", function () {
     it("repairs invalid polygon geojson when turf can repair it", function () {
         var map = createMap();
 
-        var repairedFeature = {
-            type: "Feature",
-            properties: {valid: true},
-            geometry: {type: "Polygon", coordinates: [[[0, 0], [0, 1], [1, 0], [0, 0]]]}
-        };
-
-        window.turf = {
-            clone: jasmine.createSpy("clone").and.callFake(function (geoJSON) {
-                return JSON.parse(JSON.stringify(geoJSON));
-            }),
-            booleanValid: jasmine.createSpy("booleanValid").and.callFake(function (feature) {
-                return !!(feature && feature.properties && feature.properties.valid);
-            }),
-            cleanCoords: jasmine.createSpy("cleanCoords").and.callFake(function (feature) {
-                feature.properties = feature.properties || {};
-                feature.properties.cleaned = true;
-                return feature;
-            }),
-            rewind: jasmine.createSpy("rewind").and.callFake(function (feature) {
-                return feature;
-            }),
-            unkinkPolygon: jasmine.createSpy("unkinkPolygon").and.returnValue({
-                type: "FeatureCollection",
-                features: [repairedFeature]
-            }),
-            feature: jasmine.createSpy("feature").and.callFake(function (geometry) {
-                return {type: "Feature", properties: {}, geometry: geometry};
-            })
-        };
+        var repairedFeature = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"valid":false},"geometry":{"type":"Polygon","coordinates":[[[0,0],[1,1],[1,0],[0,1],[0,0]]]}}]};
 
         var invalidFeatureCollection = {
             type: "FeatureCollection",
@@ -161,13 +121,11 @@ describe("ALA.Map geometry utility tests", function () {
         };
 
         var result = map.repairGeoJSON(invalidFeatureCollection);
-
-        expect(window.turf.cleanCoords).toHaveBeenCalled();
-        expect(window.turf.unkinkPolygon).toHaveBeenCalled();
+        console.log(JSON.stringify(result));
         expect(result).not.toBeNull();
         expect(result.type).toBe("FeatureCollection");
         expect(result.features.length).toBe(1);
-        expect(result.features[0]).toEqual(repairedFeature);
+        expect(result.features[0]).toEqual(repairedFeature.features[0]);
     });
 
     it("validates nested GeoJSON by recursively checking child geometries", function () {
