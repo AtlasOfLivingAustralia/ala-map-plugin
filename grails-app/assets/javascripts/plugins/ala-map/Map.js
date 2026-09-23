@@ -524,7 +524,7 @@ ALA.Map = function (id, options) {
     }
 
     function repairGeometry(feature, features) {
-        if (turf.booleanValid(feature)) {
+        if (ALA.MapUtils.validateGeoJSON(feature)) {
             features.push(feature);
             return;
         }
@@ -535,7 +535,7 @@ ALA.Map = function (id, options) {
         // Fix ring winding order
         repaired = self.rewindFeature(repaired);
 
-        if (turf.booleanValid(repaired)) {
+        if (ALA.MapUtils.validateGeoJSON(repaired)) {
             features.push(repaired);
             return;
         }
@@ -545,18 +545,18 @@ ALA.Map = function (id, options) {
         switch (repaired.type) {
             case "FeatureCollection":
                 repaired.features.forEach(function (repairedFeature) {
-                    if (turf.booleanValid(repairedFeature)) {
+                    if (ALA.MapUtils.validateGeoJSON(repairedFeature)) {
                         features.push(repairedFeature);
                     }
                 });
                 break;
             case "Feature":
-                if (turf.booleanValid(repaired))
+                if (ALA.MapUtils.validateGeoJSON(repaired))
                     features.push(repaired);
                 break;
             default:
                 repaired = turf.feature(repaired);
-                if (turf.booleanValid(repaired))
+                if (ALA.MapUtils.validateGeoJSON(repaired))
                     features.push(repaired);
                 break;
         }
@@ -3408,6 +3408,32 @@ ALA.MapUtils = {
             default:
                 console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
                 return null;
+        }
+    },
+    validateGeoJSON: function (geoJSON) {
+        ALA.MapUtils.checkTurfAvailability()
+        try {
+            switch (geoJSON.type) {
+                case "FeatureCollection":
+                    return geoJSON.features.every(feature => ALA.MapUtils.validateGeoJSON(feature));
+                case "Feature":
+                    return ALA.MapUtils.validateGeoJSON(geoJSON.geometry);
+                case "GeometryCollection":
+                    return geoJSON.geometries.every( geometry => ALA.MapUtils.validateGeoJSON(geometry) );
+                case "Polygon":
+                case "MultiPolygon":
+                case "LineString":
+                case "MultiLineString":
+                case "Point":
+                case "MultiPoint":
+                    return turf.booleanValid(geoJSON);
+                default:
+                    console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
+                    return false;
+            }
+        } catch (e) {
+            console.error("[ALA-Map] Error validating GeoJSON: " + e.message);
+            return false;
         }
     }
 };

@@ -37,6 +37,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor-external/leaflet.coordinates/Leaflet.Coordinates-0.1.5.src.js',
             'grails-app/assets/vendor-external/leaflet.markercluster/leaflet.markercluster.js',
             'grails-app/assets/vendor-external/@tmcw/togeojson/togeojson.umd.js',
+            'grails-app/assets/vendor-external/turf/turf-packaged.js',
             'grails-app/assets/vendor/shapefile-js-6.2.0/dist/shp.min.js',
             'grails-app/assets/vendor-external/but-unzip/but-unzip.min.js',
             'grails-app/assets/vendor-external/leaflet-filelayer/src/leaflet.filelayer.js',
