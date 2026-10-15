@@ -15,7 +15,7 @@ plugins {
     id "com.magnetichq.client-dependencies" version "2.0.0"
 }
 
-version "5.0-SNAPSHOT"
+version "5.0-SITES-SNAPSHOT"
 group "org.grails.plugins"
 
 apply plugin: "eclipse"
