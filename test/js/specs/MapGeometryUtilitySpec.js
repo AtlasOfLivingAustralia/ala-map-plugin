@@ -84,7 +84,7 @@ describe("ALA.Map geometry utility tests", function () {
         var unchangedPoint = map.rewindFeature(point);
 
         expect(rewoundPolygon).not.toBe(null);
-        expect(unchangedPoint).toBe(point);
+        expect(unchangedPoint).toEqual(point);
     });
 
     it("assigns featureId to feature and layer and respects force option", function () {
@@ -121,11 +121,90 @@ describe("ALA.Map geometry utility tests", function () {
         };
 
         var result = map.repairGeoJSON(invalidFeatureCollection);
-        console.log(JSON.stringify(result));
+        expect(result).not.toBeNull();
+        expect(result.type).toBe("FeatureCollection");
+        expect(result.features.length).toBe(2);
+        expect(result.features[0]).not.toEqual(repairedFeature.features[0]);
+    });
+
+    it("returns null for null or empty feature collections", function () {
+        var map = createMap();
+
+        expect(map.repairGeoJSON(null)).toBeNull();
+        expect(map.repairGeoJSON({type: "FeatureCollection", features: []})).toBeNull();
+    });
+
+    it("normalizes a valid feature input into a feature collection", function () {
+        var map = createMap();
+        var feature = {
+            type: "Feature",
+            properties: {name: "point"},
+            geometry: {type: "Point", coordinates: [1, 1]}
+        };
+
+        var result = map.repairGeoJSON(feature);
+
         expect(result).not.toBeNull();
         expect(result.type).toBe("FeatureCollection");
         expect(result.features.length).toBe(1);
-        expect(result.features[0]).toEqual(repairedFeature.features[0]);
+        expect(result.features[0]).toEqual(feature);
+    });
+
+    it("keeps valid features while repairing invalid polygons in the same collection", function () {
+        var map = createMap();
+        var featureCollection = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    properties: {id: "valid-point"},
+                    geometry: {type: "Point", coordinates: [1, 1]}
+                },
+                {
+                    type: "Feature",
+                    properties: {id: "invalid-polygon", valid: false},
+                    geometry: {type: "Polygon", coordinates: [[[0, 0], [1, 1], [1, 0], [0, 1], [0, 0]]]}
+                }
+            ]
+        };
+
+        var result = map.repairGeoJSON(featureCollection);
+
+        expect(result).not.toBeNull();
+        expect(result.type).toBe("FeatureCollection");
+        expect(result.features.length).toBe(3);
+        expect(result.features[0].properties.id).toBe("valid-point");
+        expect(result.features[1].properties.id).toBe("invalid-polygon");
+        expect(ALA.MapUtils.validateGeoJSON(result.features[1])).toBe(true);
+    });
+
+    it("keeps valid geometry while repairing invalid polygons in the same collection", function () {
+        var map = createMap();
+        var geometryCollection = {
+            type: "GeometryCollection",
+            geometries: [
+                {
+                    type: "Point",
+                    coordinates: [1, 1]
+                },
+                {
+                    type: "Polygon",
+                    coordinates: [[[0, 0], [1, 1], [1, 0], [0, 1], [0, 0]]]
+                }
+            ]
+        };
+
+        var result = map.repairGeoJSON(geometryCollection);
+
+        expect(result).not.toBeNull();
+        expect(result.type).toBe("FeatureCollection");
+        expect(result.features.length).toBe(1);
+        expect(result.features[0].type).toBe("Feature");
+        expect(result.features[0].geometry.type).toBe("GeometryCollection");
+        expect(result.features[0].geometry.geometries.length).toBe(3);
+        expect(result.features[0].geometry.geometries[0].type).toBe("Point");
+        expect(result.features[0].geometry.geometries[1].type).toBe("Polygon");
+        expect(result.features[0].geometry.geometries[2].type).toBe("Polygon");
     });
 
     it("validates nested GeoJSON by recursively checking child geometries", function () {
@@ -188,11 +267,11 @@ describe("ALA.Map geometry utility tests", function () {
 
     it("returns false when turf throws during geometry validation", function () {
         var result = ALA.MapUtils.validateGeoJSON({
-            type: "Point",
-            coordinates: [1, 1]
+            type: "Polygon",
+            coordinates: [[[0, 0], [1, 1], [1, 0], [0, 1], [0, 0]]]
         });
 
-        expect(result).toBe(true);
+        expect(result).toBe(false);
     });
 
     it("hides and shows layers using all supported layer APIs", function () {
@@ -228,6 +307,4 @@ describe("ALA.Map geometry utility tests", function () {
         expect(optionOnlyLayer.options.weight).toBe(4);
     });
 });
-
-
 

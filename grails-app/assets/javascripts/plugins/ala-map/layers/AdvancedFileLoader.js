@@ -25,10 +25,34 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
                 return this._convertToGeoJSON(kmlContent, 'kml');
             }
         }
+
+        throw new Error('KMZ archive does not contain a KML file.');
     },
     _convertShpToGeoJSON: async function (content) {
         if (await this.checkShapeFile(content)) {
             var geoJson = await shp(content);
+            // if more than one shp file in a zip, shp.js returns an array of geojson objects, we need to merge them into a single feature collection
+            if (Array.isArray(geoJson)) {
+                // merge features into a single feature collection
+                geoJson = {
+                    type: "FeatureCollection",
+                    features: geoJson.reduce((acc, feature) => {
+                        if (feature.type === "FeatureCollection") {
+                            acc.push(...feature.features);
+                        } else if (feature.type === "Feature") {
+                            acc.push(feature);
+                        }
+                        return acc;
+                    }, []),
+                    properties: geoJson.reduce((acc, feature) => {
+                        if (feature.properties) {
+                            Object.assign(acc, feature.properties);
+                        }
+                        return acc;
+                    }, {})
+                };
+            }
+
             return this._loadGeoJSON(geoJson);
         }
     },

@@ -265,6 +265,72 @@ describe("AdvancedFileLoader tests", function () {
             loader.load(file, 'zip');
         });
 
+        it("should merge multiple shapefiles from zip into one feature collection", function (done) {
+            var mockArrayBuffer = new ArrayBuffer(8);
+
+            var shpResult = [
+                {
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        geometry: { type: "Point", coordinates: [1, 2] },
+                        properties: { source: "first" }
+                    }],
+                    properties: { firstCollection: true }
+                },
+                {
+                    type: "Feature",
+                    geometry: { type: "Point", coordinates: [3, 4] },
+                    properties: { source: "second" }
+                }
+            ];
+
+            var originalShp = window.shp;
+            window.shp = jasmine.createSpy('shp').and.returnValue(Promise.resolve(shpResult));
+
+            var originalButUnzip = window.butUnzip;
+            window.butUnzip = makeButUnzipMock([
+                { filename: 'first.shp' },
+                { filename: 'first.shx' },
+                { filename: 'first.dbf' },
+                { filename: 'first.prj' },
+                { filename: 'second.shp' },
+                { filename: 'second.shx' },
+                { filename: 'second.dbf' },
+                { filename: 'second.prj' }
+            ]);
+
+            var restore = mockFileReader(mockArrayBuffer, true);
+
+            loader.on('data:loaded', function (e) {
+                var mergedGeoJson = e.layer.toGeoJSON();
+
+                expect(mergedGeoJson.type).toBe('FeatureCollection');
+                expect(mergedGeoJson.features.length).toBe(2);
+                expect(mergedGeoJson.properties.firstCollection).toBe(true);
+                expect(mergedGeoJson.properties.source).toBe("second");
+                expect(mergedGeoJson.features[0].properties.source).toBe('first');
+                expect(mergedGeoJson.features[1].properties.source).toBe('second');
+
+                window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
+                restore();
+                done();
+            });
+
+            loader.on('data:error', function (e) {
+                window.shp = originalShp;
+                window.butUnzip = originalButUnzip;
+                restore();
+                fail('Should not trigger error: ' + e.error);
+                done();
+            });
+
+            var file = createMockFile('multiple.zip', mockArrayBuffer, 'application/zip');
+            delete file.testing;
+            loader.load(file, 'zip');
+        });
+
         it("should fire error event when shapefile processing fails", function (done) {
             var mockArrayBuffer = new ArrayBuffer(8);
 

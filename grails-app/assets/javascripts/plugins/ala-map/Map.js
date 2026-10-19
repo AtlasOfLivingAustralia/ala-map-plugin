@@ -85,7 +85,7 @@ ALA.MapConstants = {
  *  <li><code>simplifyImportedShapes</code> True to simplify shapes imported from files. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
  *  <li><code>simplifyOptions</code> Options to pass to the turf's simplify method. Only relevant if addGeometryFromLocalFile = true and simplifyImportedShapes = true. Default: {tolerance: 0.001, highQuality: true, mutate: true}</li>
  *  <li><code>flattenMultiGeometries</code> True to flatten MultiPolygons, MultiLineStrings and MultiPoint into individual Polygons and LineStrings. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
- *  <li><code>validateImportedShapes</code> a function that will return a Promise that resolves to true if the imported shape is valid, or false if it is not. Only relevant if addGeometryFromLocalFile = true. Default: null</li>
+ *  <li><code>validateImportedShapes</code> a function that will return a Promise that resolves to {success, message} response object with success=true if the imported shape passes validation, or success=false if the shape fails validation. Only relevant if addGeometryFromLocalFile = true. Default: null</li>
  *  <li><code>addAllFeaturesFromFile</code> True to add all features from a file, rather than show a modal dialog that lets users pick features to add. Only relevant if addGeometryFromLocalFile = true. Default: true</li>
  *  <li><code>allowSearchLocationByAddress</code> whether to allow the user to search by address to place a marker on the map. Default: true</li>
  *  <li><code>allowSearchRegionByAddress</code> whether to allow the user to search by address to draw a polygon on the map. Default: true</li>
@@ -584,7 +584,8 @@ ALA.Map = function (id, options) {
                     });
 
                     if (repairedGeometries.length > 0) {
-                        feature.geometry.geometries = repairedGeometries;
+                        let geometries = repairedGeometries.map(geometry => geometry.type === "Feature" ? geometry.geometry : geometry);
+                        feature.geometry.geometries = geometries;
                         features.push(feature);
                     }
                     break;
@@ -605,18 +606,20 @@ ALA.Map = function (id, options) {
 
     /**
      * Attempts to repair the winding order of a Polygon, MultiPolygon, LineString or MultiLineString.
-     * @param feature
+     * @param featureOrGeometry
      * @returns {Feature}
      */
-    self.rewindFeature = function (feature) {
-        switch (feature.geometry.type) {
+    self.rewindFeature = function (featureOrGeometry) {
+        var type = featureOrGeometry.type;
+        switch (type) {
+            case "Feature":
             case "LineString":
             case "MultiLineString":
             case "Polygon":
             case "MultiPolygon":
-                return turf.rewind(feature, { reverse: false });
+                return turf.rewind(featureOrGeometry, { reverse: false });
             default:
-                return feature;
+                return featureOrGeometry;
         }
     }
 
@@ -626,7 +629,14 @@ ALA.Map = function (id, options) {
      * @returns {*}
      */
     self.repairPolygon = function (feature) {
-        switch (feature.geometry.type) {
+        var type = feature.type;
+        switch (type) {
+            case "Feature":
+                if (["Polygon", "MultiPolygon"].includes(feature.geometry.type)) {
+                    return turf.unkinkPolygon(feature);
+                }
+                else
+                    return feature;
             case "Polygon":
             case "MultiPolygon":
                 return turf.unkinkPolygon(feature);
@@ -656,6 +666,14 @@ ALA.Map = function (id, options) {
     self.setGeoJSON = function (geoJSON, layerOptions) {
         if (typeof geoJSON === 'string') {
             geoJSON = JSON.parse(geoJSON);
+        }
+
+        if (options.singleDraw) {
+            drawnItems.clearLayers();
+        }
+
+        if (options.markerOrShapeNotBoth) {
+            clearMarkers();
         }
 
         layerOptions = layerOptions || {};
@@ -1511,7 +1529,7 @@ ALA.Map = function (id, options) {
         if (layer.setStyle) {
             if (options && layer.setStyle) {
                 var style = {
-                    weight: options.weight / 3,
+                    weight: options.weight,
                     fillOpacity: DEFAULT_OPACITY,
                     color: options.color
                 };
@@ -2287,7 +2305,7 @@ ALA.Map = function (id, options) {
         var rows = [];
         for (var property in feature.properties) {
             if (feature.properties.hasOwnProperty(property))
-                rows.push("<tr><td>" + property + "</td><td>" + feature.properties[property] + "</td></tr>");
+                rows.push("<tr><td>" + _.escape(property) + "</td><td>" + _.escape(feature.properties[property]) + "</td></tr>");
         }
 
         if (rows.length > 0)
@@ -2327,13 +2345,6 @@ ALA.Map = function (id, options) {
                 wmsOptions.opacity = 1.0
             }
             layer = createWmsLayer(feature.properties.pid, wmsOptions);
-        }
-
-        if (options.singleDraw) {
-            drawnItems.clearLayers();
-        }
-        if (options.markerOrShapeNotBoth) {
-            clearMarkers();
         }
 
         applyLayerOptions(layer, layerOptions);
@@ -2517,83 +2528,89 @@ ALA.Map = function (id, options) {
             },
             layer: async function (geoJSON) {
                 self.startLoading();
-                var additionalNamesList = [];
-                geoJSON = ALA.MapUtils.toFeatureCollection(geoJSON);
-                geoJSON.features.forEach(function (feature) {
-                    var clonedAdditionalNamesList = additionalNamesList.slice();
-                    self.assignFeatureId(null, feature);
-                    assignNameToFeature(null, feature, clonedAdditionalNamesList);
-                    additionalNamesList.push(feature.properties.name);
-                });
+                try {
+                    var additionalNamesList = [];
+                    geoJSON = ALA.MapUtils.toFeatureCollection(geoJSON);
+                    geoJSON.features.forEach(function (feature) {
+                        var clonedAdditionalNamesList = additionalNamesList.slice();
+                        self.assignFeatureId(null, feature);
+                        assignNameToFeature(null, feature, clonedAdditionalNamesList);
+                        additionalNamesList.push(feature.properties.name);
+                    });
 
-                // pop-up a modal to select the feature they like to load.
-                if (options.addAllFeaturesFromFile === false) {
-                    geoJSON = await selectFeaturesFromGeoJSON(geoJSON);
-                }
-
-                if (options.simplifyImportedShapes) {
-                    ALA.MapUtils.checkTurfAvailability();
-                    var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
-                    geoJSON = turf.simplify(geoJSON, config);
-                }
-
-                if (options.flattenMultiGeometries) {
-                    ALA.MapUtils.checkTurfAvailability();
-                    geoJSON = turf.flatten(geoJSON);
-                }
-
-                geoJSON = self.repairGeoJSON(geoJSON);
-                if (!geoJSON) {
-                    console.error("[ALA-Map] Invalid GeoJSON provided, and unable to repair it.");
-                    alert("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again.");
-                    self.finishLoading();
-                    return Promise.reject(new Error("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again."));
-                }
-
-                // Having self-intersecting polygons when this is disallowed on geoman will cause shape to be uneditable and appear red,
-                // so we will filter them out here to avoid confusing users.
-                if (!options.allowSelfIntersection) {
-                    geoJSON = self.filterOutSelfIntersectingFeatures(geoJSON);
-                    if (geoJSON.features.length === 0) {
-                        console.error("[ALA-Map] All imported features were self-intersecting and have been filtered out.");
-                        alert("All imported features were self-intersecting and have been filtered out. Please check the data and try again.");
-                        self.finishLoading();
-                        return Promise.reject(new Error("All imported features were self-intersecting and have been filtered out. Please check the data and try again."));
+                    // pop-up a modal to select the feature they like to load.
+                    if (options.addAllFeaturesFromFile === false) {
+                        geoJSON = await selectFeaturesFromGeoJSON(geoJSON);
                     }
-                }
 
-                var validate = typeof options.validateImportedShapes == "function" ? options.validateImportedShapes(geoJSON) : {success: true}
-                return Promise.resolve(validate)
-                    .then(function (response) {
+                    if (options.simplifyImportedShapes) {
+                        ALA.MapUtils.checkTurfAvailability();
+                        var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
+                        geoJSON = turf.simplify(geoJSON, config);
+                    }
+
+                    if (options.flattenMultiGeometries) {
+                        ALA.MapUtils.checkTurfAvailability();
+                        geoJSON = turf.flatten(geoJSON);
+                    }
+
+                    geoJSON = self.repairGeoJSON(geoJSON);
+                    if (!geoJSON) {
+                        console.error("[ALA-Map] Invalid GeoJSON provided, and unable to repair it.");
+                        alert("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again.");
                         self.finishLoading();
-                        if (!response.success) {
-                            console.error("[ALA-Map] Imported geometry was rejected by validateImportedShapes callback.");
-                            var ignore = confirm(response.message + "\nClick OK to NOT load the geometry, or Cancel to add it to the map.");
+                        return Promise.reject(new Error("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again."));
+                    }
+
+                    // Having self-intersecting polygons when this is disallowed on geoman will cause shape to be uneditable and appear red,
+                    // so we will filter them out here to avoid confusing users.
+                    if (!options.allowSelfIntersection) {
+                        geoJSON = self.filterOutSelfIntersectingFeatures(geoJSON);
+                        if (geoJSON.features.length === 0) {
+                            console.error("[ALA-Map] All imported features were self-intersecting and have been filtered out.");
+                            alert("All imported features were self-intersecting and have been filtered out. Please check the data and try again.");
+                            self.finishLoading();
+                            return Promise.reject(new Error("All imported features were self-intersecting and have been filtered out. Please check the data and try again."));
+                        }
+                    }
+
+                    var validate = typeof options.validateImportedShapes == "function" ? options.validateImportedShapes(geoJSON) : {success: true}
+                    return Promise.resolve(validate)
+                        .then(function (response) {
+                            self.finishLoading();
+                            if (!response.success) {
+                                console.error("[ALA-Map] Imported geometry was rejected by validateImportedShapes callback.");
+                                var ignore = confirm(response.message + "\nClick OK to NOT load the geometry, or Cancel to add it to the map.");
+                                if (!ignore) {
+                                    console.log("[ALA-Map] User asked to add geometry regardless of validation fail.");
+                                    // make sure the latest style is applied to the imported layer
+                                    controlOptions.layerOptions.style = options.style;
+                                    return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
+                                }
+
+                                return;
+                            }
+
+                            // when geometry is valid
+                            controlOptions.layerOptions.style = options.style;
+                            return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
+                        }, function (response) {
+                            console.error("[ALA-Map] Error validating imported geometry: " + response.message);
+                            self.finishLoading();
+                            var message = response.message || "An error occurred while trying to find the validity of the shape file";
+                            var ignore = confirm(message + ".\nClick OK to remove the geometry, or Cancel to add it to the map.");
                             if (!ignore) {
-                                console.log("[ALA-Map] User asked to add geometry regardless of validation fail.");
+                                console.log("[ALA-Map] User asked to add geometry regardless of error validating.");
                                 // make sure the latest style is applied to the imported layer
                                 controlOptions.layerOptions.style = options.style;
                                 return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
                             }
-
-                            return;
-                        }
-
-                        // when geometry is valid
-                        controlOptions.layerOptions.style = options.style;
-                        return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
-                    }, function (response) {
-                        console.error("[ALA-Map] Error validating imported geometry: " + response.message);
-                        self.finishLoading();
-                        var message = response.message || "An error occurred while trying to find the validity of the shape file";
-                        var ignore = confirm(message + ".\nClick OK to remove the geometry, or Cancel to add it to the map.");
-                        if (!ignore) {
-                            console.log("[ALA-Map] User asked to add geometry regardless of error validating.");
-                            // make sure the latest style is applied to the imported layer
-                            controlOptions.layerOptions.style = options.style;
-                            return self.setGeoJSON(geoJSON, controlOptions.layerOptions);
-                        }
-                    });
+                        });
+                } catch (error) {
+                    console.error("[ALA-Map] Error processing GeoJSON layer:", error);
+                    self.finishLoading();
+                    return Promise.reject(null);
+                }
             }
         });
 
@@ -2649,7 +2666,7 @@ ALA.Map = function (id, options) {
                 scriptId: scriptId
             },
             shownHandler = L.Util.bind(listFeaturesWhenModalShown, handlerPayload);
-        if (!isShownEventRegistered && modal._shownHandler) {
+        if (modal._shownHandler) {
             modalDOM.removeEventListener('shown.bs.modal', modal._shownHandler);
         }
 
@@ -3373,13 +3390,16 @@ ALA.MapUtils = {
             case "FeatureCollection":
                 return turf.clone(geoJSON);
             case "Feature":
+                return turf.featureCollection([geoJSON]);
+            case "GeometryCollection":
             case "Polygon":
             case "MultiPolygon":
             case "LineString":
             case "MultiLineString":
             case "Point":
             case "MultiPoint":
-                return turf.featureCollection([geoJSON]);
+                let features = [geoJSON].map(geometry => turf.feature(geometry));
+                return turf.featureCollection(features);
             default:
                 console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
                 return null;
@@ -3426,7 +3446,7 @@ ALA.MapUtils = {
                 case "MultiLineString":
                 case "Point":
                 case "MultiPoint":
-                    return turf.booleanValid(geoJSON);
+                    return turf.booleanValid(geoJSON) && !ALA.MapUtils.isSelfIntersecting(geoJSON);
                 default:
                     console.error("[ALA-Map] Invalid GeoJSON type: " + geoJSON.type);
                     return false;
@@ -3435,5 +3455,14 @@ ALA.MapUtils = {
             console.error("[ALA-Map] Error validating GeoJSON: " + e.message);
             return false;
         }
+    },
+    isSelfIntersecting: function (geoJSON) {
+        var selfIntersects = false;
+        L.geoJSON(geoJSON).eachLayer(function (layer) {
+            if (layer.pm && layer.pm.hasSelfIntersection)
+                selfIntersects = selfIntersects || layer.pm.hasSelfIntersection();
+        });
+
+        return selfIntersects;
     }
 };
