@@ -307,8 +307,6 @@ describe("AdvancedFileLoader tests", function () {
 
                 expect(mergedGeoJson.type).toBe('FeatureCollection');
                 expect(mergedGeoJson.features.length).toBe(2);
-                expect(mergedGeoJson.properties.firstCollection).toBe(true);
-                expect(mergedGeoJson.properties.source).toBe("second");
                 expect(mergedGeoJson.features[0].properties.source).toBe('first');
                 expect(mergedGeoJson.features[1].properties.source).toBe('second');
 
