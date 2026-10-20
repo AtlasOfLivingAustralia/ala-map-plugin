@@ -1553,8 +1553,13 @@ ALA.Map = function (id, options) {
 
         if (layer.setStyle) {
             if (!layer._originalOptions) {
-                // deep clone the options to preserve the original values for unHighlightLayer
-                layer._originalOptions = JSON.parse(JSON.stringify(layer.options));
+                // Adding explicit option lookup to copy inherited default value.
+                // Previous use of JSON stringify/parse was not copying inherited default values.
+                layer._originalOptions = {
+                    weight: layer.options.weight,
+                    fillOpacity: layer.options.fillOpacity,
+                    color: layer.options.color
+                };
             }
 
             var options = layer._originalOptions;
@@ -1624,7 +1629,12 @@ ALA.Map = function (id, options) {
 
         force = force || false;
         feature = feature || {};
-        var currentFeatureId = feature.properties && feature.properties.featureId;
+        var currentFeatureId = feature.properties && feature.properties.featureId,
+            takenFeatureIds = self.getDrawnItemsFeatureIds();
+
+        if (!!currentFeatureId && takenFeatureIds[currentFeatureId]) {
+            force = true;  // force a new featureId if the current one is already taken
+        }
         // Only return if featureId is present and force is false.
         // If force is true, we will assign a new featureId regardless of whether one already exists.
         if (!!currentFeatureId && !force) {
@@ -1640,6 +1650,20 @@ ALA.Map = function (id, options) {
             layer.feature.properties = layer.feature.properties || {};
             layer.feature.properties.featureId = featureId;
         }
+    }
+
+    /**
+     * List all featureId of the geometries displayed on map.
+     * @returns {{}}
+     */
+    self.getDrawnItemsFeatureIds = function () {
+        var featureIds = {};
+        drawnItems.eachLayer(function (layer) {
+            if (layer.feature && layer.feature.properties && layer.feature.properties.featureId) {
+                featureIds[layer.feature.properties.featureId] = true;
+            }
+        });
+        return featureIds;
     }
 
     self.hideLayer = function (layer, style) {
@@ -3360,7 +3384,7 @@ ALA.MapUtils = {
                     areaSqKm += ((3.14 * feature.properties.radius * feature.properties.radius) / 1000) / 1000;
                 }
                 else if (feature.properties && feature.properties.pid && feature.properties.area_km) {
-                    areaSqKm += feature.properties.area_km;
+                    areaSqKm += (Number(feature.properties.area_km) - turf.area(feature) / 1000000); // subtract the area of the feature as calculated by turf, and add the area_km property instead
                 }
             });
         } else if (geoJson.type == "Feature") {
@@ -3368,7 +3392,7 @@ ALA.MapUtils = {
                 areaSqKm += ((3.14 * geoJson.properties.radius * geoJson.properties.radius) / 1000) / 1000;
             }
             else if (geoJson.properties && geoJson.properties.pid && geoJson.properties.area_km) {
-                areaSqKm += geoJson.properties.area_km;
+                areaSqKm += (Number(geoJson.properties.area_km) - turf.area(geoJson) / 1000000); // subtract the area of the feature as calculated by turf, and add the area_km property instead
             }
         }
 

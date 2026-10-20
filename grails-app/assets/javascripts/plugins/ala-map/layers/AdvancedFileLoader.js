@@ -133,6 +133,10 @@ L.FileLayer.AdvancedFileLoader = L.FileLayer.FileLoader.extend({
                 return Promise.resolve(
                     parser.processor.call(this, e.target.result, parser.ext)
                 ).then(L.Util.bind(function (layer) {
+                    if (!layer) {
+                        return;
+                    }
+
                     this.fire('data:loaded', {
                         layer: layer,
                         filename: file.name,

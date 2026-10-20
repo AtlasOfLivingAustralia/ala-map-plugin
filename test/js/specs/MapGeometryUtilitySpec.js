@@ -106,6 +106,20 @@ describe("ALA.Map geometry utility tests", function () {
         expect(layer.feature.properties.featureId).toBe("id-2");
     });
 
+    it("generates a new unique featureId when the current one is already taken", function () {
+        var map = createMap();
+        var layer = {};
+        var feature = {properties: {featureId: "duplicate-id"}};
+
+        spyOn(map, "getDrawnItemsFeatureIds").and.returnValue({"duplicate-id": true});
+        spyOn(UUID, "generate").and.returnValue("unique-id");
+
+        map.assignFeatureId(layer, feature, false);
+
+        expect(feature.properties.featureId).toBe("unique-id");
+        expect(layer.feature.properties.featureId).toBe("unique-id");
+    });
+
     it("repairs invalid polygon geojson when turf can repair it", function () {
         var map = createMap();
 
