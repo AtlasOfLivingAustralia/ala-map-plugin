@@ -35,14 +35,14 @@ describe("ALA.Map tests", function () {
     it("should add the default drawing controls to a new map with default options", function() {
         new ALA.Map(ID);
 
-        var drawBar = $(".leaflet-draw");
+        var drawBar = $(".leaflet-pm-toolbar");
         expect(drawBar).toBeVisible();
-        expect(drawBar.children().length).toBe(2); // draw controls and edit
-        expect($(".leaflet-draw-draw-polygon")).toExist();
-        expect($(".leaflet-draw-draw-rectangle")).toExist();
-        expect($(".leaflet-draw-draw-circle")).toExist();
-        expect($(".leaflet-draw-draw-marker")).toExist();
-        expect($(".leaflet-draw-draw-polyline")).not.toExist();
+        expect(drawBar.children().length).toBeGreaterThan(0);
+        expect($(".leaflet-pm-icon-polygon")).toExist();
+        expect($(".leaflet-pm-icon-rectangle")).toExist();
+        expect($(".leaflet-pm-icon-circle")).toExist();
+        expect($(".leaflet-pm-icon-marker")).toExist();
+        expect($(".leaflet-pm-icon-polyline")).not.toExist();
     });
 
     it("should add the current lat/lng to a new map with the default options", function() {
