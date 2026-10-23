@@ -8,3 +8,4 @@ node_modules/
 target/
 build/
 bin/
+grails-app/assets/vendor-external/

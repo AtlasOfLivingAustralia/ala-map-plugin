@@ -4,9 +4,9 @@ A Grails plugin providing reusable [Leaflet](https://leafletjs.com/)-based mappi
 
 #
 ## Technologies
-* Grails framework 7.1.1
-* Java 17
-* Groovy 4
+* Grails framework 8.0.0
+* Java 21
+* Groovy 5
 * Leaflet 1.6
 
 > **Note:** If the Leaflet version or resource is changed, the images path in `MapTagLib.groovy` also needs to be updated, otherwise the Leaflet marker may not be shown.
@@ -84,6 +84,9 @@ myOccurrenceMap.map.subscribe(function() {...})
 ```
 
 ## Features
+
+### Version 7
+Upgraded the plugin to Grails 8.0.0, Java 21, Groovy 5 and Gradle 9. The JavaScript libraries under `grails-app/assets/vendor-external` are now declared in `package.json` and installed with `npm ci && npm run vendor` (run this before `./gradlew bootRun` or `./gradlew assemble`); the Gradle `clientInstall` task has been removed.
 
 ### Version 6
 Upgraded the plugin to Grails 7.1.1, Java 17 and Groovy 4, with updated Leaflet and JavaScript dependencies.

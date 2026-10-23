@@ -17,7 +17,7 @@ class MapTagLib {
      * @attr height The height for the map div. Optional - defaults to {@link #DEFAULT_MAP_HEIGHT}
      * @attr imageLocation The leaflet image location - defaults to resource(dir: /vendor/leaflet/images, plugin: ala-map)
      */
-    def map = { attrs ->
+    def map(Map attrs) {
         // add file to work around an asset-pipeline crash
         String leafletImageLocation = attrs.imageLocation ?: "${assetPath(src: 'leaflet/images/')}"
         String style = "width: ${attrs.width ?: DEFAULT_MAP_WIDTH}; height: ${attrs.height ?: DEFAULT_MAP_HEIGHT}"
@@ -25,7 +25,7 @@ class MapTagLib {
         out << "<div id='${attrs.id}' style='${style}' data-leaflet-img='${leafletImageLocation}'></div>"
     }
 
-    def occurrenceMap = { attrs ->
+    def occurrenceMap(Map attrs) {
         // add file to work around an asset-pipeline crash
         String leafletImageLocation = attrs.imageLocation ?: "${assetPath(src: 'leaflet/images/')}"
         String style = "width: ${attrs.width ?: DEFAULT_FACETED_MAP_WIDTH}; height: ${attrs.height ?: DEFAULT_FACETED_MAP_HEIGHT}"
