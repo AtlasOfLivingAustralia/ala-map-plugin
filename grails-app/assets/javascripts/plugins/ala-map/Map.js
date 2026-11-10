@@ -523,128 +523,6 @@ ALA.Map = function (id, options) {
         return featureGroup.toGeoJSON();
     }
 
-    function repairGeometry(feature, features) {
-        if (ALA.MapUtils.validateGeoJSON(feature)) {
-            features.push(feature);
-            return;
-        }
-
-        // Remove duplicate coordinates
-        let repaired = turf.cleanCoords(feature);
-
-        // Fix ring winding order
-        repaired = self.rewindFeature(repaired);
-
-        if (ALA.MapUtils.validateGeoJSON(repaired)) {
-            features.push(repaired);
-            return;
-        }
-
-        // Split self-intersecting polygons into valid polygons
-        repaired = self.repairPolygon(repaired);
-        switch (repaired.type) {
-            case "FeatureCollection":
-                repaired.features.forEach(function (repairedFeature) {
-                    if (ALA.MapUtils.validateGeoJSON(repairedFeature)) {
-                        features.push(repairedFeature);
-                    }
-                });
-                break;
-            case "Feature":
-                if (ALA.MapUtils.validateGeoJSON(repaired))
-                    features.push(repaired);
-                break;
-            default:
-                repaired = turf.feature(repaired);
-                if (ALA.MapUtils.validateGeoJSON(repaired))
-                    features.push(repaired);
-                break;
-        }
-    }
-
-    /**
-     * Attempts to repair an invalid Polygon or MultiPolygon.
-     *
-     * @param {FeatureCollection} feature
-     * @returns {Feature|FeatureCollection}
-     */
-    self.repairGeoJSON = function (geoJSON) {
-        if (!geoJSON) {
-            return null;
-        }
-
-        geoJSON = ALA.MapUtils.toFeatureCollection(geoJSON);
-        var features = [];
-        geoJSON.features.forEach(function (feature) {
-            switch (feature.geometry.type) {
-                case "GeometryCollection":
-                    let repairedGeometries = [];
-                    feature.geometry.geometries.forEach(function (geometry) {
-                        repairGeometry(geometry, repairedGeometries);
-                    });
-
-                    if (repairedGeometries.length > 0) {
-                        let geometries = repairedGeometries.map(geometry => geometry.type === "Feature" ? geometry.geometry : geometry);
-                        feature.geometry.geometries = geometries;
-                        features.push(feature);
-                    }
-                    break;
-                default:
-                    repairGeometry(feature, features);
-                    break;
-            }
-        });
-
-        // no feature could be repaired, return null
-        if (features.length === 0) {
-            return null;
-        }
-
-        geoJSON.features = features;
-        return geoJSON;
-    }
-
-    /**
-     * Attempts to repair the winding order of a Polygon, MultiPolygon, LineString or MultiLineString.
-     * @param featureOrGeometry
-     * @returns {Feature}
-     */
-    self.rewindFeature = function (featureOrGeometry) {
-        var type = featureOrGeometry.type;
-        switch (type) {
-            case "Feature":
-            case "LineString":
-            case "MultiLineString":
-            case "Polygon":
-            case "MultiPolygon":
-                return turf.rewind(featureOrGeometry, { reverse: false });
-            default:
-                return featureOrGeometry;
-        }
-    }
-
-    /**
-     * Attempts to repair an invalid Polygon or MultiPolygon.
-     * @param feature
-     * @returns {*}
-     */
-    self.repairPolygon = function (feature) {
-        var type = feature.type;
-        switch (type) {
-            case "Feature":
-                if (["Polygon", "MultiPolygon"].includes(feature.geometry.type)) {
-                    return turf.unkinkPolygon(feature);
-                }
-                else
-                    return feature;
-            case "Polygon":
-            case "MultiPolygon":
-                return turf.unkinkPolygon(feature);
-            default:
-                return feature;
-        }
-    }
-
     /**
      * Populate the map with the provided GeoJSON data.
      *
@@ -2364,11 +2242,19 @@ ALA.Map = function (id, options) {
         }
 
         if (feature.properties && feature.properties.pid) {
-            if (feature.geometry.type == ALA.MapConstants.DRAW_TYPE.POINT_TYPE){
+            if ((feature.geometry.type === ALA.MapConstants.DRAW_TYPE.POINT_TYPE) && (feature.properties.type === "point")) {
                 wmsOptions.layers = "ALA:Points"
                 wmsOptions.opacity = 1.0
             }
             layer = createWmsLayer(feature.properties.pid, wmsOptions);
+            mapImpl.on("click", function (e) {
+                if (mapImpl.pm && mapImpl.pm.globalRemovalModeEnabled && mapImpl.pm.globalRemovalModeEnabled()) {
+                    var bounds = layer.getBounds();
+                    if (bounds && bounds.contains(e.latlng)) {
+                        self.removeLayer(layer);
+                    }
+                }
+            });
         }
 
         applyLayerOptions(layer, layerOptions);
@@ -2578,7 +2464,7 @@ ALA.Map = function (id, options) {
                         geoJSON = turf.flatten(geoJSON);
                     }
 
-                    geoJSON = self.repairGeoJSON(geoJSON);
+                    geoJSON = ALA.MapUtils.repairGeoJSON(geoJSON);
                     if (!geoJSON) {
                         console.error("[ALA-Map] Invalid GeoJSON provided, and unable to repair it.");
                         alert("Invalid Geometry shape provided, and unable to repair it. Please check the data and try again.");
@@ -3488,5 +3374,125 @@ ALA.MapUtils = {
         });
 
         return selfIntersects;
+    },
+    repairGeometry: function (feature, features) {
+        if (ALA.MapUtils.validateGeoJSON(feature)) {
+            features.push(feature);
+            return;
+        }
+
+        // Remove duplicate coordinates
+        let repaired = turf.cleanCoords(feature);
+
+        // Fix ring winding order
+        repaired = ALA.MapUtils.rewindFeature(repaired);
+
+        if (ALA.MapUtils.validateGeoJSON(repaired)) {
+            features.push(repaired);
+            return;
+        }
+
+        // Split self-intersecting polygons into valid polygons
+        repaired = ALA.MapUtils.repairPolygon(repaired);
+        switch (repaired.type) {
+            case "FeatureCollection":
+                repaired.features.forEach(function (repairedFeature) {
+                    if (ALA.MapUtils.validateGeoJSON(repairedFeature)) {
+                        features.push(repairedFeature);
+                    }
+                });
+                break;
+            case "Feature":
+                if (ALA.MapUtils.validateGeoJSON(repaired))
+                    features.push(repaired);
+                break;
+            default:
+                repaired = turf.feature(repaired);
+                if (ALA.MapUtils.validateGeoJSON(repaired))
+                    features.push(repaired);
+                break;
+        }
+    },
+
+    /**
+     * Attempts to repair an invalid Polygon or MultiPolygon.
+     *
+     * @param {FeatureCollection} feature
+     * @returns {Feature|FeatureCollection}
+     */
+    repairGeoJSON: function (geoJSON) {
+        if (!geoJSON) {
+            return null;
+        }
+
+        geoJSON = ALA.MapUtils.toFeatureCollection(geoJSON);
+        var features = [];
+        geoJSON.features.forEach(function (feature) {
+            switch (feature.geometry.type) {
+                case "GeometryCollection":
+                    let repairedGeometries = [];
+                    feature.geometry.geometries.forEach(function (geometry) {
+                        ALA.MapUtils.repairGeometry(geometry, repairedGeometries);
+                    });
+
+                    if (repairedGeometries.length > 0) {
+                        feature.geometry.geometries = repairedGeometries.map(geometry => geometry.type === "Feature" ? geometry.geometry : geometry);
+                        features.push(feature);
+                    }
+                    break;
+                default:
+                    ALA.MapUtils.repairGeometry(feature, features);
+                    break;
+            }
+        });
+
+        // no feature could be repaired, return null
+        if (features.length === 0) {
+            return null;
+        }
+
+        geoJSON.features = features;
+        return geoJSON;
+    },
+
+    /**
+     * Attempts to repair the winding order of a Polygon, MultiPolygon, LineString or MultiLineString.
+     * @param featureOrGeometry
+     * @returns {Feature}
+     */
+    rewindFeature: function (featureOrGeometry) {
+        var type = featureOrGeometry.type;
+        switch (type) {
+            case "Feature":
+            case "LineString":
+            case "MultiLineString":
+            case "Polygon":
+            case "MultiPolygon":
+                return turf.rewind(featureOrGeometry, { reverse: false });
+            default:
+                return featureOrGeometry;
+        }
+    },
+
+    /**
+     * Attempts to repair an invalid Polygon or MultiPolygon.
+     * @param feature
+     * @returns {*}
+     */
+    repairPolygon: function (feature) {
+        var type = feature.type;
+        switch (type) {
+            case "Feature":
+                if (["Polygon", "MultiPolygon"].includes(feature.geometry.type)) {
+                    return turf.unkinkPolygon(feature);
+                }
+                else
+                    return feature;
+            case "Polygon":
+            case "MultiPolygon":
+                return turf.unkinkPolygon(feature);
+            default:
+                return feature;
+        }
     }
 };
