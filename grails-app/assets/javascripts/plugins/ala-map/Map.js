@@ -244,7 +244,7 @@ ALA.Map = function (id, options) {
         opacity: 0.5,
         transparent: true,
         layers: "ALA:Objects",
-        version: "1.1.0",
+        version: "1.1.1",
         srs: "EPSG:900913"
     };
 
@@ -1451,6 +1451,11 @@ ALA.Map = function (id, options) {
         else if (layer.getIcon) {
             increaseOrDecreaseIconSize(layer, 1);
         }
+        else if (layer.setOpacity) {
+            if (layer._originalOptions && layer._originalOptions.opacity) {
+                layer.setOpacity(layer._originalOptions.opacity);
+            }
+        }
     };
 
     /**
@@ -1492,6 +1497,14 @@ ALA.Map = function (id, options) {
         }
         else if (layer.getIcon) {
             increaseOrDecreaseIconSize(layer, 1.5);
+        }
+        else if (layer.setOpacity) {
+            if (!layer._originalOptions) {
+                layer._originalOptions = {
+                    opacity: layer.options.opacity
+                };
+            }
+            layer.setOpacity(1);
         }
     };
 
@@ -2259,6 +2272,7 @@ ALA.Map = function (id, options) {
      */
     function onEachFeatureWithWMSLayerSupport(feature, layer, layerOptions) {
         var wmsOptions = {};
+        Object.assign(wmsOptions, layerOptions.wmsOptions);
         updateFeatureProperties(feature, layer);
         self.assignFeatureId(layer, feature);
         assignNameToFeature(layer, feature);
