@@ -80,8 +80,8 @@ describe("ALA.Map geometry utility tests", function () {
             geometry: {type: "Point", coordinates: [1, 1]}
         };
 
-        var rewoundPolygon = map.rewindFeature(polygon);
-        var unchangedPoint = map.rewindFeature(point);
+        var rewoundPolygon = ALA.MapUtils.rewindFeature(polygon);
+        var unchangedPoint = ALA.MapUtils.rewindFeature(point);
 
         expect(rewoundPolygon).not.toBe(null);
         expect(unchangedPoint).toEqual(point);
@@ -121,8 +121,6 @@ describe("ALA.Map geometry utility tests", function () {
     });
 
     it("repairs invalid polygon geojson when turf can repair it", function () {
-        var map = createMap();
-
         var repairedFeature = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"valid":false},"geometry":{"type":"Polygon","coordinates":[[[0,0],[1,1],[1,0],[0,1],[0,0]]]}}]};
 
         var invalidFeatureCollection = {
@@ -134,7 +132,7 @@ describe("ALA.Map geometry utility tests", function () {
             }]
         };
 
-        var result = map.repairGeoJSON(invalidFeatureCollection);
+        var result = ALA.MapUtils.repairGeoJSON(invalidFeatureCollection);
         expect(result).not.toBeNull();
         expect(result.type).toBe("FeatureCollection");
         expect(result.features.length).toBe(2);
@@ -142,21 +140,18 @@ describe("ALA.Map geometry utility tests", function () {
     });
 
     it("returns null for null or empty feature collections", function () {
-        var map = createMap();
-
-        expect(map.repairGeoJSON(null)).toBeNull();
-        expect(map.repairGeoJSON({type: "FeatureCollection", features: []})).toBeNull();
+        expect(ALA.MapUtils.repairGeoJSON(null)).toBeNull();
+        expect(ALA.MapUtils.repairGeoJSON({type: "FeatureCollection", features: []})).toBeNull();
     });
 
     it("normalizes a valid feature input into a feature collection", function () {
-        var map = createMap();
         var feature = {
             type: "Feature",
             properties: {name: "point"},
             geometry: {type: "Point", coordinates: [1, 1]}
         };
 
-        var result = map.repairGeoJSON(feature);
+        var result = ALA.MapUtils.repairGeoJSON(feature);
 
         expect(result).not.toBeNull();
         expect(result.type).toBe("FeatureCollection");
@@ -165,7 +160,6 @@ describe("ALA.Map geometry utility tests", function () {
     });
 
     it("keeps valid features while repairing invalid polygons in the same collection", function () {
-        var map = createMap();
         var featureCollection = {
             type: "FeatureCollection",
             features: [
@@ -182,7 +176,7 @@ describe("ALA.Map geometry utility tests", function () {
             ]
         };
 
-        var result = map.repairGeoJSON(featureCollection);
+        var result = ALA.MapUtils.repairGeoJSON(featureCollection);
 
         expect(result).not.toBeNull();
         expect(result.type).toBe("FeatureCollection");
@@ -208,7 +202,7 @@ describe("ALA.Map geometry utility tests", function () {
             ]
         };
 
-        var result = map.repairGeoJSON(geometryCollection);
+        var result = ALA.MapUtils.repairGeoJSON(geometryCollection);
 
         expect(result).not.toBeNull();
         expect(result.type).toBe("FeatureCollection");
@@ -319,6 +313,86 @@ describe("ALA.Map geometry utility tests", function () {
         expect(opacityLayer.setOpacity).toHaveBeenCalledWith(0.5);
         expect(optionOnlyLayer.options.opacity).toBe(0.5);
         expect(optionOnlyLayer.options.weight).toBe(4);
+    });
+
+    it("removes internal properties from a feature and keeps other properties", function () {
+        var map = createMap();
+        var geoJSON = {
+            type: "Feature",
+            properties: {
+                featureId: "f-1",
+                tempSiteId: "t-1",
+                siteId: "s-1",
+                name: "Area 1",
+                category: "A"
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [134, -28]
+            }
+        };
+
+        map.clearProperties(geoJSON);
+
+        expect(geoJSON.properties.featureId).toBeUndefined();
+        expect(geoJSON.properties.tempSiteId).toBeUndefined();
+        expect(geoJSON.properties.siteId).toBeUndefined();
+        expect(geoJSON.properties.name).toBe("Area 1");
+        expect(geoJSON.properties.category).toBe("A");
+    });
+
+    it("removes internal properties from all features in a feature collection", function () {
+        var map = createMap();
+        var geoJSON = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    properties: {featureId: "f-1", siteId: "s-1", keep: "yes"},
+                    geometry: {type: "Point", coordinates: [134, -28]}
+                },
+                {
+                    type: "Feature",
+                    properties: {tempSiteId: "t-2", keep: "still"},
+                    geometry: {type: "Point", coordinates: [135, -29]}
+                }
+            ],
+            properties: {
+                collectionName: "Test Collection",
+                siteId: "s-collection",
+                tempSiteId: "t-collection",
+                featureId: "f-collection"
+            }
+        };
+
+        map.clearProperties(geoJSON);
+
+        expect(geoJSON.features[0].properties.featureId).toBeUndefined();
+        expect(geoJSON.features[0].properties.siteId).toBeUndefined();
+        expect(geoJSON.features[0].properties.keep).toBe("yes");
+        expect(geoJSON.features[1].properties.tempSiteId).toBeUndefined();
+        expect(geoJSON.features[1].properties.keep).toBe("still");
+        expect(geoJSON.properties.featureId).toBeUndefined();
+        expect(geoJSON.properties.siteId).toBeUndefined();
+        expect(geoJSON.properties.tempSiteId).toBeUndefined();
+        expect(geoJSON.properties.collectionName).toBe("Test Collection");
+
+    });
+
+    it("does not fail when feature has no properties", function () {
+        var map = createMap();
+        var geoJSON = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [134, -28]
+            }
+        };
+
+        expect(function () {
+            map.clearProperties(geoJSON);
+        }).not.toThrow();
+        expect(geoJSON.properties).toBeUndefined();
     });
 });
 
