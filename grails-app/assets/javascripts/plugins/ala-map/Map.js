@@ -505,10 +505,12 @@ ALA.Map = function (id, options) {
      *
      * @memberOf ALA.Map
      * @function getGeoJSON
+     * @param precision {Number} Optional. The number of decimal places to use for coordinates in the GeoJSON output. Default: 8
      * @return {GeoJSON} Standard GeoJSON representation of the map's drawn features
      */
-    self.getGeoJSON = function () {
-        return drawnItems.toGeoJSON();
+    self.getGeoJSON = function (precision) {
+        precision = precision || 8;
+        return drawnItems.toGeoJSON(precision);
     };
 
     /**
