@@ -1719,6 +1719,22 @@ ALA.Map = function (id, options) {
             addFileInputControl(options);
         }
 
+        // fix for Google Mutant not refreshing the tiles when the map is first loaded. This is a workaround for a bug in Google Mutant.
+        if (options.baseLayer instanceof L.GridLayer.GoogleMutant) {
+            let refreshMapInterval = setInterval(() => {
+                console.log("[ALA-Map] attempting to refresh Google Mutant map tiles.");
+                let clearIntervalFlag = false;
+                if (options.baseLayer._mutant) {
+                    options.baseLayer._checkZoomLevels && options.baseLayer._checkZoomLevels();
+                    clearIntervalFlag = true;
+                }
+
+                if (clearIntervalFlag) {
+                    clearInterval(refreshMapInterval);
+                }
+            }, 500);
+        }
+
         // If the map container is not visible, add a listener to trigger a redraw once it becomes visible.
         // This avoids problems with the map viewport being initialised to an incorrect size because Leaflet could not
         // determine the size of the container.
