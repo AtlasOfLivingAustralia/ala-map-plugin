@@ -42,6 +42,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor-external/but-unzip/but-unzip.min.js',
             'grails-app/assets/vendor-external/leaflet-filelayer/src/leaflet.filelayer.js',
             'grails-app/assets/vendor-external/uuidjs/uuid.min.js',
+            'grails-app/assets/vendor-external/leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js',
             'grails-app/assets/javascripts/*.js',
             'grails-app/assets/javascripts/plugins/**/*.js',
             'test/js/specs/**/*.js'
