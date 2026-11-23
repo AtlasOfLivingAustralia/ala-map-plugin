@@ -2058,10 +2058,14 @@ ALA.Map = function (id, options) {
     }
 
     function copyPropertiesFromSourceToDestination(sourceLayer, destinationLayer) {
+        var toRemove = ["featureId", "name"];
         if (sourceLayer.feature && sourceLayer.feature.properties) {
             destinationLayer.feature = destinationLayer.feature || {};
             destinationLayer.feature.properties = destinationLayer.feature.properties || {};
             destinationLayer.feature.properties = Object.assign({}, sourceLayer.feature.properties, destinationLayer.feature.properties);
+            toRemove.forEach(function (property) {
+                delete destinationLayer.feature.properties[property];
+            });
         }
 
         return destinationLayer;
