@@ -81,6 +81,7 @@ ALA.MapConstants = {
  *  <li><code>markerOrShapeNotBoth</code> whether to allow users to draw both markers and regions/shapes at the same time. Default: true</li>
  *  <li><code>showFitBoundsToggle</code> whether to include a button to toggle between the initial map zoom and the bounds of the data. Default: false</li>
  *  <li><code>useMyLocation</code> whether to include a "Use My Location" button to place a marker on the map at the user's location. Default: true</li>
+ *  <li><code>repairGeometry</code> adds a control that will attempt to repair invalid geometries. Default: false</li>
  *  <li><code>addGeometryFromLocalFile</code> add a shape from a file. Accepted formats are shapefile, geojson, kml, gpx.  Default: false</li>
  *  <li><code>simplifyImportedShapes</code> True to simplify shapes imported from files. Only relevant if addGeometryFromLocalFile = true. Default: false</li>
  *  <li><code>simplifyOptions</code> Options to pass to the turf's simplify method. Only relevant if addGeometryFromLocalFile = true and simplifyImportedShapes = true. Default: {tolerance: 0.001, highQuality: true, mutate: true}</li>
@@ -303,6 +304,7 @@ ALA.Map = function (id, options) {
         wakeTime: 750,
         sleepNote: false,
         hoverToWake: true,
+        repairGeometry: false,
         trackWindowHeight: false,
         minMapHeight: 250,
         autoZIndex: true,
@@ -920,6 +922,22 @@ ALA.Map = function (id, options) {
             alert("Location lookup failed for the following reason - " + event.message);
             self.finishLoading();
         });
+    };
+
+    /**
+     * Repairs invalid geometry on the map.
+     */
+    self.repairGeometry = function () {
+        var geoJSON = self.getGeoJSON(8),
+            repairedGeoJSON = ALA.MapUtils.repairGeoJSON(geoJSON);
+
+        if (ALA.MapUtils.validateGeoJSON(repairedGeoJSON)) {
+            self.clearLayers()
+            self.setGeoJSON(repairedGeoJSON);
+            self.fitBounds();
+        }
+        else
+            alert("Attempt to repair geometry failed. Please use external GIS software.");
     };
 
     /**
@@ -1714,6 +1732,10 @@ ALA.Map = function (id, options) {
 
         if (options.allowKnownShapesControl && options.knownShapesOptions && options.knownShapesOptions.featuresServiceUrl && options.knownShapesOptions.regionListUrl) {
             addKnownShapeControl(options.knownShapesOptions);
+        }
+
+        if (options.repairGeometry) {
+            self.addButton("<span class='ala-map-repair-geometry fa fa-magic' style='padding-top: 5px' title='Repair invalid geometry'></span>", self.repairGeometry, "topleft");
         }
 
         if(options.trackWindowHeight) {
