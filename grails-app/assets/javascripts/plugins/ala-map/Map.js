@@ -497,6 +497,14 @@ ALA.Map = function (id, options) {
     }
 
     /**
+     * Get the properties that will be removed from the GeoJSON when clearProperties is called.
+     * @returns {string[]}
+     */
+    self.getPropertiesToRemove = function (){
+        return PROPERTIES_TO_REMOVE
+    }
+
+    /**
      * Retrieves the standard GeoJSON representation of all features that have been drawn on the map.
      *
      * Note that Circle objects are not supported by GeoJSON. Therefore, they are represented as Points in the resulting
@@ -592,18 +600,20 @@ ALA.Map = function (id, options) {
      * Remove the properties that are used internally by the map such as featureId, tempSiteId and siteId. This is useful
      * when reusing GeoJSON for another purpose.
      * @param geoJSON
+     * @param propertiesToRemove {Array} Optional. The list of properties to remove. If not provided, the default list will be used.
      */
-    self.clearProperties = function (geoJSON) {
+    self.clearProperties = function (geoJSON, propertiesToRemove) {
+        propertiesToRemove = propertiesToRemove || PROPERTIES_TO_REMOVE;
         switch (geoJSON.type) {
             case "FeatureCollection":
                 geoJSON.features.forEach(function (feature) {
-                    self.clearProperties(feature);
+                    self.clearProperties(feature, propertiesToRemove);
                 });
                 break;
         }
 
         if (geoJSON.properties) {
-            PROPERTIES_TO_REMOVE.forEach(function (property) {
+            propertiesToRemove.forEach(function (property) {
                 delete geoJSON.properties[property];
             });
         }
@@ -2058,14 +2068,11 @@ ALA.Map = function (id, options) {
     }
 
     function copyPropertiesFromSourceToDestination(sourceLayer, destinationLayer) {
-        var toRemove = ["featureId", "name"];
         if (sourceLayer.feature && sourceLayer.feature.properties) {
             destinationLayer.feature = destinationLayer.feature || {};
             destinationLayer.feature.properties = destinationLayer.feature.properties || {};
             destinationLayer.feature.properties = Object.assign({}, sourceLayer.feature.properties, destinationLayer.feature.properties);
-            toRemove.forEach(function (property) {
-                delete destinationLayer.feature.properties[property];
-            });
+            self.clearProperties(destinationLayer.feature, PROPERTIES_TO_REMOVE.concat(["name"]));
         }
 
         return destinationLayer;

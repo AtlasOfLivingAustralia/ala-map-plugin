@@ -341,6 +341,32 @@ describe("ALA.Map geometry utility tests", function () {
         expect(geoJSON.properties.category).toBe("A");
     });
 
+    it("removes provided properties from a feature and keeps other properties", function () {
+        var map = createMap();
+        var geoJSON = {
+            type: "Feature",
+            properties: {
+                featureId: "f-1",
+                tempSiteId: "t-1",
+                siteId: "s-1",
+                name: "Area 1",
+                category: "A"
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [134, -28]
+            }
+        };
+
+        map.clearProperties(geoJSON, ["category"]);
+
+        expect(geoJSON.properties.featureId).toBe("f-1");
+        expect(geoJSON.properties.tempSiteId).toBe("t-1");
+        expect(geoJSON.properties.siteId).toBe("s-1");
+        expect(geoJSON.properties.name).toBe("Area 1");
+        expect(geoJSON.properties.category).toBeUndefined();
+    });
+
     it("removes internal properties from all features in a feature collection", function () {
         var map = createMap();
         var geoJSON = {
