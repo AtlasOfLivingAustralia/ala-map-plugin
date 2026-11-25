@@ -520,7 +520,7 @@ ALA.Map = function (id, options) {
      * @return {GeoJSON} Standard GeoJSON representation of the map's drawn features
      */
     self.getGeoJSON = function (precision) {
-        precision = precision || 8;
+        precision = typeof precision === "undefined" ? 8 : precision;
         return drawnItems.toGeoJSON(precision);
     };
 
@@ -1483,7 +1483,7 @@ ALA.Map = function (id, options) {
             increaseOrDecreaseIconSize(layer, 1);
         }
         else if (layer.setOpacity) {
-            if (layer._originalOptions && layer._originalOptions.opacity) {
+            if (layer._originalOptions && typeof layer._originalOptions.opacity !== "undefined") {
                 layer.setOpacity(layer._originalOptions.opacity);
             }
         }
@@ -1763,7 +1763,7 @@ ALA.Map = function (id, options) {
         }
 
         // fix for Google Mutant not refreshing the tiles when the map is first loaded. This is a workaround for a bug in Google Mutant.
-        if (options.baseLayer instanceof L.GridLayer.GoogleMutant) {
+        if (typeof L.GridLayer.GoogleMutant === "function" && options.baseLayer instanceof L.GridLayer.GoogleMutant) {
             let refreshMapInterval = setInterval(() => {
                 console.log("[ALA-Map] attempting to refresh Google Mutant map tiles.");
                 let clearIntervalFlag = false;
@@ -2357,13 +2357,21 @@ ALA.Map = function (id, options) {
                 wmsOptions.opacity = 1.0
             }
             layer = createWmsLayer(feature.properties.pid, wmsOptions);
-            mapImpl.on("click", function (e) {
+            var removeWmsLayerOnClick = function (e) {
                 if (mapImpl.pm && mapImpl.pm.globalRemovalModeEnabled && mapImpl.pm.globalRemovalModeEnabled()) {
                     var bounds = layer.getBounds();
                     if (bounds && bounds.contains(e.latlng)) {
                         self.removeLayer(layer);
                     }
                 }
+            };
+
+            layer.on("add", function () {
+                mapImpl.on("click", removeWmsLayerOnClick);
+            });
+
+            layer.on("remove", function () {
+                mapImpl.off("click", removeWmsLayerOnClick);
             });
         }
 
