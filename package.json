@@ -22,7 +22,7 @@
     "@turf/simplify": "^7.3.5",
     "@turf/unkink-polygon": "^7.3.5",
     "better-docs": "^2.7.3",
-    "chromedriver": "^145.0.6",
+    "chromedriver": "^158.0.1",
     "font-awesome": "4.7.0",
     "handlebars": "^4.7.10",
     "jasmine-core": "^3.5.0",
