@@ -267,6 +267,132 @@ describe("ALA.Map geometry utility tests", function () {
         expect(result).toBe(false);
     });
 
+    it("detects self-intersecting geometry", function () {
+        var selfIntersectingPolygon = {
+            type: "Feature",
+            properties: {},
+            geometry: {
+                type: "Polygon",
+                coordinates: [[[0, 0], [2, 2], [2, 0], [0, 2], [0, 0]]]
+            }
+        };
+
+        var result = ALA.MapUtils.isSelfIntersecting(selfIntersectingPolygon);
+
+        expect(result).toBe(true);
+    });
+
+    it("returns false for geometry without self-intersection", function () {
+        var validPolygon = {
+            type: "Feature",
+            properties: {},
+            geometry: {
+                type: "Polygon",
+                coordinates: [[[0, 0], [0, 2], [2, 2], [2, 0], [0, 0]]]
+            }
+        };
+
+        var result = ALA.MapUtils.isSelfIntersecting(validPolygon);
+
+        expect(result).toBe(false);
+    });
+
+    it("detects self-intersection in a feature collection", function () {
+        var featureCollection = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    properties: {id: "valid"},
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[0, 0], [0, 2], [2, 2], [2, 0], [0, 0]]]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {id: "self-intersecting"},
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[0, 0], [2, 2], [2, 0], [0, 2], [0, 0]]]
+                    }
+                }
+            ]
+        };
+
+        var result = ALA.MapUtils.isSelfIntersecting(featureCollection);
+
+        expect(result).toBe(true);
+    });
+
+    it("returns false for a feature collection without self-intersections", function () {
+        var featureCollection = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    properties: {id: "first"},
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[0, 0], [0, 2], [2, 2], [2, 0], [0, 0]]]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {id: "second"},
+                    geometry: {
+                        type: "Polygon",
+                        coordinates: [[[3, 3], [3, 5], [5, 5], [5, 3], [3, 3]]]
+                    }
+                }
+            ]
+        };
+
+        var result = ALA.MapUtils.isSelfIntersecting(featureCollection);
+
+        expect(result).toBe(false);
+    });
+
+    it("detects self-intersection in a geometry collection", function () {
+        var geometryCollection = {
+            type: "GeometryCollection",
+            geometries: [
+                {
+                    type: "Polygon",
+                    coordinates: [[[0, 0], [0, 2], [2, 2], [2, 0], [0, 0]]]
+                },
+                {
+                    type: "Polygon",
+                    coordinates: [[[0, 0], [2, 2], [2, 0], [0, 2], [0, 0]]]
+                }
+            ]
+        };
+
+        var result = ALA.MapUtils.isSelfIntersecting(geometryCollection);
+
+        expect(result).toBe(true);
+    });
+
+    it("returns false for a geometry collection without self-intersections", function () {
+        var geometryCollection = {
+            type: "GeometryCollection",
+            geometries: [
+                {
+                    type: "Polygon",
+                    coordinates: [[[0, 0], [0, 2], [2, 2], [2, 0], [0, 0]]]
+                },
+                {
+                    type: "Polygon",
+                    coordinates: [[[3, 3], [3, 5], [5, 5], [5, 3], [3, 3]]]
+                }
+            ]
+        };
+
+        var result = ALA.MapUtils.isSelfIntersecting(geometryCollection);
+
+        expect(result).toBe(false);
+    });
+
     it("returns false for unsupported GeoJSON types", function () {
         var result = ALA.MapUtils.validateGeoJSON({type: "UnsupportedType"});
 
@@ -280,6 +406,64 @@ describe("ALA.Map geometry utility tests", function () {
         });
 
         expect(result).toBe(false);
+    });
+
+    it("returns original geojson when coordinate count is at or below max points", function () {
+        var geoJSON = {
+            type: "Feature",
+            properties: {},
+            geometry: {type: "LineString", coordinates: [[0, 0], [1, 1]]}
+        };
+
+        spyOn(ALA.MapUtils, "validateGeoJSON");
+
+        var result = ALA.MapUtils.simplifyToValidGeoJSON(geoJSON, 0.4, 3, 2, 2);
+
+        expect(result).toBe(geoJSON);
+        expect(ALA.MapUtils.validateGeoJSON).not.toHaveBeenCalled();
+    });
+
+    it("stops simplifying once validation succeeds", function () {
+        var coordinates = [];
+        for (var i = 0; i < 500; i++) {
+            coordinates.push([i * 0.001, Math.sin(i * 0.01)]);
+        }
+
+        var geoJSON = {
+            type: "Feature",
+            properties: {},
+            geometry: {type: "LineString", coordinates: coordinates}
+        };
+
+        spyOn(ALA.MapUtils, "validateGeoJSON").and.callFake(function () {
+            return ALA.MapUtils.validateGeoJSON.calls.count() >= 2;
+        });
+
+        var result = ALA.MapUtils.simplifyToValidGeoJSON(geoJSON, 0.01, 4, 2, 200);
+
+        expect(ALA.MapUtils.validateGeoJSON.calls.count()).toBe(2);
+        expect(turf.coordAll(result).length).toBeLessThanOrEqual(turf.coordAll(geoJSON).length);
+    });
+
+    it("returns the last simplified result when validation never succeeds", function () {
+        var coordinates = [];
+        for (var i = 0; i < 500; i++) {
+            coordinates.push([i * 0.001, Math.sin(i * 0.01)]);
+        }
+
+        var geoJSON = {
+            type: "Feature",
+            properties: {},
+            geometry: {type: "LineString", coordinates: coordinates}
+        };
+
+        spyOn(ALA.MapUtils, "validateGeoJSON").and.returnValue(false);
+
+        var result = ALA.MapUtils.simplifyToValidGeoJSON(geoJSON, 0.01, 2, 2, 200);
+
+        expect(ALA.MapUtils.validateGeoJSON.calls.count()).toBe(3);
+        expect(result.type).toBe("Feature");
+        expect(result.geometry.type).toBe("LineString");
     });
 
     it("hides and shows layers using all supported layer APIs", function () {
@@ -421,4 +605,3 @@ describe("ALA.Map geometry utility tests", function () {
         expect(geoJSON.properties).toBeUndefined();
     });
 });
-

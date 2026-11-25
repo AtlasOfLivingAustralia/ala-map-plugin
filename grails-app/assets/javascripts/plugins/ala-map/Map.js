@@ -372,6 +372,7 @@ ALA.Map = function (id, options) {
     var fitToBoundsToggle = options.zoomToObject;
     var layerControl = null;
     var layerCreatedByGeoJSON = null;
+    var repairGeometryControlInitialised = false;
 
     /* Keep track of all available overlay layers. */
     var overlayLayersAvailable = [];
@@ -1648,6 +1649,16 @@ ALA.Map = function (id, options) {
         }
     }
 
+    /**
+     * Add a control that will fix invalid geometries currently displayed.
+     */
+    self.addRepairGeometryControl = function () {
+        if (!repairGeometryControlInitialised) {
+            self.addButton("<span class='ala-map-repair-geometry fa fa-magic' style='padding-top: 5px' title='Repair invalid geometry'></span>", self.repairGeometry, "topleft");
+            repairGeometryControlInitialised = true;
+        }
+    }
+
     // ----------------------
     // Private functions
     // ----------------------
@@ -1735,7 +1746,7 @@ ALA.Map = function (id, options) {
         }
 
         if (options.repairGeometry) {
-            self.addButton("<span class='ala-map-repair-geometry fa fa-magic' style='padding-top: 5px' title='Repair invalid geometry'></span>", self.repairGeometry, "topleft");
+            self.addRepairGeometryControl();
         }
 
         if(options.trackWindowHeight) {
@@ -2556,7 +2567,7 @@ ALA.Map = function (id, options) {
                     if (options.simplifyImportedShapes) {
                         ALA.MapUtils.checkTurfAvailability();
                         var config = _.defaults(options.simplifyOptions || {}, DEFAULT_SIMPLIFICATION_OPTIONS);
-                        geoJSON = turf.simplify(geoJSON, config);
+                        geoJSON = ALA.MapUtils.simplifyToValidGeoJSON(geoJSON, config.tolerance);
                     }
 
                     if (options.flattenMultiGeometries) {
@@ -3466,14 +3477,33 @@ ALA.MapUtils = {
             return false;
         }
     },
+    /**
+     * Returns true if GeoJSON is self-intersecting. It uses Turf's kinks method.
+     * @param geoJSON
+     * @returns {boolean}
+     */
     isSelfIntersecting: function (geoJSON) {
-        var selfIntersects = false;
-        L.geoJSON(geoJSON).eachLayer(function (layer) {
-            if (layer.pm && layer.pm.hasSelfIntersection)
-                selfIntersects = selfIntersects || layer.pm.hasSelfIntersection();
-        });
-
-        return selfIntersects;
+        ALA.MapUtils.checkTurfAvailability()
+        try {
+            switch (geoJSON.type) {
+                case "FeatureCollection":
+                    return geoJSON.features.some(function (feature) {
+                        return ALA.MapUtils.isSelfIntersecting(feature);
+                    });
+                    break;
+                case "GeometryCollection":
+                    return geoJSON.geometries.some(function (geometry){
+                        return ALA.MapUtils.isSelfIntersecting(geometry);
+                    });
+                default:
+                    var selfIntersection = turf.kinks(geoJSON);
+                    return selfIntersection.features.length > 0;
+            }
+        }
+        catch (e) {
+            console.error("[ALA-Map] Error checking self-intersection: " + e.message);
+            return false;
+        }
     },
     repairGeometry: function (feature, features) {
         if (ALA.MapUtils.validateGeoJSON(feature)) {
@@ -3594,5 +3624,36 @@ ALA.MapUtils = {
             default:
                 return feature;
         }
+    },
+    /**
+     * Simplifies a GeoJSON object to a valid GeoJSON within the specified tolerance and max number of attempts.
+     * If the number of coordinates is below a threshold, then the GeoJSON is not simplified.
+     * @param geoJSON
+     * @param tolerance default 0.0001
+     * @param maxAttempts default 4
+     * @param stepSize default 2
+     * @param maxPoints default 200
+     * @returns {*}
+     */
+    simplifyToValidGeoJSON: function (geoJSON, tolerance, maxAttempts, stepSize, maxPoints) {
+        ALA.MapUtils.checkTurfAvailability()
+        var attempts = 0,
+            simplified = geoJSON;
+        tolerance = tolerance || 0.0001;
+        stepSize = stepSize || 2;
+        maxAttempts = maxAttempts || 4;
+        maxPoints = maxPoints || 200;
+        if (turf.coordAll(geoJSON).length <= maxPoints)
+            return geoJSON;
+
+        while (attempts <= maxAttempts) {
+            simplified = turf.simplify(geoJSON, {tolerance: tolerance, highQuality: true});
+            if (ALA.MapUtils.validateGeoJSON(simplified))
+                 return simplified;
+            tolerance = tolerance / stepSize;
+            attempts++;
+        }
+
+        return simplified;
     }
 };
