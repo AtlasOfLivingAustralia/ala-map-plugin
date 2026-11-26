@@ -3643,7 +3643,7 @@ ALA.MapUtils = {
      * If the number of coordinates is below a threshold, then the GeoJSON is not simplified.
      * @param geoJSON
      * @param tolerance default 0.0001
-     * @param maxAttempts default 10
+     * @param maxAttempts default 7
      * @param stepSize default 2
      * @param maxPoints default 200
      * @returns {*}
