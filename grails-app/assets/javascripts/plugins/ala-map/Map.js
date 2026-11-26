@@ -3497,25 +3497,25 @@ ALA.MapUtils = {
      */
     isSelfIntersecting: function (geoJSON) {
         ALA.MapUtils.checkTurfAvailability()
-        try {
-            switch (geoJSON.type) {
-                case "FeatureCollection":
-                    return geoJSON.features.some(function (feature) {
-                        return ALA.MapUtils.isSelfIntersecting(feature);
-                    });
-                    break;
-                case "GeometryCollection":
-                    return geoJSON.geometries.some(function (geometry){
-                        return ALA.MapUtils.isSelfIntersecting(geometry);
-                    });
-                default:
+        switch (geoJSON.type) {
+            case "FeatureCollection":
+                return geoJSON.features.some(function (feature) {
+                    return ALA.MapUtils.isSelfIntersecting(feature);
+                });
+                break;
+            case "GeometryCollection":
+                return geoJSON.geometries.some(function (geometry){
+                    return ALA.MapUtils.isSelfIntersecting(geometry);
+                });
+            default:
+                try {
                     var selfIntersection = turf.kinks(geoJSON);
                     return selfIntersection.features.length > 0;
-            }
-        }
-        catch (e) {
-            console.error("[ALA-Map] Error checking self-intersection: " + e.message);
-            return false;
+                }
+                catch (e) {
+                    console.warn("[ALA-Map] Error checking self-intersection: " + e.message);
+                    return false;
+                }
         }
     },
     repairGeometry: function (feature, features) {
