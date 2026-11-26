@@ -3643,7 +3643,7 @@ ALA.MapUtils = {
      * If the number of coordinates is below a threshold, then the GeoJSON is not simplified.
      * @param geoJSON
      * @param tolerance default 0.0001
-     * @param maxAttempts default 4
+     * @param maxAttempts default 10
      * @param stepSize default 2
      * @param maxPoints default 200
      * @returns {*}
@@ -3654,7 +3654,7 @@ ALA.MapUtils = {
             simplified = geoJSON;
         tolerance = tolerance || 0.0001;
         stepSize = stepSize || 2;
-        maxAttempts = maxAttempts || 4;
+        maxAttempts = maxAttempts || 7;
         maxPoints = maxPoints || 200;
         if (turf.coordAll(geoJSON).length <= maxPoints)
             return geoJSON;
@@ -3667,6 +3667,6 @@ ALA.MapUtils = {
             attempts++;
         }
 
-        return simplified;
+        return geoJSON;
     }
 };
