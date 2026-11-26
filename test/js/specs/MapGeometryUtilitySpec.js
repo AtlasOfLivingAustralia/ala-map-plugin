@@ -445,7 +445,7 @@ describe("ALA.Map geometry utility tests", function () {
         expect(turf.coordAll(result).length).toBeLessThanOrEqual(turf.coordAll(geoJSON).length);
     });
 
-    it("returns the last simplified result when validation never succeeds", function () {
+    it("returns the original result when validation never succeeds", function () {
         var coordinates = [];
         for (var i = 0; i < 500; i++) {
             coordinates.push([i * 0.001, Math.sin(i * 0.01)]);
@@ -462,8 +462,7 @@ describe("ALA.Map geometry utility tests", function () {
         var result = ALA.MapUtils.simplifyToValidGeoJSON(geoJSON, 0.01, 2, 2, 200);
 
         expect(ALA.MapUtils.validateGeoJSON.calls.count()).toBe(3);
-        expect(result.type).toBe("Feature");
-        expect(result.geometry.type).toBe("LineString");
+        expect(result).toBe(geoJSON);
     });
 
     it("hides and shows layers using all supported layer APIs", function () {
