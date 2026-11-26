@@ -929,16 +929,21 @@ ALA.Map = function (id, options) {
      * Repairs invalid geometry on the map.
      */
     self.repairGeometry = function () {
-        var geoJSON = self.getGeoJSON(8),
-            repairedGeoJSON = ALA.MapUtils.repairGeoJSON(geoJSON);
+        try {
+            var geoJSON = self.getGeoJSON(8),
+                repairedGeoJSON = ALA.MapUtils.repairGeoJSON(geoJSON);
 
-        if (ALA.MapUtils.validateGeoJSON(repairedGeoJSON)) {
-            self.clearLayers()
-            self.setGeoJSON(repairedGeoJSON);
-            self.fitBounds();
+            if (ALA.MapUtils.validateGeoJSON(repairedGeoJSON)) {
+                self.clearLayers()
+                self.setGeoJSON(repairedGeoJSON);
+                self.fitBounds();
+            }
+            else
+                alert("Attempt to repair geometry failed. Please use external GIS software to fix it.");
         }
-        else
-            alert("Attempt to repair geometry failed. Please use external GIS software.");
+        catch (e) {
+            alert("Failed to repair geometry - " + e.message + ". Please use external GIS software to fix it.");
+        }
     };
 
     /**
