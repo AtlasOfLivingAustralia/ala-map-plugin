@@ -88,7 +88,7 @@ clientDependencies {
         'urijs'('1.19.11')
         'leaflet-plugins'('3.4.0')
         'leaflet.gridlayer.googlemutant'('0.16.0')
-        '@tmcw/togeojson'('7.1.2')
+        '@tmcw/togeojson'('7.1.4')
         'leaflet-filelayer'('1.2.0')
     }
 }
